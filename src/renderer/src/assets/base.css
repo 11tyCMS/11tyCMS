@@ -1,0 +1,38 @@
+body, html{
+  width:100%;
+  height:100%;
+}
+
+#root{
+  width:100%;
+  height:100%;
+  display:flex;
+}
+
+.sidebar{
+  width:200px;
+  height:100%;
+  box-sizing: border-box;
+  padding:10px;
+}
+.mdxeditor{
+  flex-grow:1;
+}
+.sidebar ul {
+  padding-inline-start: 0px;
+  list-style-type: none;
+}
+
+.sidebar ul li{
+  height:fit-content;
+  /* margin: 10px; */
+  color:white;
+  font-size:14px;
+  border-bottom:1px solid red;
+  font-weight:100
+}
+
+.sidebar ul li.parent{
+  font-size:20px;
+  font-weight:600;
+}

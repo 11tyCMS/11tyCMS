@@ -1,0 +1,213 @@
+import { app, shell, BrowserWindow, ipcMain, dialog, protocol, net } from 'electron'
+import { join } from 'path'
+import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import icon from '../../resources/icon.png?asset'
+import fs from 'node:fs';
+import * as matter from 'gray-matter';
+import chokidar from 'chokidar';
+import path from 'node:path';
+
+let collectionDirectories = [];
+let collectionWatcher = null;
+let browserWindow = null;
+let eleventyDir = null;
+function createWindow() {
+  // Create the browser window.
+  const mainWindow = new BrowserWindow({
+    width: 900,
+    height: 670,
+    show: false,
+    autoHideMenuBar: true,
+    ...(process.platform === 'linux' ? { icon } : {}),
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js'),
+      sandbox: false,
+
+    }
+  })
+
+  mainWindow.on('ready-to-show', () => {
+    mainWindow.show()
+  })
+
+  mainWindow.webContents.setWindowOpenHandler((details) => {
+    shell.openExternal(details.url)
+    return { action: 'deny' }
+  })
+
+  // HMR for renderer base on electron-vite cli.
+  // Load the remote URL for development or the local html file for production.
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+  } else {
+    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+  }
+  return mainWindow;
+}
+
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.whenReady().then(() => {
+  // Set app user model id for windows
+  electronApp.setAppUserModelId('com.electron')
+
+  // Default open or close DevTools by F12 in development
+  // and ignore CommandOrControl + R in production.
+  // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
+  app.on('browser-window-created', (_, window) => {
+    optimizer.watchWindowShortcuts(window)
+  })
+  // app.whenReady().then(()=>{
+  //   protocol.handle('eleventy', (request)=>{
+  //     console.log("eleventy")
+  //     return net.fetch('file://' + request.url.slice('eleventy://'.length))
+  //   });
+  // })
+  
+    // Register the protocol handler ONCE
+    protocol.handle('eleventy', (request) => {
+        console.log(`%c[Eleventy Protocol] Fetching: %c${request.url}%c from 11ty directory: %c ${eleventyDir}`, "color:cyan; font-weight:bold;", "font-style:italic;", "color:cyan; font-weight:bold;")
+
+        // Check if user has selected a directory
+        if (!eleventyDir) {
+            console.log("[Eleventy Protocol] No directory selected yet");
+            return new Response('No directory selected', { status: 404 });
+        }
+        
+        // Get the file path from the URL
+        const relativePath = request.url.slice('eleventy://'.length);
+        const fullPath = path.join(eleventyDir, relativePath);
+        
+        console.log("[Eleventy Protocol] Serving file:", fullPath);
+        
+        // Security check - make sure file is within selected directory
+        if (!fullPath.startsWith(eleventyDir)) {
+            return new Response('Access denied', { status: 403 });
+        }
+        
+        return net.fetch('file://' + fullPath);
+    });
+
+
+  const openDir = async ()=>{
+    //response.filePaths[0]+'/'+fileName
+    return new Promise(resolveOuter=>{
+      dialog.showOpenDialog({
+        properties:['openDirectory']
+      }).then((response)=>{
+        eleventyDir = response.filePaths[0];
+        /* 
+          We need a function that will return all the directories at the root of the 11ty src folder.
+          It will then need to check through any folders that arent _* to see if its a collection, by checking to see if there is a child file with a matching name to its containing folder.
+        */
+
+        const isDirCollection = (path, folderName)=> {
+          const isFolderInternal = folderName[0] == '_'
+          const files = fs.readdirSync(`${path}/${folderName}`, {withFileTypes:true}).map(file=>file.name).includes(`${folderName}.json`)
+          return !isFolderInternal && files;
+        };
+
+        const collectionsFactory = (collectionDirectories)=>{
+          let collections = {}
+          collectionDirectories.forEach(dir=>{
+            collections[dir.name] = []
+            fs.readdirSync(`${dir.path}/${dir.name}`, {withFileTypes:true}).filter(file=>file.name.includes('.md')).forEach(file=>{
+              const matterData = matter.read(`${file.parentPath}/${file.name}`);
+              collections[dir.name].push({...file, path:matterData.path, data:matterData.data})
+            })
+          })
+          return collections
+        }
+        
+        const eleventyRootDirs = fs.readdirSync(response.filePaths[0], {withFileTypes: true}).filter(dirFile=>dirFile.isDirectory())
+        
+        const collectionDirs = eleventyRootDirs.filter(dir=> isDirCollection(response.filePaths[0], dir.name));
+        collectionDirectories = collectionDirs.map(dir=>`${dir.path}/${dir.name}`)
+        let eleventyStructure = {
+          rootPath: response.filePaths[0],
+          code: eleventyRootDirs.filter(dir=>dir.name[0] == '_'),
+          collections: collectionsFactory(collectionDirs)
+        }
+        resolveOuter(eleventyStructure);
+        if(collectionWatcher)
+          collectionWatcher.close();
+        
+          collectionWatcher = chokidar.watch(collectionDirectories, {persistent:true, ignoreInitial:true});
+          collectionWatcher
+            .on('add', path=> browserWindow.webContents.send('collectionFileAdded', {
+              path,
+              file: matter.read(path),
+              collection: (()=>{
+                const lastSlashIndex = path.lastIndexOf('/')
+                let string = path.substring(0, lastSlashIndex);
+                let splitPath = string.split('/');
+                return splitPath[splitPath.length-1];
+              })()
+            }))
+            .on('unlink', path=> browserWindow.webContents.send('collectionFileRemoved', {
+              path,
+              collection: (()=>{
+                const lastSlashIndex = path.lastIndexOf('/')
+                let string = path.substring(0, lastSlashIndex);
+                let splitPath = string.split('/');
+                return splitPath[splitPath.length-1];
+              })()
+            }))
+      })
+    }); 
+  }
+
+  const openFile = (event, filePath)=>{
+    let fileData = matter.read(filePath);
+    const regex = /!\[(.*?)\]\((?!https?:\/\/)(.*?)\)/g;
+    let content = fileData.content
+    content = content.replace(regex, (fullMatch, altText, relativeUrl)=>{
+        return `![${altText}](${"eleventy://"}${relativeUrl})`;
+    })
+    fileData.content = content
+    return fileData
+  }
+
+  const saveFile = (event, path, metadata, contents)=>{
+    let content = contents.replace(/eleventy:\/\//g, "");
+
+    const fileContents = matter.stringify(content, metadata);
+    console.log("Creating/writing file at "+ path)
+    return fs.writeFileSync(path, fileContents);
+  }
+  
+  const renameFile = (event, beforePath, afterPath)=>{
+    console.log("Renaming file from/to: ", beforePath, afterPath);
+    return fs.rename(beforePath, afterPath, ()=>{});
+  }
+
+  ipcMain.handle('dialog:openDir', openDir)
+  ipcMain.handle('dialog:openFile', openFile)
+  ipcMain.handle('file:save', saveFile)
+  ipcMain.handle('file:rename', renameFile)
+
+  // IPC test
+
+  
+  browserWindow = createWindow()
+  console.log('window created');
+  app.on('activate', function () {
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
+})
+
+// Quit when all windows are closed, except on macOS. There, it's common
+// for applications and their menu bar to stay active until the user quits
+// explicitly with Cmd + Q.
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+    collectionWatcher.close()
+  }
+})
+
+// In this file you can include the rest of your app's specific main process
+// code. You can also put them in separate files and require them here.
