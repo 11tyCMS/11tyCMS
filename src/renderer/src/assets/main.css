@@ -135,7 +135,7 @@ body, html{
   margin:0px;
   color:#e5eeff
 }
-.postsList ul, li {
+.postsList ul, .postsList li {
   list-style-type: none;
   padding:0;
   margin:0;
@@ -197,4 +197,23 @@ body, html{
   font-family: sans-serif;
   outline:none;
   cursor:horizontal-text;
+}
+.milkdown .ProseMirror{
+    padding: 20px !important;
+    background: #0e182d;
+    color: #dee7f6;
+
+}
+
+.milkdown .ProseMirror a{
+   color:#81a7f6 !important;
+}
+.milkdown .ProseMirror ul, .milkdown .ProseMirror ol {
+    padding: 0;
+    margin-left: 36px;
+    list-style-type: initial !important;
+    list-style-type: disc !important;
+}
+.milkdown .ProseMirror ul li::marker, .milkdown .ProseMirror ol li::marker{
+  color:white;
 }

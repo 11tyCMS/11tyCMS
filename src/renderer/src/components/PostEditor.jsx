@@ -1,64 +1,27 @@
 import { useState, useEffect, useRef } from 'react'
-import {
-  headingsPlugin,
-  listsPlugin,
-  quotePlugin,
-  thematicBreakPlugin,
-  markdownShortcutPlugin,
-  MDXEditor,
-  UndoRedo,
-  BoldItalicUnderlineToggles,
-  toolbarPlugin,
-  linkPlugin,
-  linkDialogPlugin,
-  imagePlugin,
-  realmPlugin
-} from '@mdxeditor/editor'
-import '@mdxeditor/editor/style.css'
-import { marked } from 'marked';
+import { Editor, rootCtx } from "@milkdown/kit/core";
+import { commonmark } from "@milkdown/kit/preset/commonmark";
+import { Milkdown, MilkdownProvider, useEditor } from "@milkdown/react";
+import { useInstance } from "@milkdown/react";
+import { insert, replaceAll } from "@milkdown/kit/utils";
+
+import "@milkdown/crepe/theme/common/style.css";
+import "@milkdown/crepe/theme/frame.css";
+
 import turndown from "turndown";
 const turndownService = new turndown();
 import Europa from 'europa';
 const ieuropa = new Europa();
 
+import MilkdownEditorWrapper from './MilkdownEditor';
 
-import ListItem from '@tiptap/extension-list-item'
-import TextStyle from '@tiptap/extension-text-style'
-import Document from '@tiptap/extension-document'
-import Paragraph from '@tiptap/extension-paragraph'
-import Text from '@tiptap/extension-text'
-import Image from '@tiptap/extension-image'
-import Link from '@tiptap/extension-link'
-import { EditorContent, useEditor } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import {RichTextLink} from './tiptap-extensions/md-link'
-const extensions = [
-  
-  TextStyle.configure({ types: [ListItem.name] }),
-  StarterKit.configure({
-    bulletList: {
-      keepMarks: true,
-      keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
-    },
-    orderedList: {
-      keepMarks: true,
-      keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
-    },
-  }),
-  Image,
-  Link,
-  RichTextLink
-]
+
+
 function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, selectedCollection }) {
-  const editor = useEditor({
-    extensions,
-    content: "hello world editor edition",
-    onUpdate(){
-      timeoutSave()
-    }
-  })
 
+  const editorRef = useRef(null);
   const typingRef = useRef(null)
+  const editorContainer = useRef(null)
   const fetchFile = (fileName) => {
     window.api.openFile(fileName).then((fileContents) => {
       setSelectedFile({
@@ -82,8 +45,10 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
     setSelectedFile(updatedSelectedFile)
   }
   useEffect(() => {
-    editor.commands.setContent(marked.parse(selectedFile.content))
-
+    // console.log(getInstance(), isLoading)
+    // if(!isLoading)
+    //   getInstance().action(replaceAll(selectedFile.content))
+    console.log(editorRef.current, editorContainer);
   }, [selectedFile])
 
   const updateFileName = (title) => {
@@ -99,16 +64,14 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
     })
   }
   const saveFile = (path, metadata, contents) => {
-
-    const convertedContents = turndownService.turndown(contents)
-    window.api.saveFile(path, metadata, convertedContents).then((test) => {
+    window.api.saveFile(path, metadata, contents).then((test) => {
     })
   }
 
   const timeoutSave = () => {
     if (typingRef.current) clearTimeout(typingRef.current)
     typingRef.current = setTimeout(() => {
-      saveFile(selectedFile.fileName, selectedFile.data, editor.getHTML())
+      //saveFile(selectedFile.fileName, selectedFile.data, editor.getHTML())
       clearTimeout(typingRef.current)
     }, 2000)
   }
@@ -116,9 +79,13 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
   useEffect(() => {
     return () => {
       if (typingRef.current) clearTimeout(typingRef.current)
-      saveFile(selectedFile.fileName, selectedFile.data, editor.getHTML())
+      //saveFile(selectedFile.fileName, selectedFile.data, editor.getHTML())
     }
   }, [])
+  const saveJustContent = (content)=>{
+    window.api.saveFile(selectedFile.fileName, selectedFile.data, content).then((test) => {
+    })
+  }
   return (
     <>
       <button onClick={() => setSelectedFile(null)}>back</button>
@@ -143,22 +110,11 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
               ))
           : ''}
       </table>
-      {selectedFile ? (
-        <button
-          onClick={() =>
-            saveFile(
-              selectedFile.fileName,
-              selectedFile.data,
-              marked.Parser(editor.getHTML())
-            )
-          }
-        >
-          save
-        </button>
-      ) : (
-        ''
-      )}
-       <EditorContent editor={editor}/>
+      <div ref={editorContainer}>
+        <MilkdownEditorWrapper selectedFile={selectedFile} editorContainerRef={editorContainer} editorRef={editorRef} saveFile={saveJustContent}/>
+
+      </div>
+      
     </>
   )
 }
