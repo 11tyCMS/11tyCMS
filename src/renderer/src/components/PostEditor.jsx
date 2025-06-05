@@ -110,8 +110,9 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
               ))
           : ''}
       </table>
+
       <div ref={editorContainer}>
-        <MilkdownEditorWrapper selectedFile={selectedFile} editorContainerRef={editorContainer} editorRef={editorRef} saveFile={saveJustContent}/>
+        <MilkdownEditorWrapper selectedFile={selectedFile} editorContainerRef={editorContainer} editorRef={editorRef} saveFile={saveJustContent} cwd={cwd}/>
 
       </div>
       

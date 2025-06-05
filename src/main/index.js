@@ -176,6 +176,11 @@ app.whenReady().then(() => {
     console.log("Creating/writing file at "+ path)
     return fs.writeFileSync(path, fileContents);
   }
+
+  const saveImage = (event, path, file)=>{
+    console.log("Creating image at "+ path)
+    return fs.writeFileSync(path, Buffer.from(file));
+  }
   
   const renameFile = (event, beforePath, afterPath)=>{
     console.log("Renaming file from/to: ", beforePath, afterPath);
@@ -185,6 +190,7 @@ app.whenReady().then(() => {
   ipcMain.handle('dialog:openDir', openDir)
   ipcMain.handle('dialog:openFile', openFile)
   ipcMain.handle('file:save', saveFile)
+  ipcMain.handle('file:saveImage', saveImage)
   ipcMain.handle('file:rename', renameFile)
 
   // IPC test

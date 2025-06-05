@@ -1,69 +1,95 @@
-import { Editor, rootCtx, defaultValueCtx } from '@milkdown/kit/core';
-import { commonmark } from '@milkdown/kit/preset/commonmark';
-import { Milkdown, MilkdownProvider, useEditor} from '@milkdown/react';
-import { replaceAll, getMarkdown } from '@milkdown/utils';
-import { listener, listenerCtx } from '@milkdown/kit/plugin/listener';
+import { Editor, rootCtx, defaultValueCtx } from '@milkdown/kit/core'
+import { commonmark } from '@milkdown/kit/preset/commonmark'
+import { Milkdown, MilkdownProvider, useEditor } from '@milkdown/react'
+import { replaceAll, getMarkdown, insert } from '@milkdown/utils'
+import { listener, listenerCtx } from '@milkdown/kit/plugin/listener'
 import '@milkdown/crepe/theme/common/style.css'
 import '@milkdown/crepe/theme/frame.css'
 import { automd } from '@milkdown/plugin-automd'
 import { clipboard } from '@milkdown/plugin-clipboard'
+import fs from 'fs';
 
 import { useEffect, useRef, useState, StrictMode } from 'react'
-function MilkdownEditor({ editorContainerRef, selectedFile, saveFile }) {
-   const [content, setContent] = useState("");
-  const editorRef = useRef(null);
-  const saveTimerRef = useRef(null);
-  
-  const {loading, get} = useEditor((root) =>
+function MilkdownEditor({ editorContainerRef, selectedFile, saveFile, cwd }) {
+  const [content, setContent] = useState('')
+  const editorRef = useRef(null)
+  const saveTimerRef = useRef(null)
+
+  const { loading, get } = useEditor((root) =>
     Editor.make()
       .config((ctx) => {
-        ctx.set(rootCtx, root);
-        ctx.set(defaultValueCtx, "# Hello World");
-        
+        ctx.set(rootCtx, root)
+        ctx.set(defaultValueCtx, '# Hello World')
+
         // Set up listeners
-        ctx.get(listenerCtx)
-          .markdownUpdated((ctx, markdown, prevMarkdown) => {
-            if(saveTimerRef.current){
-                clearTimeout(saveTimerRef.current)
-                saveTimerRef.current = null
-            }
-            saveTimerRef.current = setTimeout(()=>saveFile(markdown), 1000)
-          });
+        ctx.get(listenerCtx).markdownUpdated((ctx, markdown, prevMarkdown) => {
+          if (saveTimerRef.current) {
+            clearTimeout(saveTimerRef.current)
+            saveTimerRef.current = null
+          }
+          saveTimerRef.current = setTimeout(() => saveFile(markdown), 1000)
+        })
       })
       .use(commonmark)
       .use(listener)
       .use(automd)
       .use(clipboard)
-  );
+  )
 
   // Example function to get current content
   const getCurrentContent = async () => {
-    const editor = await get();
-    const markdown = editor.action(getMarkdown());
-    console.log('Current content:', markdown);
-    return markdown;
-  };
+    const editor = await get()
+    const markdown = editor.action(getMarkdown())
+    console.log('Current content:', markdown)
+    return markdown
+  }
 
   // Example function to set content
   const setEditorContent = async (newContent) => {
-    const editor = await get();
+    const editor = await get()
     console.log(editor, get())
-    editor.action(replaceAll(newContent));
-  };
+    editor.action(replaceAll(newContent))
+  }
 
   useEffect(() => {
-    if(selectedFile && !loading)
-        setEditorContent(selectedFile.content)
-  }, [selectedFile, loading]);
+    if (selectedFile && !loading) setEditorContent(selectedFile.content)
+  }, [selectedFile, loading])
+  const insertImage = ()=>{
+    const fileUpload = document.createElement('input');
+    fileUpload.type = 'file'
+    fileUpload.onchange = event =>{
+        const reader = new FileReader();
+        reader.onload = (e)=>{
+            console.log(fileUpload.files[0], e.target.result)
+            const fileName = fileUpload.files[0].name.split(" ").join("-").toLowerCase();
+            window.api.saveImage(`${cwd}/media/${fileName}`, e.target.result).then( async ()=>{
+                console.log('done!');
+                const editor = await get();
+                editor.action(insert(`![image](eleventy:///media/${fileName})`))
+            })
+        }
+        reader.readAsArrayBuffer(fileUpload.files[0])
+        
+    }
+    fileUpload.click()
 
+  }
   return (
-    
+    <>
+      <div className="toolbar">
+        <button onClick={insertImage}>i</button>
+      </div>
       <div ref={editorRef}>
         <Milkdown />
       </div>
-  );
+    </>
+  )
 }
 
-export default function MilkdownWrapper(props){
-    return <MilkdownProvider><MilkdownEditor {...props}/></MilkdownProvider>
+export default function MilkdownWrapper(props) {
+  return (
+    <MilkdownProvider>
+      <MilkdownEditor {...props} />
+    </MilkdownProvider>
+  )
 }

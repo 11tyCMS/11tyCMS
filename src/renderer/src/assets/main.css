@@ -58,7 +58,23 @@ body, html{
   color: #acc7ff;
   font-family:arial;
 }
-
+.mdxeditor-container .toolbar{
+  width:calc(100% - 20px);
+  border-radius: 8px;
+  background-color: #2e3455;
+  margin: 10px;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding:10px;
+  border-collapse: collapse;
+  color: #acc7ff;
+  font-family:arial;
+  position: sticky;
+  top: -10px;
+  left: 0;
+  z-index: 100;
+  margin-top: 0px;
+}
 .mdxeditor-container tr {
   border-bottom: 1px solid #0e182d;
   /* background: red; */
