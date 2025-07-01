@@ -20,6 +20,55 @@ body, html{
   background-color:rgb(14 24 44);
   border-radius:6px;
 }
+.sidebar .siteInfo{
+  width: calc(100% - 24px);
+    /* height: 100px; */
+    padding: 12px;
+    background-color: rgb(29, 48, 87);
+    display: flex
+;
+    flex-direction: row;
+    box-sizing: border-box;
+    margin: 10px;
+    border-radius: 14px;
+    cursor:pointer;
+}
+.sidebar .siteInfo .favicon-container{
+}
+.sidebar .siteInfo .favicon-container .favicon{
+  width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    background: grey;
+}
+.sidebar .siteInfo .info{
+  font-size: 7px;
+    /* padding-top: 5px; */
+    padding-left: 12px;
+    display: flex
+;
+    align-items: center;
+}
+.sidebar .siteInfo .info h1{
+  font-size:14px;
+  color: #bcd6f6;
+  font-family: sans-serif;
+  font-weight: 500;
+  padding:0px;
+  margin:0px;
+}
+.sidebar .siteInfo .info.select-button{
+  padding-left:0px;
+  flex-grow:1;
+}
+.sidebar .siteInfo .info.select-button h1{
+  width: 100%;
+  text-align: center;
+  color:#94aac4;
+}
+.sidebar .siteInfo .info h2{
+  font-size:14px;
+}
 
 .mdxeditor-container{
   flex-grow:1;

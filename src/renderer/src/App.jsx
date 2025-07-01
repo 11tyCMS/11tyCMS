@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import PostsList from './components/PostsList'
 import PostEditor from './components/PostEditor'
+import { Milkdown, MilkdownProvider, useEditor } from "@milkdown/react";
 
 function App() {
   const [cwd, setCwd] = useState('')
@@ -49,14 +50,21 @@ function App() {
         window.ipcRenderer.removeAllListeners("collectionFileAdded")
         window.ipcRenderer.removeAllListeners("collectionFileRemoved")
       }
-
-
     }
   }, [collections])
   return (
-    <>
+<>
       <div className="sidebar">
-        <button onClick={() => ipcHandle()}>Select folder</button>
+        <div className='siteInfo' onClick={() => ipcHandle()}>
+          { Object.keys(collections).length != 0 ? <><div className='favicon-container'>
+            <div className='favicon'></div>
+          </div>
+          <div className='info'>
+            <h1>Thoughts of Thinkymeat</h1>
+          </div> </>: <><div className='info select-button'>
+            <h1>Select 11ty site</h1>
+          </div></>}
+        </div>
         <ul className="containingList">
           {Object.keys(collections).map((collectionName) => (
             <li className="parent">
@@ -69,7 +77,7 @@ function App() {
         {!selectedFile ? <PostsList cwd={cwd} fetchFile={fetchFile} collection={selectedCollection} posts={collections[selectedCollection] ? collections[selectedCollection] : []} setSelectedFile={setSelectedFile}/> : ''}
         {selectedFile ? <PostEditor {...{selectedFile, setTitle,markdownEditorRef, cwd, setCwd, setSelectedFile, selectedCollection}}/> : ""}
       </div>
-    </>
+      </>
   )
 }
 
