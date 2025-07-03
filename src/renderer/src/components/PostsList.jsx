@@ -13,10 +13,10 @@ function PostsList({ collection, posts, setSelectedFile, fetchFile, cwd }) {
         collection={collection}
         cwd={cwd}
       ></AddFileDialog>
-      <h1>
-        {collection}
+      <div className='head-container'>
+        <h1>{collection}</h1>
         <button onClick={() => setDisplayAddFileDialog(!displayAddFileDialog)}>+</button>
-      </h1>
+      </div>
       <ul>
         {posts
           .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
