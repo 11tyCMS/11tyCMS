@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import * as matter from 'gray-matter';
 import chokidar from 'chokidar';
 import path from 'node:path';
+const child_process = require('child_process')
 
 let collectionDirectories = [];
 let collectionWatcher = null;
@@ -186,12 +187,62 @@ app.whenReady().then(() => {
     console.log("Renaming file from/to: ", beforePath, afterPath);
     return fs.rename(beforePath, afterPath, ()=>{});
   }
+  const getFavicon = async(sitePath)=>{
+    return await fs.readFileSync(`${sitePath}/media/favicon.svg`, 'utf8')
+  }
 
+  const imageToBase64 = (file, ext)=>{
+    const base64String = Buffer.from(file, 'utf8').toString('base64');
+    let mimeType;
+    switch (ext) {
+      case '.png':
+        mimeType = 'image/png';
+        break;
+      case '.jpg':
+      case '.jpeg':
+        mimeType = 'image/jpeg';
+        break;
+      case '.gif':
+        mimeType = 'image/gif';
+        break;
+      case '.svg':
+        mimeType = 'image/svg+xml';
+        break;
+      case '.webp':
+        mimeType = 'image/webp';
+        break;
+      default:
+        // Fallback for unknown types, or you can throw an error
+        console.warn(`Unknown image type for ${imagePath}. Defaulting to image/jpeg.`);
+        mimeType = 'image/jpeg';
+    }
+
+    // 4. Construct the Base64 data URL
+    return `data:${mimeType};base64,${base64String}`;
+  }
+  const getSiteInfo = async (event, path)=>{
+    let otherData = {
+    }
+    const favicon = await getFavicon(path)
+    otherData['base64Favicon'] = imageToBase64(favicon, '.svg')
+    return {...JSON.parse(await fs.readFileSync(`${path}/_data/site.json`, 'utf8')), ...otherData};
+  }
+  const buildSite = (event, path)=>{
+    const promise = new Promise((resolve)=>{
+      console.log("my cwd", path);
+      child_process.exec('npx @11ty/eleventy', {cwd: path}, function(err, stdout, stderr) {
+        resolve(err, stdout, stderr);
+      });
+    })
+    
+  }
   ipcMain.handle('dialog:openDir', openDir)
   ipcMain.handle('dialog:openFile', openFile)
   ipcMain.handle('file:save', saveFile)
   ipcMain.handle('file:saveImage', saveImage)
   ipcMain.handle('file:rename', renameFile)
+  ipcMain.handle('site:getSiteInfo', getSiteInfo);
+  ipcMain.handle('site:build', buildSite);
 
   // IPC test
 
