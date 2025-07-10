@@ -14,11 +14,11 @@ import Europa from 'europa';
 const ieuropa = new Europa();
 
 import MilkdownEditorWrapper from './MilkdownEditor';
+import FeatherIcon from 'feather-icons-react';
 
 
 
 function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, selectedCollection }) {
-
   const editorRef = useRef(null);
   const typingRef = useRef(null)
   const editorContainer = useRef(null)
@@ -48,7 +48,7 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
     // console.log(getInstance(), isLoading)
     // if(!isLoading)
     //   getInstance().action(replaceAll(selectedFile.content))
-    console.log(editorRef.current, editorContainer);
+
   }, [selectedFile])
 
   const updateFileName = (title) => {
@@ -79,43 +79,46 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
   useEffect(() => {
     return () => {
       if (typingRef.current) clearTimeout(typingRef.current)
+
       //saveFile(selectedFile.fileName, selectedFile.data, editor.getHTML())
     }
   }, [])
-  const saveJustContent = (content)=>{
+  const saveJustContent = (content) => {
     window.api.saveFile(selectedFile.fileName, selectedFile.data, content).then((test) => {
     })
   }
   return (
     <>
-      <button onClick={() => setSelectedFile(null)}>back</button>
-      <input
-        className="title"
-        value={selectedFile ? selectedFile.data.title : ''}
-        onChange={(e) => {
-          setTitle(e.target.value)
-        }}
-      ></input>
+      <div className='title-bar'>
+        <FeatherIcon icon={"arrow-left"} size={25} color="#7c8ad6" className='back-button' onClick={() => setSelectedFile(null)}/>
+        <input
+          className="title"
+          value={selectedFile ? selectedFile.data.title : ''}
+          onChange={(e) => {
+            setTitle(e.target.value)
+          }}
+        ></input>
+      </div>
       <table className="metadata">
         {selectedFile
           ? Object.keys(selectedFile.data)
-              .filter((key) => key != 'title')
-              .map((key) => (
-                <tr>
-                  <td>
-                    <b>{key}</b>
-                  </td>
-                  <td>{String(selectedFile.data[key])}</td>
-                </tr>
-              ))
+            .filter((key) => key != 'title')
+            .map((key) => (
+              <tr>
+                <td>
+                  <b>{key}</b>
+                </td>
+                <td>{String(selectedFile.data[key])}</td>
+              </tr>
+            ))
           : ''}
       </table>
 
       <div ref={editorContainer}>
-        <MilkdownEditorWrapper selectedFile={selectedFile} editorContainerRef={editorContainer} editorRef={editorRef} saveFile={saveJustContent} cwd={cwd}/>
+        <MilkdownEditorWrapper selectedFile={selectedFile} editorContainerRef={editorContainer} editorRef={editorRef} saveFile={saveJustContent} cwd={cwd} />
 
       </div>
-      
+
     </>
   )
 }

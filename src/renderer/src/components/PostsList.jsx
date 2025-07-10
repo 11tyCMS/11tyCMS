@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import AddFileDialog from './AddFileDialog'
 import { MDXEditor } from '@mdxeditor/editor'
+import FeatherIcon from 'feather-icons-react'
 function PostsList({ collection, posts, setSelectedFile, fetchFile, cwd }) {
   const [displayAddFileDialog, setDisplayAddFileDialog] = useState(false)
   console.log(posts, 'tesd')
@@ -15,7 +16,7 @@ function PostsList({ collection, posts, setSelectedFile, fetchFile, cwd }) {
       ></AddFileDialog>
       <div className='head-container'>
         <h1>{collection}</h1>
-        <button onClick={() => setDisplayAddFileDialog(!displayAddFileDialog)}>+</button>
+        <FeatherIcon icon={"plus"} size={25} color="#7c8ad6" className='add-button' onClick={() => setDisplayAddFileDialog(!displayAddFileDialog)}/>
       </div>
       <ul>
         {posts
