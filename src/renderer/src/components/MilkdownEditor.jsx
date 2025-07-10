@@ -8,7 +8,7 @@ import '@milkdown/crepe/theme/frame.css'
 import { automd } from '@milkdown/plugin-automd'
 import { clipboard } from '@milkdown/plugin-clipboard'
 import fs from 'fs';
-
+import FeatherIcon from 'feather-icons-react'
 import { useEffect, useRef, useState, StrictMode } from 'react'
 function MilkdownEditor({ editorContainerRef, selectedFile, saveFile, cwd }) {
   const [content, setContent] = useState('')
@@ -77,7 +77,7 @@ function MilkdownEditor({ editorContainerRef, selectedFile, saveFile, cwd }) {
   return (
     <>
       <div className="toolbar">
-        <button onClick={insertImage}>i</button>
+        <button onClick={insertImage}><FeatherIcon icon={"image"} size={15} color="#7c8ad6"/></button>
       </div>
       <div ref={editorRef}>
         <Milkdown />

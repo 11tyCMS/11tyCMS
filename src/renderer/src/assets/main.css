@@ -153,10 +153,13 @@ button svg{
 
 .mdxeditor-container .toolbar button{
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   text-align: center;
   padding:0px;
+}
+.mdxeditor-container .toolbar button svg{
+  margin-right:0px !important;
 }
 .back-button{
   align-self: anchor-center;
