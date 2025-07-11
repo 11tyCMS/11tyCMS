@@ -14,6 +14,7 @@ button{
   cursor:pointer;
   display: flex;
   align-items: anchor-center;
+  justify-content: center;
 }
 button svg{
   margin-right:8px;
@@ -163,9 +164,9 @@ button svg{
 }
 .back-button{
   align-self: anchor-center;
-    margin-left: 6px;
-    margin-right: 6px;
-    cursor: pointer;
+  margin-left: 6px;
+  margin-right: 6px;
+  cursor: pointer;
 }
 .add-button{
     margin-left: 6px;
