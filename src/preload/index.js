@@ -6,6 +6,7 @@ const api = {
   openDirectory: ()=>ipcRenderer.invoke('dialog:openDir'),
   openFile: (fileName)=>ipcRenderer.invoke('dialog:openFile', fileName),
   saveFile: (path, metadata, contents)=>ipcRenderer.invoke('file:save', path, metadata, contents),
+  saveFileMetadata: (path, metadata)=>ipcRenderer.invoke('file:saveMetadata', path, metadata),
   saveImage: (path, file)=>ipcRenderer.invoke('file:saveImage', path, file),
   renameFile: (beforePath, afterPath)=>ipcRenderer.invoke('file:rename', beforePath, afterPath),
   getSiteInfo: (path)=>ipcRenderer.invoke('site:getSiteInfo', path),

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import PostsList from './components/PostsList'
-import PostEditor from './components/PostEditor'
+import PostEditor from './components/PostEditor/PostEditor'
 import { Milkdown, MilkdownProvider, useEditor } from "@milkdown/react";
 import FeatherIcon from 'feather-icons-react';
 

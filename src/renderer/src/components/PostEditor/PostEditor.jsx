@@ -13,8 +13,9 @@ const turndownService = new turndown();
 import Europa from 'europa';
 const ieuropa = new Europa();
 
-import MilkdownEditorWrapper from './MilkdownEditor';
+import MilkdownEditorWrapper from '../MilkdownEditor';
 import FeatherIcon from 'feather-icons-react';
+import Metadata from './Metadata/Metadata';
 
 
 
@@ -87,10 +88,14 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
     window.api.saveFile(selectedFile.fileName, selectedFile.data, content).then((test) => {
     })
   }
+  const saveMetadata = (metadata)=>{
+    setSelectedFile({...selectedFile, data:metadata});
+    window.api.saveFileMetadata(selectedFile.fileName, metadata)
+  }
   return (
     <>
       <div className='title-bar'>
-        <FeatherIcon icon={"arrow-left"} size={25} color="#7c8ad6" className='back-button' onClick={() => setSelectedFile(null)}/>
+        <FeatherIcon icon={"arrow-left"} size={25} color="#7c8ad6" className='back-button' onClick={() => setSelectedFile(null)} />
         <input
           className="title"
           value={selectedFile ? selectedFile.data.title : ''}
@@ -99,21 +104,7 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
           }}
         ></input>
       </div>
-      <table className="metadata">
-        {selectedFile
-          ? Object.keys(selectedFile.data)
-            .filter((key) => key != 'title')
-            .map((key) => (
-              <tr>
-                <td>
-                  <b>{key}</b>
-                </td>
-                <td>{String(selectedFile.data[key])}</td>
-              </tr>
-            ))
-          : ''}
-      </table>
-
+      <Metadata selectedFile={selectedFile} saveMetadata={saveMetadata}/>
       <div ref={editorContainer}>
         <MilkdownEditorWrapper selectedFile={selectedFile} editorContainerRef={editorContainer} editorRef={editorRef} saveFile={saveJustContent} cwd={cwd} />
 

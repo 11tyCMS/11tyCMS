@@ -177,6 +177,11 @@ app.whenReady().then(() => {
     console.log("Creating/writing file at "+ path)
     return fs.writeFileSync(path, fileContents);
   }
+  const saveFileMetadata = (event, path, metadata)=>{
+    let file = matter.read(path);
+    const data = {...file.data, metadata};
+    saveFile(null, path, metadata, file.content);
+  }
 
   const saveImage = (event, path, file)=>{
     console.log("Creating image at "+ path)
@@ -239,10 +244,12 @@ app.whenReady().then(() => {
   ipcMain.handle('dialog:openDir', openDir)
   ipcMain.handle('dialog:openFile', openFile)
   ipcMain.handle('file:save', saveFile)
+  ipcMain.handle('file:saveMetadata', saveFileMetadata);
   ipcMain.handle('file:saveImage', saveImage)
   ipcMain.handle('file:rename', renameFile)
   ipcMain.handle('site:getSiteInfo', getSiteInfo);
   ipcMain.handle('site:build', buildSite);
+  
 
   // IPC test
 

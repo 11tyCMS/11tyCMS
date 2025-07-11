@@ -179,8 +179,25 @@ button svg{
   /* background: red; */
   display: block;
   padding: 8px;
+  display: flex;
+  align-items: anchor-center;
+}
+.mdxeditor-container tr .buttons{
+  margin-left:auto;
+  display:none;
+}
+.mdxeditor-container tr .buttons button{
+  width: 24px;
+  height: 16px;
+  padding:unset;
+}
+.mdxeditor-container tr .buttons button svg{
+  margin-right:0px;
 }
 
+.mdxeditor-container tr:hover .buttons{
+  display:block;
+}
 .mdxeditor-container tr:last-of-type {
   border: none;
 }
