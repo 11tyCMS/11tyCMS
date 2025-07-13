@@ -36,14 +36,9 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
     })
   }
   const setTitle = (value) => {
-    let updatedSelectedFile = { ...selectedFile }
-    updatedSelectedFile['data']['title'] = value
-    saveFile(
-      selectedFile.fileName,
-      updatedSelectedFile.data,
-      editor.getHTML()
-    )
-    setSelectedFile(updatedSelectedFile)
+    let updatedMetadata = { ...selectedFile.data }
+    updatedMetadata['title'] = value
+    saveMetadata(updatedMetadata);
   }
   useEffect(() => {
     // console.log(getInstance(), isLoading)
