@@ -10,9 +10,8 @@ import { clipboard } from '@milkdown/plugin-clipboard'
 import fs from 'fs';
 import FeatherIcon from 'feather-icons-react'
 import { useEffect, useRef, useState, StrictMode } from 'react'
-function MilkdownEditor({ editorContainerRef, selectedFile, saveFile, cwd }) {
+function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef }) {
   const [content, setContent] = useState('')
-  const editorRef = useRef(null)
   const saveTimerRef = useRef(null)
 
   const { loading, get } = useEditor((root) =>
@@ -23,6 +22,7 @@ function MilkdownEditor({ editorContainerRef, selectedFile, saveFile, cwd }) {
 
         // Set up listeners
         ctx.get(listenerCtx).markdownUpdated((ctx, markdown, prevMarkdown) => {
+          markdownRef.current = markdown;
           if (saveTimerRef.current) {
             clearTimeout(saveTimerRef.current)
             saveTimerRef.current = null
@@ -52,7 +52,11 @@ function MilkdownEditor({ editorContainerRef, selectedFile, saveFile, cwd }) {
   }
 
   useEffect(() => {
-    if (selectedFile && !loading) setEditorContent(selectedFile.content)
+    if (selectedFile && !loading){
+      editorRef.current = get();
+      setEditorContent(selectedFile.content)
+
+    } 
   }, [selectedFile, loading])
   const insertImage = ()=>{
     const fileUpload = document.createElement('input');
@@ -63,8 +67,9 @@ function MilkdownEditor({ editorContainerRef, selectedFile, saveFile, cwd }) {
             console.log(fileUpload.files[0], e.target.result)
             const fileName = fileUpload.files[0].name.split(" ").join("-").toLowerCase();
             window.api.saveImage(`${cwd}/media/${fileName}`, e.target.result).then( async ()=>{
-                console.log('done!');
+                
                 const editor = await get();
+                console.log('done!', editor);
                 editor.action(insert(`![image](eleventy:///media/${fileName})`))
             })
         }
@@ -79,7 +84,7 @@ function MilkdownEditor({ editorContainerRef, selectedFile, saveFile, cwd }) {
       <div className="toolbar">
         <button onClick={insertImage}><FeatherIcon icon={"image"} size={15} color="#7c8ad6"/></button>
       </div>
-      <div ref={editorRef}>
+      <div>
         <Milkdown />
       </div>
     </>

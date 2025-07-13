@@ -3,7 +3,7 @@ import { Editor, rootCtx } from "@milkdown/kit/core";
 import { commonmark } from "@milkdown/kit/preset/commonmark";
 import { Milkdown, MilkdownProvider, useEditor } from "@milkdown/react";
 import { useInstance } from "@milkdown/react";
-import { insert, replaceAll } from "@milkdown/kit/utils";
+import { getMarkdown, insert, replaceAll } from "@milkdown/kit/utils";
 
 import "@milkdown/crepe/theme/common/style.css";
 import "@milkdown/crepe/theme/frame.css";
@@ -20,9 +20,9 @@ import Metadata from './Metadata/Metadata';
 
 
 function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, selectedCollection }) {
-  const editorRef = useRef(null);
+  const markdownRef = useRef(null);
   const typingRef = useRef(null)
-  const editorContainer = useRef(null)
+  const editorRef = useRef(null)
   const fetchFile = (fileName) => {
     window.api.openFile(fileName).then((fileContents) => {
       setSelectedFile({
@@ -89,8 +89,12 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
     })
   }
   const saveMetadata = (metadata)=>{
-    setSelectedFile({...selectedFile, data:metadata});
-    window.api.saveFileMetadata(selectedFile.fileName, metadata)
+    let updatedSelectedFile = {...selectedFile, data:metadata};
+    const markdown = editorRef.current.action(getMarkdown());
+    updatedSelectedFile['content'] = markdown
+    updatedSelectedFile['contents'] = markdown
+    setSelectedFile({...updatedSelectedFile, data:metadata});
+    window.api.saveFileMetadata(updatedSelectedFile.fileName, metadata)
   }
   return (
     <>
@@ -105,8 +109,8 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
         ></input>
       </div>
       <Metadata selectedFile={selectedFile} saveMetadata={saveMetadata}/>
-      <div ref={editorContainer}>
-        <MilkdownEditorWrapper selectedFile={selectedFile} editorContainerRef={editorContainer} editorRef={editorRef} saveFile={saveJustContent} cwd={cwd} />
+      <div>
+        <MilkdownEditorWrapper selectedFile={selectedFile} editorRef={editorRef} markdownRef={markdownRef} saveFile={saveJustContent} cwd={cwd} />
 
       </div>
 
