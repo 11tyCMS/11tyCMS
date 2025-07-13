@@ -19,6 +19,15 @@ button{
 button svg{
   margin-right:8px;
 }
+button:disabled{
+  cursor:unset;
+  color:grey;
+  background-color:#14223e;
+
+}
+button:disabled span{
+  margin-right:8px;
+}
 #root {
   width: 100%;
   height: 100%;

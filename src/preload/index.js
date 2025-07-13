@@ -11,6 +11,7 @@ const api = {
   renameFile: (beforePath, afterPath)=>ipcRenderer.invoke('file:rename', beforePath, afterPath),
   getSiteInfo: (path)=>ipcRenderer.invoke('site:getSiteInfo', path),
   build: (path)=>ipcRenderer.invoke('site:build', path, path),
+  publish: (path)=>ipcRenderer.invoke('site:publish', path),
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

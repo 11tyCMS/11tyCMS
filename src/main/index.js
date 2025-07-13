@@ -175,7 +175,7 @@ app.whenReady().then(() => {
     const metadataWithDate = metadata.date ? metadata : {...metadata, date:new Date().toString()}
     const fileContents = matter.stringify(content, metadataWithDate);
     console.log("Creating/writing file at "+ path)
-    return fs.writeFileSync(path, fileContents);
+    return  fs.writeFileSync(path, fileContents);
   }
   const saveFileMetadata = (event, path, metadata)=>{
     let file = matter.read(path);
@@ -233,14 +233,23 @@ app.whenReady().then(() => {
     return {...JSON.parse(await fs.readFileSync(`${path}/_data/site.json`, 'utf8')), ...otherData};
   }
   const buildSite = (event, path)=>{
-    const promise = new Promise((resolve)=>{
+    return new Promise((resolve)=>{
       console.log("my cwd", path);
       child_process.exec('npx @11ty/eleventy', {cwd: path}, function(err, stdout, stderr) {
         resolve(err, stdout, stderr);
       });
-    })
-    
+    })  
   }
+
+  const publishSite = async (event, path)=>{
+    return new Promise((resolve)=>{
+      child_process.exec('/Users/jessie/.gem/ruby/3.4.0/bin/neocities push .', {cwd: `${path}/_site`}, function(err, stdout, stderr) {
+        console.log(stdout, stderr);
+        resolve(err, stdout, stderr);
+      });
+    })  
+  }
+
   ipcMain.handle('dialog:openDir', openDir)
   ipcMain.handle('dialog:openFile', openFile)
   ipcMain.handle('file:save', saveFile)
@@ -249,6 +258,7 @@ app.whenReady().then(() => {
   ipcMain.handle('file:rename', renameFile)
   ipcMain.handle('site:getSiteInfo', getSiteInfo);
   ipcMain.handle('site:build', buildSite);
+  ipcMain.handle('site:publish', publishSite);
   
 
   // IPC test

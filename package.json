@@ -38,6 +38,7 @@
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.0",
     "marked": "^15.0.12",
+    "react-spinners": "^0.17.0",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
     "remark-parse": "^11.0.0",

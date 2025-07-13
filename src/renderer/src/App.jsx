@@ -3,10 +3,13 @@ import PostsList from './components/PostsList'
 import PostEditor from './components/PostEditor/PostEditor'
 import { Milkdown, MilkdownProvider, useEditor } from "@milkdown/react";
 import FeatherIcon from 'feather-icons-react';
+import { ClipLoader, SyncLoader } from 'react-spinners';
 
 function App() {
   const [cwd, setCwd] = useState('')
   const [collections, setCollections] = useState({})
+  const [isBuilding, setIsBuilding] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   const [selectedSiteInfo, setSelectedSiteInfo] = useState(null)
   const [selectedFile, setSelectedFile] = useState(null)
   const [selectedCollection, setSelectedCollection] = useState(null);
@@ -59,6 +62,23 @@ function App() {
     }
   }, [collections])
   console.log(selectedSiteInfo, "testing background test");
+  const build = (pubBuild)=>{
+    setIsBuilding(true);
+    return window.api.build(cwd).then(()=>{
+        setIsBuilding(false);
+    })
+  }
+  const publish = ()=>{
+    return new Promise((resolve)=>{
+       build(true).then(()=>{
+        setIsPublishing(true);
+        window.api.publish(cwd).then(()=>{
+          setIsPublishing(false)
+          resolve();
+        })
+      });
+    })
+  }
   return (
     <>
       <div className="sidebar">
@@ -83,11 +103,8 @@ function App() {
           ))}
         </ul>
         <div className='site-buttons'>
-          <button onClick={()=>{
-            console.log(cwd);
-            window.api.build(cwd)
-          }}><FeatherIcon icon="tool" size={15}/>Build</button>
-          <button><FeatherIcon icon="upload-cloud" size={15}/>Publish</button>
+          <button onClick={()=>build()} disabled={isBuilding || isPublishing ? true : false}>{isBuilding ? <ClipLoader size={10} color="#a0afc2"/> : <FeatherIcon icon="tool" size={15} />} Build</button>
+          <button onClick={()=>publish()} disabled={isBuilding || isPublishing ? true : false}>{isPublishing ? <ClipLoader size={10} color="#a0afc2"/> : <FeatherIcon icon="upload-cloud" size={15} />} Publish</button>
         </div>
       </div>
       <div className="mdxeditor-container">
