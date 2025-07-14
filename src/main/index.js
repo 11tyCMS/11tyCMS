@@ -6,12 +6,17 @@ import fs from 'node:fs';
 import * as matter from 'gray-matter';
 import chokidar from 'chokidar';
 import path from 'node:path';
+import { CMSDatabase } from './database/models';
+const { Sequelize, DataTypes } = require('sequelize');
 const child_process = require('child_process')
+const sequelize = new Sequelize('sqlite::memory:');
 
 let collectionDirectories = [];
 let collectionWatcher = null;
 let browserWindow = null;
 let eleventyDir = null;
+let collections = {}
+let eleventyDB = new CMSDatabase(sequelize);
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -65,138 +70,144 @@ app.whenReady().then(() => {
   //     return net.fetch('file://' + request.url.slice('eleventy://'.length))
   //   });
   // })
-  
-    // Register the protocol handler ONCE
-    protocol.handle('eleventy', (request) => {
-        console.log(`%c[Eleventy Protocol] Fetching: %c${request.url}%c from 11ty directory: %c ${eleventyDir}`, "color:cyan; font-weight:bold;", "font-style:italic;", "color:cyan; font-weight:bold;")
 
-        // Check if user has selected a directory
-        if (!eleventyDir) {
-            console.log("[Eleventy Protocol] No directory selected yet");
-            return new Response('No directory selected', { status: 404 });
-        }
-        
-        // Get the file path from the URL
-        const relativePath = request.url.slice('eleventy://'.length);
-        const fullPath = path.join(eleventyDir, relativePath);
-        
-        console.log("[Eleventy Protocol] Serving file:", fullPath);
-        
-        // Security check - make sure file is within selected directory
-        if (!fullPath.startsWith(eleventyDir)) {
-            return new Response('Access denied', { status: 403 });
-        }
-        
-        return net.fetch('file://' + fullPath);
-    });
+  // Register the protocol handler ONCE
+  protocol.handle('eleventy', (request) => {
+    console.log(`%c[Eleventy Protocol] Fetching: %c${request.url}%c from 11ty directory: %c ${eleventyDir}`, "color:cyan; font-weight:bold;", "font-style:italic;", "color:cyan; font-weight:bold;")
+
+    // Check if user has selected a directory
+    if (!eleventyDir) {
+      console.log("[Eleventy Protocol] No directory selected yet");
+      return new Response('No directory selected', { status: 404 });
+    }
+
+    // Get the file path from the URL
+    const relativePath = request.url.slice('eleventy://'.length);
+    const fullPath = path.join(eleventyDir, relativePath);
+
+    console.log("[Eleventy Protocol] Serving file:", fullPath);
+
+    // Security check - make sure file is within selected directory
+    if (!fullPath.startsWith(eleventyDir)) {
+      return new Response('Access denied', { status: 403 });
+    }
+
+    return net.fetch('file://' + fullPath);
+  });
 
 
-  const openDir = async ()=>{
+  const openDir = async () => {
     //response.filePaths[0]+'/'+fileName
-    return new Promise(resolveOuter=>{
+    return new Promise(resolveOuter => {
       dialog.showOpenDialog({
-        properties:['openDirectory']
-      }).then((response)=>{
+        properties: ['openDirectory']
+      }).then((response) => {
         eleventyDir = response.filePaths[0];
         /* 
           We need a function that will return all the directories at the root of the 11ty src folder.
           It will then need to check through any folders that arent _* to see if its a collection, by checking to see if there is a child file with a matching name to its containing folder.
         */
 
-        const isDirCollection = (path, folderName)=> {
+        const isDirCollection = (path, folderName) => {
           const isFolderInternal = folderName[0] == '_'
-          const files = fs.readdirSync(`${path}/${folderName}`, {withFileTypes:true}).map(file=>file.name).includes(`${folderName}.json`)
+          const files = fs.readdirSync(`${path}/${folderName}`, { withFileTypes: true }).map(file => file.name).includes(`${folderName}.json`)
           return !isFolderInternal && files;
         };
 
-        const collectionsFactory = (collectionDirectories)=>{
-          let collections = {}
-          collectionDirectories.forEach(dir=>{
+        const collectionsFactory = (collectionDirectories) => {
+          collectionDirectories.forEach(dir => {
             collections[dir.name] = []
-            fs.readdirSync(`${dir.path}/${dir.name}`, {withFileTypes:true}).filter(file=>file.name.includes('.md')).forEach(file=>{
+            fs.readdirSync(`${dir.path}/${dir.name}`, { withFileTypes: true }).filter(file => file.name.includes('.md')).forEach(file => {
               const matterData = matter.read(`${file.parentPath}/${file.name}`);
-              collections[dir.name].push({...file, path:matterData.path, data:matterData.data})
+              collections[dir.name].push({ ...file, path: matterData.path, data: matterData.data })
+              eleventyDB.ItemMetadata.create({
+                collection: dir.name,
+                fileName: file.name,
+                metadata: matterData.data
+              }).then((item)=>{
+                console.log(item);
+              })
             })
           })
           return collections
         }
-        
-        const eleventyRootDirs = fs.readdirSync(response.filePaths[0], {withFileTypes: true}).filter(dirFile=>dirFile.isDirectory())
-        
-        const collectionDirs = eleventyRootDirs.filter(dir=> isDirCollection(response.filePaths[0], dir.name));
-        collectionDirectories = collectionDirs.map(dir=>`${dir.path}/${dir.name}`)
+
+        const eleventyRootDirs = fs.readdirSync(response.filePaths[0], { withFileTypes: true }).filter(dirFile => dirFile.isDirectory())
+
+        const collectionDirs = eleventyRootDirs.filter(dir => isDirCollection(response.filePaths[0], dir.name));
+        collectionDirectories = collectionDirs.map(dir => `${dir.path}/${dir.name}`)
         let eleventyStructure = {
           rootPath: response.filePaths[0],
-          code: eleventyRootDirs.filter(dir=>dir.name[0] == '_'),
+          code: eleventyRootDirs.filter(dir => dir.name[0] == '_'),
           collections: collectionsFactory(collectionDirs)
         }
         resolveOuter(eleventyStructure);
-        if(collectionWatcher)
+        if (collectionWatcher)
           collectionWatcher.close();
-        
-          collectionWatcher = chokidar.watch(collectionDirectories, {persistent:true, ignoreInitial:true});
-          collectionWatcher
-            .on('add', path=> browserWindow.webContents.send('collectionFileAdded', {
-              path,
-              file: matter.read(path),
-              collection: (()=>{
-                const lastSlashIndex = path.lastIndexOf('/')
-                let string = path.substring(0, lastSlashIndex);
-                let splitPath = string.split('/');
-                return splitPath[splitPath.length-1];
-              })()
-            }))
-            .on('unlink', path=> browserWindow.webContents.send('collectionFileRemoved', {
-              path,
-              collection: (()=>{
-                const lastSlashIndex = path.lastIndexOf('/')
-                let string = path.substring(0, lastSlashIndex);
-                let splitPath = string.split('/');
-                return splitPath[splitPath.length-1];
-              })()
-            }))
+
+        collectionWatcher = chokidar.watch(collectionDirectories, { persistent: true, ignoreInitial: true });
+        collectionWatcher
+          .on('add', path => browserWindow.webContents.send('collectionFileAdded', {
+            path,
+            file: matter.read(path),
+            collection: (() => {
+              const lastSlashIndex = path.lastIndexOf('/')
+              let string = path.substring(0, lastSlashIndex);
+              let splitPath = string.split('/');
+              return splitPath[splitPath.length - 1];
+            })()
+          }))
+          .on('unlink', path => browserWindow.webContents.send('collectionFileRemoved', {
+            path,
+            collection: (() => {
+              const lastSlashIndex = path.lastIndexOf('/')
+              let string = path.substring(0, lastSlashIndex);
+              let splitPath = string.split('/');
+              return splitPath[splitPath.length - 1];
+            })()
+          }))
       })
-    }); 
+    });
   }
 
-  const openFile = (event, filePath)=>{
+  const openFile = (event, filePath) => {
     let fileData = matter.read(filePath);
     const regex = /!\[(.*?)\]\((?!https?:\/\/)(.*?)\)/g;
     let content = fileData.content
-    content = content.replace(regex, (fullMatch, altText, relativeUrl)=>{
-        return `![${altText}](${"eleventy://"}${relativeUrl})`;
+    content = content.replace(regex, (fullMatch, altText, relativeUrl) => {
+      return `![${altText}](${"eleventy://"}${relativeUrl})`;
     })
     fileData.content = content
     return fileData
   }
 
-  const saveFile = (event, path, metadata, contents)=>{
+  const saveFile = (event, path, metadata, contents) => {
     let content = contents.replace(/eleventy:\/\//g, "");
-    const metadataWithDate = metadata.date ? metadata : {...metadata, date:new Date().toString()}
+    const metadataWithDate = metadata.date ? metadata : { ...metadata, date: new Date().toString() }
     const fileContents = matter.stringify(content, metadataWithDate);
-    console.log("Creating/writing file at "+ path)
-    return  fs.writeFileSync(path, fileContents);
+    console.log("Creating/writing file at " + path)
+    return fs.writeFileSync(path, fileContents);
   }
-  const saveFileMetadata = (event, path, metadata)=>{
+  const saveFileMetadata = (event, path, metadata) => {
     let file = matter.read(path);
-    const data = {...file.data, metadata};
+    const data = { ...file.data, metadata };
     saveFile(null, path, metadata, file.content);
   }
 
-  const saveImage = (event, path, file)=>{
-    console.log("Creating image at "+ path)
+  const saveImage = (event, path, file) => {
+    console.log("Creating image at " + path)
     return fs.writeFileSync(path, Buffer.from(file));
   }
-  
-  const renameFile = (event, beforePath, afterPath)=>{
+
+  const renameFile = (event, beforePath, afterPath) => {
     console.log("Renaming file from/to: ", beforePath, afterPath);
-    return fs.rename(beforePath, afterPath, ()=>{});
+    return fs.rename(beforePath, afterPath, () => { });
   }
-  const getFavicon = async(sitePath)=>{
+  const getFavicon = async (sitePath) => {
     return await fs.readFileSync(`${sitePath}/media/favicon.svg`, 'utf8')
   }
 
-  const imageToBase64 = (file, ext)=>{
+  const imageToBase64 = (file, ext) => {
     const base64String = Buffer.from(file, 'utf8').toString('base64');
     let mimeType;
     switch (ext) {
@@ -225,29 +236,29 @@ app.whenReady().then(() => {
     // 4. Construct the Base64 data URL
     return `data:${mimeType};base64,${base64String}`;
   }
-  const getSiteInfo = async (event, path)=>{
+  const getSiteInfo = async (event, path) => {
     let otherData = {
     }
     const favicon = await getFavicon(path)
     otherData['base64Favicon'] = imageToBase64(favicon, '.svg')
-    return {...JSON.parse(await fs.readFileSync(`${path}/_data/site.json`, 'utf8')), ...otherData};
+    return { ...JSON.parse(await fs.readFileSync(`${path}/_data/site.json`, 'utf8')), ...otherData };
   }
-  const buildSite = (event, path)=>{
-    return new Promise((resolve)=>{
+  const buildSite = (event, path) => {
+    return new Promise((resolve) => {
       console.log("my cwd", path);
-      child_process.exec('npx @11ty/eleventy', {cwd: path}, function(err, stdout, stderr) {
+      child_process.exec('npx @11ty/eleventy', { cwd: path }, function (err, stdout, stderr) {
         resolve(err, stdout, stderr);
       });
-    })  
+    })
   }
 
-  const publishSite = async (event, path)=>{
-    return new Promise((resolve)=>{
-      child_process.exec('/Users/jessie/.gem/ruby/3.4.0/bin/neocities push .', {cwd: `${path}/_site`}, function(err, stdout, stderr) {
+  const publishSite = async (event, path) => {
+    return new Promise((resolve) => {
+      child_process.exec('/Users/jessie/.gem/ruby/3.4.0/bin/neocities push .', { cwd: `${path}/_site` }, function (err, stdout, stderr) {
         console.log(stdout, stderr);
         resolve(err, stdout, stderr);
       });
-    })  
+    })
   }
 
   ipcMain.handle('dialog:openDir', openDir)
@@ -259,11 +270,11 @@ app.whenReady().then(() => {
   ipcMain.handle('site:getSiteInfo', getSiteInfo);
   ipcMain.handle('site:build', buildSite);
   ipcMain.handle('site:publish', publishSite);
-  
+
 
   // IPC test
 
-  
+
   browserWindow = createWindow()
   console.log('window created');
   app.on('activate', function () {
