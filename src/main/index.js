@@ -122,10 +122,10 @@ app.whenReady().then(() => {
               collections[dir.name].push({ ...file, path: matterData.path, data: matterData.data })
               eleventyDB.ItemMetadata.create({
                 collection: dir.name,
-                fileName: file.name,
-                metadata: matterData.data
-              }).then((item)=>{
-                console.log(item);
+                name: file.name,
+                data: matterData.data,
+                path: matterData.path,
+                parentPath: file.parentPath
               })
             })
           })
@@ -141,7 +141,20 @@ app.whenReady().then(() => {
           code: eleventyRootDirs.filter(dir => dir.name[0] == '_'),
           collections: collectionsFactory(collectionDirs)
         }
-        resolveOuter(eleventyStructure);
+        eleventyDB.ItemMetadata.findAll().then((res)=>{
+          const files = res.map(({dataValues})=>dataValues)
+          let structuredCollections = {}
+          files.forEach(file=>{
+            let currentColllection = structuredCollections[file.collection];
+            if(currentColllection)
+              structuredCollections[file.collection].push(file);
+            else
+              structuredCollections[file.collection] = [file];
+          });
+          eleventyStructure['collections'] = structuredCollections;
+          resolveOuter(eleventyStructure);
+        })
+        
         if (collectionWatcher)
           collectionWatcher.close();
 

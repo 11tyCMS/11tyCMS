@@ -12,11 +12,19 @@ class CMSDatabase {
                 type: DataTypes.STRING,
                 allowNull: false
             },
-            fileName: {
+            name: {
                 type: DataTypes.STRING,
                 allowNull: false
             },
-            metadata: {
+            path: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            parentPath: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            data: {
                 type: DataTypes.JSON,
                 allowNull: false
             }
