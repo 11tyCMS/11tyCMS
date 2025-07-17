@@ -141,12 +141,12 @@ app.whenReady().then(() => {
           code: eleventyRootDirs.filter(dir => dir.name[0] == '_'),
           collections: collectionsFactory(collectionDirs)
         }
-        eleventyDB.ItemMetadata.findAll().then((res)=>{
-          const files = res.map(({dataValues})=>dataValues)
+        eleventyDB.ItemMetadata.findAll().then((res) => {
+          const files = res.map(({ dataValues }) => dataValues)
           let structuredCollections = {}
-          files.forEach(file=>{
+          files.forEach(file => {
             let currentColllection = structuredCollections[file.collection];
-            if(currentColllection)
+            if (currentColllection)
               structuredCollections[file.collection].push(file);
             else
               structuredCollections[file.collection] = [file];
@@ -154,7 +154,7 @@ app.whenReady().then(() => {
           eleventyStructure['collections'] = structuredCollections;
           resolveOuter(eleventyStructure);
         })
-        
+
         if (collectionWatcher)
           collectionWatcher.close();
 
@@ -179,11 +179,22 @@ app.whenReady().then(() => {
               return splitPath[splitPath.length - 1];
             })()
           }))
+          .on('unlink', path => {
+            let explodedPath = path.split('/');
+            let collection = explodedPath[explodedPath.length - 2]
+            let fileName = explodedPath[explodedPath.length - 1];
+            eleventyDB.ItemMetadata.destroy({
+              where: { collection, name: fileName }
+            })
+          })
       })
     });
   }
 
   const openFile = (event, filePath) => {
+    let explodedPath = filePath.split('/');
+    let collection = explodedPath[explodedPath.length - 2]
+    let fileName = explodedPath[explodedPath.length - 1];
     let fileData = matter.read(filePath);
     const regex = /!\[(.*?)\]\((?!https?:\/\/)(.*?)\)/g;
     let content = fileData.content
@@ -191,12 +202,27 @@ app.whenReady().then(() => {
       return `![${altText}](${"eleventy://"}${relativeUrl})`;
     })
     fileData.content = content
-    return fileData
+    return new Promise(resolve => {
+      eleventyDB.ItemMetadata.findAll({
+        where: {
+          collection,
+          name: fileName
+        }
+      }).then(results => {
+        results = results.map(item=>item.dataValues)[0]['data'];
+        fileData.data = results
+        resolve(fileData);
+      })
+    });
   }
 
   const saveFile = (event, path, metadata, contents) => {
     let content = contents.replace(/eleventy:\/\//g, "");
+    let explodedPath = path.split('/');
+    let collection = explodedPath[explodedPath.length - 2]
+    let fileName = explodedPath[explodedPath.length - 1];
     const metadataWithDate = metadata.date ? metadata : { ...metadata, date: new Date().toString() }
+    eleventyDB.ItemMetadata.update({data:metadataWithDate}, { where: { name: fileName, collection: collection } })
     const fileContents = matter.stringify(content, metadataWithDate);
     console.log("Creating/writing file at " + path)
     return fs.writeFileSync(path, fileContents);
@@ -214,6 +240,12 @@ app.whenReady().then(() => {
 
   const renameFile = (event, beforePath, afterPath) => {
     console.log("Renaming file from/to: ", beforePath, afterPath);
+    let explodedPathBefore = beforePath.split('/');
+    let explodedPathAfter = afterPath.split('/');
+    let collection = explodedPath[explodedPathBefore.length - 2]
+    let fileNameBefore = explodedPath[explodedPathBefore.length - 1];
+    let fileNameAfter = explodedPath[explodedPathAfter.length - 1];
+    eleventyDB.ItemMetadata.update({ name: fileNameAfter }, { where: { name: fileNameBefore, collection: collection } })
     return fs.rename(beforePath, afterPath, () => { });
   }
   const getFavicon = async (sitePath) => {
