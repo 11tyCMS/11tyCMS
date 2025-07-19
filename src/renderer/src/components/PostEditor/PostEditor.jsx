@@ -34,6 +34,7 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
 
 
     })
+    console.log("fetching fileee")
   }
   const setTitle = (value) => {
     let updatedMetadata = { ...selectedFile.data }
@@ -44,7 +45,7 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
     // console.log(getInstance(), isLoading)
     // if(!isLoading)
     //   getInstance().action(replaceAll(selectedFile.content))
-
+    console.log('updating the selectedfile state!', selectedFile)
   }, [selectedFile])
 
   const updateFileName = (title) => {
@@ -80,15 +81,19 @@ function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, sel
     }
   }, [])
   const saveJustContent = (content) => {
-    window.api.saveFile(selectedFile.fileName, selectedFile.data, content).then((test) => {
+    console.log("updating file contents with this fucking bullshit", selectedFile,)
+    window.api.saveFile(selectedFile.fileName, null, content).then((test) => {
     })
   }
   const saveMetadata = (metadata)=>{
+
     let updatedSelectedFile = {...selectedFile, data:metadata};
+    
     const markdown = editorRef.current.action(getMarkdown());
     updatedSelectedFile['content'] = markdown
     updatedSelectedFile['contents'] = markdown
-    setSelectedFile({...updatedSelectedFile, data:metadata});
+    console.log("updating metadata with this bullshit", updatedSelectedFile);
+    setSelectedFile(updatedSelectedFile);
     window.api.saveFileMetadata(updatedSelectedFile.fileName, metadata)
   }
   return (

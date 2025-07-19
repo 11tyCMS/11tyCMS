@@ -221,7 +221,8 @@ app.whenReady().then(() => {
     let explodedPath = path.split('/');
     let collection = explodedPath[explodedPath.length - 2]
     let fileName = explodedPath[explodedPath.length - 1];
-    const metadataWithDate = metadata.date ? metadata : { ...metadata, date: new Date().toString() }
+    let fileData = matter.read(path)['data'];
+    const metadataWithDate = metadata ? (metadata.date ? metadata : { ...metadata, date: new Date().toString() }) : fileData
     eleventyDB.ItemMetadata.update({data:metadataWithDate}, { where: { name: fileName, collection: collection } })
     const fileContents = matter.stringify(content, metadataWithDate);
     console.log("Creating/writing file at " + path)
@@ -229,8 +230,8 @@ app.whenReady().then(() => {
   }
   const saveFileMetadata = (event, path, metadata) => {
     let file = matter.read(path);
-    const data = { ...file.data, metadata };
-    saveFile(null, path, metadata, file.content);
+    const data = { ...file.data, ...metadata };
+    saveFile(null, path, data, file.content);
   }
 
   const saveImage = (event, path, file) => {
