@@ -119,7 +119,6 @@ app.whenReady().then(() => {
             collections[dir.name] = []
             fs.readdirSync(`${dir.path}/${dir.name}`, { withFileTypes: true }).filter(file => file.name.includes('.md')).forEach(file => {
               const matterData = matter.read(`${file.parentPath}/${file.name}`);
-              collections[dir.name].push({ ...file, path: matterData.path, data: matterData.data })
               eleventyDB.ItemMetadata.create({
                 collection: dir.name,
                 name: file.name,
