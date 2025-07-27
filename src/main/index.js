@@ -229,8 +229,7 @@ app.whenReady().then(() => {
   }
   const saveFileMetadata = (event, path, metadata) => {
     let file = matter.read(path);
-    const data = { ...file.data, ...metadata };
-    saveFile(null, path, data, file.content);
+    saveFile(null, path, metadata, file.content);
   }
 
   const saveImage = (event, path, file) => {
