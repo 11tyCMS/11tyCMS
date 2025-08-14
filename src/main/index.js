@@ -107,7 +107,9 @@ app.whenReady().then(() => {
           We need a function that will return all the directories at the root of the 11ty src folder.
           It will then need to check through any folders that arent _* to see if its a collection, by checking to see if there is a child file with a matching name to its containing folder.
         */
-
+        eleventyDB.ItemMetadata.destroy({
+          truncate:true
+        })
         const isDirCollection = (path, folderName) => {
           const isFolderInternal = folderName[0] == '_'
           const files = fs.readdirSync(`${path}/${folderName}`, { withFileTypes: true }).map(file => file.name).includes(`${folderName}.json`)
@@ -186,6 +188,9 @@ app.whenReady().then(() => {
               where: { collection, name: fileName }
             })
           })
+          .on('change', path=>{
+
+          })
       })
     });
   }
@@ -221,7 +226,7 @@ app.whenReady().then(() => {
     let collection = explodedPath[explodedPath.length - 2]
     let fileName = explodedPath[explodedPath.length - 1];
     let fileData = matter.read(path)['data'];
-    const metadataWithDate = metadata ? (metadata.date ? metadata : { ...metadata, date: new Date().toString() }) : fileData
+    const metadataWithDate = metadata ? (metadata.date ? metadata : { ...metadata, date: new Date().toISOString() }) : fileData
     eleventyDB.ItemMetadata.update({data:metadataWithDate}, { where: { name: fileName, collection: collection } })
     const fileContents = matter.stringify(content, metadataWithDate);
     console.log("Creating/writing file at " + path)
