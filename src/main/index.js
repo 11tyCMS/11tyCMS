@@ -224,13 +224,34 @@ app.whenReady().then(() => {
     let explodedPath = path.split('/');
     let collection = explodedPath[explodedPath.length - 2]
     let fileName = explodedPath[explodedPath.length - 1];
-    let fileData = matter.read(path)['data'];
-    const metadataWithDate = metadata ? (metadata.date ? metadata : { ...metadata, date: new Date().toISOString() }) : fileData
-    eleventyDB.ItemMetadata.update({data:metadataWithDate}, { where: { name: fileName, collection: collection } })
-    const fileContents = matter.stringify(content, metadataWithDate);
-    browserWindow.webContents.send('collectionFileModified', {collection, fileName, metadata:metadataWithDate})
-    console.log("Creating/writing file at " + path)
-    return fs.writeFileSync(path, fileContents);
+    if(fs.existsSync(path)){
+      let fileData = matter.read(path)['data'];
+      const metadataWithDate = metadata ? (metadata.date ? metadata : { ...metadata, date: new Date().toISOString() }) : fileData
+      eleventyDB.ItemMetadata.update({data:metadataWithDate}, { where: { name: fileName, collection: collection } })
+      const fileContents = matter.stringify(content, metadataWithDate);
+      browserWindow.webContents.send('collectionFileModified', {collection, fileName, metadata:metadataWithDate})
+      console.log("Creating/writing file at " + path)
+      return fs.writeFileSync(path, fileContents);
+    } else{
+      const metadataWithDate = metadata.date ? metadata : { ...metadata, date: new Date().toISOString() }
+      // eleventyDB.ItemMetadata.update({data:metadataWithDate}, { where: { name: fileName, collection: collection } })
+      
+      let parentPath = [...explodedPath];
+      parentPath.pop();
+      parentPath = parentPath.join('/')
+      eleventyDB.ItemMetadata.create({
+                collection: collection,
+                name: fileName,
+                data: metadataWithDate,
+                path: path,
+                parentPath
+              })
+      const fileContents = matter.stringify(content, metadataWithDate);
+      //browserWindow.webContents.send('collectionFileModified', {collection, fileName, metadata:metadataWithDate})
+      console.log("Creating/writing file at " + path)
+      return fs.writeFileSync(path, fileContents);
+    }
+    
   }
   const saveFileMetadata = (event, path, metadata) => {
     let file = matter.read(path);
