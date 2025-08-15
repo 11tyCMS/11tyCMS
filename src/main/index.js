@@ -189,7 +189,6 @@ app.whenReady().then(() => {
             })
           })
           .on('change', path=>{
-
           })
       })
     });
@@ -229,6 +228,7 @@ app.whenReady().then(() => {
     const metadataWithDate = metadata ? (metadata.date ? metadata : { ...metadata, date: new Date().toISOString() }) : fileData
     eleventyDB.ItemMetadata.update({data:metadataWithDate}, { where: { name: fileName, collection: collection } })
     const fileContents = matter.stringify(content, metadataWithDate);
+    browserWindow.webContents.send('collectionFileModified', {collection, fileName, metadata:metadataWithDate})
     console.log("Creating/writing file at " + path)
     return fs.writeFileSync(path, fileContents);
   }

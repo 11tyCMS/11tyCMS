@@ -43,8 +43,10 @@ function App() {
   }
   // onClick={()=>fetchFile(`${file.rootPath}/+file`)}
   useEffect(() => {
+    console.log("collectionFileAdded useEffect called!")
     window.ipcRenderer
       .on("collectionFileAdded", (event, event1) => {
+        console.log("collectionFileAdded called!")
         let updatedCollections = { ...collections };
         updatedCollections[event1.collection] = [...updatedCollections[event1.collection], event1.file];
         setCollections(updatedCollections);
@@ -54,10 +56,19 @@ function App() {
       updatedCollections[event1.collection] = updatedCollections[event1.collection].filter(post => event1.path != post.path)
       setCollections(updatedCollections);
     });
+    window.ipcRenderer.on("collectionFileModified", (event, eventData)=>{
+      const {collection, fileName, metadata} = eventData;
+      let updatedCollections = {...collections};
+      let targetPostIndex = null;
+      targetPostIndex = updatedCollections[collection].findIndex(({name})=>fileName == name)
+      updatedCollections[collection][targetPostIndex]['data'] = metadata;
+      setCollections[updatedCollections];
+    });
     return () => {
       if (window.ipcRenderer) {
         window.ipcRenderer.removeAllListeners("collectionFileAdded")
         window.ipcRenderer.removeAllListeners("collectionFileRemoved")
+        window.ipcRenderer.removeAllListeners("collectionFileModified")
       }
     }
   }, [collections])
