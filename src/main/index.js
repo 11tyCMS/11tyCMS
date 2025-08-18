@@ -108,7 +108,7 @@ app.whenReady().then(() => {
           It will then need to check through any folders that arent _* to see if its a collection, by checking to see if there is a child file with a matching name to its containing folder.
         */
         eleventyDB.ItemMetadata.destroy({
-          truncate:true
+          truncate: true
         })
         const isDirCollection = (path, folderName) => {
           const isFolderInternal = folderName[0] == '_'
@@ -161,16 +161,30 @@ app.whenReady().then(() => {
 
         collectionWatcher = chokidar.watch(collectionDirectories, { persistent: true, ignoreInitial: true });
         collectionWatcher
-          .on('add', path => browserWindow.webContents.send('collectionFileAdded', {
-            path,
-            file: matter.read(path),
-            collection: (() => {
-              const lastSlashIndex = path.lastIndexOf('/')
-              let string = path.substring(0, lastSlashIndex);
-              let splitPath = string.split('/');
-              return splitPath[splitPath.length - 1];
-            })()
-          }))
+          .on('add', path => {
+            let explodedPathBefore = path.split('/');
+            const matterData = matter.read(path);
+            const pathArray = path.split('/');
+            let parentPath = [...path.split('/')];
+            parentPath.pop();
+            parentPath = parentPath.join('/')
+            eleventyDB.ItemMetadata.create({
+              collection: explodedPathBefore[explodedPathBefore.length - 2],
+              name: pathArray[pathArray.length - 1],
+              data: matterData.data,
+              path: matterData.path,
+              parentPath: parentPath
+            })
+
+            browserWindow.webContents.send('collectionFileAdded', {
+              collection: explodedPathBefore[explodedPathBefore.length - 2],
+              name: pathArray[pathArray.length - 1],
+              data: matterData.data,
+              path: matterData.path,
+              parentPath: parentPath
+            })
+
+          })
           .on('unlink', path => browserWindow.webContents.send('collectionFileRemoved', {
             path,
             collection: (() => {
@@ -188,7 +202,7 @@ app.whenReady().then(() => {
               where: { collection, name: fileName }
             })
           })
-          .on('change', path=>{
+          .on('change', path => {
           })
       })
     });
@@ -212,7 +226,7 @@ app.whenReady().then(() => {
           name: fileName
         }
       }).then(results => {
-        results = results.map(item=>item.dataValues)[0]['data'];
+        results = results.map(item => item.dataValues)[0]['data'];
         fileData.data = results
         resolve(fileData);
       })
@@ -224,34 +238,35 @@ app.whenReady().then(() => {
     let explodedPath = path.split('/');
     let collection = explodedPath[explodedPath.length - 2]
     let fileName = explodedPath[explodedPath.length - 1];
-    if(fs.existsSync(path)){
+    if (fs.existsSync(path)) {
       let fileData = matter.read(path)['data'];
       const metadataWithDate = metadata ? (metadata.date ? metadata : { ...metadata, date: new Date().toISOString() }) : fileData
-      eleventyDB.ItemMetadata.update({data:metadataWithDate}, { where: { name: fileName, collection: collection } })
+      eleventyDB.ItemMetadata.update({ data: metadataWithDate }, { where: { name: fileName, collection: collection } })
       const fileContents = matter.stringify(content, metadataWithDate);
-      browserWindow.webContents.send('collectionFileModified', {collection, fileName, metadata:metadataWithDate})
+      browserWindow.webContents.send('collectionFileModified', { collection, fileName, metadata: metadataWithDate })
       console.log("Creating/writing file at " + path)
+      console.log("File already exists, so sending collectionFileModified out")
       return fs.writeFileSync(path, fileContents);
-    } else{
+    } else {
       const metadataWithDate = metadata.date ? metadata : { ...metadata, date: new Date().toISOString() }
       // eleventyDB.ItemMetadata.update({data:metadataWithDate}, { where: { name: fileName, collection: collection } })
-      
+
       let parentPath = [...explodedPath];
       parentPath.pop();
       parentPath = parentPath.join('/')
       eleventyDB.ItemMetadata.create({
-                collection: collection,
-                name: fileName,
-                data: metadataWithDate,
-                path: path,
-                parentPath
-              })
+        collection: collection,
+        name: fileName,
+        data: metadataWithDate,
+        path: path,
+        parentPath
+      })
       const fileContents = matter.stringify(content, metadataWithDate);
       //browserWindow.webContents.send('collectionFileModified', {collection, fileName, metadata:metadataWithDate})
       console.log("Creating/writing file at " + path)
       return fs.writeFileSync(path, fileContents);
     }
-    
+
   }
   const saveFileMetadata = (event, path, metadata) => {
     let file = matter.read(path);

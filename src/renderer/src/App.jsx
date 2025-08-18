@@ -46,9 +46,9 @@ function App() {
     console.log("collectionFileAdded useEffect called!")
     window.ipcRenderer
       .on("collectionFileAdded", (event, event1) => {
-        console.log("collectionFileAdded called!")
+        console.log("collectionFileAdded called!", event1)
         let updatedCollections = { ...collections };
-        updatedCollections[event1.collection] = [...updatedCollections[event1.collection], event1.file];
+        updatedCollections[event1.collection] = [...updatedCollections[event1.collection], event1];
         setCollections(updatedCollections);
       })
     window.ipcRenderer.on('collectionFileRemoved', (event, event1) => {
@@ -57,10 +57,15 @@ function App() {
       setCollections(updatedCollections);
     });
     window.ipcRenderer.on("collectionFileModified", (event, eventData)=>{
+      console.log("collectionFileMOdified!");
       const {collection, fileName, metadata} = eventData;
       let updatedCollections = {...collections};
       let targetPostIndex = null;
-      targetPostIndex = updatedCollections[collection].findIndex(({name})=>fileName == name)
+      targetPostIndex = updatedCollections[collection].findIndex(({name})=>{
+        console.log()
+        return fileName == name
+      })
+      console.log(updatedCollections[collection][targetPostIndex], fileName, updatedCollections[collection], eventData);
       updatedCollections[collection][targetPostIndex]['data'] = metadata;
       setCollections[updatedCollections];
     });
