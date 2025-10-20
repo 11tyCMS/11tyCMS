@@ -4,6 +4,10 @@ import { MDXEditor } from '@mdxeditor/editor'
 import FeatherIcon from 'feather-icons-react'
 function PostsList({ collection, posts, setSelectedFile, fetchFile, cwd }) {
   const [displayAddFileDialog, setDisplayAddFileDialog] = useState(false)
+  const deletePost = (event, post)=>{
+    event.stopPropagation();
+    window.api.deleteFile(post.path);
+  }
   console.log(posts, 'tesd')
   return (
     <div className="postsList">
@@ -16,7 +20,7 @@ function PostsList({ collection, posts, setSelectedFile, fetchFile, cwd }) {
       ></AddFileDialog>
       <div className='head-container'>
         <h1>{collection}</h1>
-        <FeatherIcon icon={"plus"} size={25} color="#7c8ad6" className='add-button' onClick={() => setDisplayAddFileDialog(!displayAddFileDialog)}/>
+        <FeatherIcon icon={"plus"} size={25} color="#7c8ad6" className='add-button' onClick={() => setDisplayAddFileDialog(!displayAddFileDialog)} />
       </div>
       <ul>
         {posts
@@ -24,9 +28,15 @@ function PostsList({ collection, posts, setSelectedFile, fetchFile, cwd }) {
           .map((post) => (
             <li onClick={() => fetchFile(post.path)}>
               <label>{post.data.title ? post.data.title : post.path}</label>
-              <span style={{ justifySelf: 'end' }}>
-                {new Date(post.data.date).toLocaleDateString('en-US')}
-              </span>
+              <div className='buttons-info'>
+                <span style={{ justifySelf: 'end' }}>
+                  {new Date(post.data.date).toLocaleDateString('en-US')}
+                </span>
+                <button className='icon' onClick={(e)=>deletePost(e, post)}>
+                  <FeatherIcon icon='trash' size={16} />
+                </button>
+              </div>
+
             </li>
           ))}
       </ul>

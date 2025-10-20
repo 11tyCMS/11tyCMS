@@ -346,9 +346,14 @@ app.whenReady().then(() => {
     })
   }
 
+  const deleteFile = async (event, path)=>{
+    return fs.unlinkSync(path)
+  };
+
   ipcMain.handle('dialog:openDir', openDir)
   ipcMain.handle('dialog:openFile', openFile)
   ipcMain.handle('file:save', saveFile)
+  ipcMain.handle('file:delete', deleteFile)
   ipcMain.handle('file:saveMetadata', saveFileMetadata);
   ipcMain.handle('file:saveImage', saveImage)
   ipcMain.handle('file:rename', renameFile)
