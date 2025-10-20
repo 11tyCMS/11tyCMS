@@ -2,11 +2,14 @@ import { useState, useRef, useEffect } from 'react'
 import AddFileDialog from './AddFileDialog'
 import { MDXEditor } from '@mdxeditor/editor'
 import FeatherIcon from 'feather-icons-react'
+import DialogBase from './DialogBase'
+import DeletePostDialog from './DeletePostDialog'
 function PostsList({ collection, posts, setSelectedFile, fetchFile, cwd }) {
   const [displayAddFileDialog, setDisplayAddFileDialog] = useState(false)
-  const deletePost = (event, post)=>{
+  const [postToDelete, setPostToDelete] = useState(null);
+  const deletePost = (event, post) => {
     event.stopPropagation();
-    window.api.deleteFile(post.path);
+    setPostToDelete(post);
   }
   console.log(posts, 'tesd')
   return (
@@ -17,7 +20,10 @@ function PostsList({ collection, posts, setSelectedFile, fetchFile, cwd }) {
         fetchFile={fetchFile}
         collection={collection}
         cwd={cwd}
-      ></AddFileDialog>
+      />
+      <DeletePostDialog
+        post={postToDelete}
+        setPostToDelete={setPostToDelete} />
       <div className='head-container'>
         <h1>{collection}</h1>
         <FeatherIcon icon={"plus"} size={25} color="#7c8ad6" className='add-button' onClick={() => setDisplayAddFileDialog(!displayAddFileDialog)} />
@@ -32,7 +38,7 @@ function PostsList({ collection, posts, setSelectedFile, fetchFile, cwd }) {
                 <span style={{ justifySelf: 'end' }}>
                   {new Date(post.data.date).toLocaleDateString('en-US')}
                 </span>
-                <button className='icon' onClick={(e)=>deletePost(e, post)}>
+                <button className='icon' onClick={(e) => deletePost(e, post)}>
                   <FeatherIcon icon='trash' size={16} />
                 </button>
               </div>
