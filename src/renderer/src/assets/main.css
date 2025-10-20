@@ -5,35 +5,42 @@ html {
   margin: 0px;
   background: rgb(6 10 19)
 }
-button{
+
+button {
   border-radius: 8px;
   padding: 10px;
   border: none;
   background: #1e3563;
   color: #cddff5;
-  cursor:pointer;
+  cursor: pointer;
   display: flex;
   align-items: anchor-center;
   justify-content: center;
 }
-button svg{
-  margin-right:8px;
+
+button svg {
+  margin-right: 8px;
 }
-button:disabled{
-  cursor:unset;
-  color:grey;
-  background-color:#14223e;
+
+button:disabled {
+  cursor: unset;
+  color: grey;
+  background-color: #14223e;
 
 }
-button:disabled span{
-  margin-right:8px;
+
+button:disabled span {
+  margin-right: 8px;
 }
-button.icon{
-  padding:4px;
+
+button.icon {
+  padding: 4px;
 }
-button.icon svg{
-margin:0px;
+
+button.icon svg {
+  margin: 0px;
 }
+
 #root {
   width: 100%;
   height: 100%;
@@ -72,7 +79,8 @@ margin:0px;
   height: 30px;
   border-radius: 100%;
 }
-.sidebar .siteInfo .favicon-container .favicon.no-icon{
+
+.sidebar .siteInfo .favicon-container .favicon.no-icon {
   background: grey;
 }
 
@@ -167,28 +175,32 @@ margin:0px;
   margin-top: 0px;
 }
 
-.mdxeditor-container .toolbar button{
+.mdxeditor-container .toolbar button {
   justify-content: center;
   width: 26px;
   height: 26px;
   text-align: center;
-  padding:0px;
+  padding: 0px;
 }
-.mdxeditor-container .toolbar button svg{
-  margin-right:0px !important;
+
+.mdxeditor-container .toolbar button svg {
+  margin-right: 0px !important;
 }
-.back-button{
+
+.back-button {
   align-self: anchor-center;
   margin-left: 6px;
   margin-right: 6px;
   cursor: pointer;
 }
-.add-button{
-    margin-left: 6px;
-    margin-right: 6px;
-    cursor: pointer;
-    align-self: anchor-center;
+
+.add-button {
+  margin-left: 6px;
+  margin-right: 6px;
+  cursor: pointer;
+  align-self: anchor-center;
 }
+
 .mdxeditor-container tr {
   border-bottom: 1px solid #0e182d;
   /* background: red; */
@@ -197,22 +209,26 @@ margin:0px;
   display: flex;
   align-items: anchor-center;
 }
-.mdxeditor-container tr .buttons{
-  margin-left:auto;
-  display:none;
-}
-.mdxeditor-container tr .buttons button{
-  width: 24px;
-  height: 16px;
-  padding:unset;
-}
-.mdxeditor-container tr .buttons button svg{
-  margin-right:0px;
+
+.mdxeditor-container tr .buttons {
+  margin-left: auto;
+  display: none;
 }
 
-.mdxeditor-container tr:hover .buttons{
-  display:block;
+.mdxeditor-container tr .buttons button {
+  width: 24px;
+  height: 16px;
+  padding: unset;
 }
+
+.mdxeditor-container tr .buttons button svg {
+  margin-right: 0px;
+}
+
+.mdxeditor-container tr:hover .buttons {
+  display: block;
+}
+
 .mdxeditor-container tr:last-of-type {
   border: none;
 }
@@ -334,28 +350,34 @@ margin:0px;
   justify-content: space-between;
   transition: background ease-in 0.15s;
 }
-.postsList ul li .buttons-info{
-  display:flex;
+
+.postsList ul li .buttons-info {
+  display: flex;
   justify-content: end;
   align-items: center;
 }
-.postsList ul li .buttons-info button{
-  margin-left:10px;
-  display:none;
+
+.postsList ul li .buttons-info button {
+  margin-left: 10px;
+  display: none;
 }
-.postsList ul li:hover button{
-  display:block;
-  z-index:100
+
+.postsList ul li:hover button {
+  display: block;
+  z-index: 100
 }
-.postsList .head-container{
-  display:flex;
+
+.postsList .head-container {
+  display: flex;
   justify-content: space-between;
 }
-.postsList .head-container button{
-  height:35px;
-  width:35px;
-  border-radius:100%;
+
+.postsList .head-container button {
+  height: 35px;
+  width: 35px;
+  border-radius: 100%;
 }
+
 .postsList ul li:hover {
   background: #2e3455;
 }
@@ -382,24 +404,49 @@ margin:0px;
 }
 
 .dialog-modal-bg .dialog {
-  padding: 10px;
   border-radius: 8px;
-  background-color: rgb(14 24 44);
+  background-color: rgb(19 41 86);
+  color: white;
 }
 
-.title-bar{
-  display:flex;
+.dialog-modal-bg .dialog h1:first-of-type {
+  font-size: 24px;
+  border-bottom: 1px solid #143477;
+  padding: 12px;
+}
+
+.dialog-modal-bg .dialog .content {
+  padding: 12px;
+}
+
+.dialog-modal-bg .dialog .content p {
+  margin-top: 0px;
+}
+
+.dialog-modal-bg .dialog .buttons {
+  display: flex;
+  margin-top: 14px;
+}
+
+.dialog-modal-bg .dialog .buttons button:not(:first-child) {
+  margin-left: 12px;
+}
+
+.title-bar {
+  display: flex;
   flex-direction: row;
 }
-.title-bar .title{
-  flex-grow:1;
+
+.title-bar .title {
+  flex-grow: 1;
 }
-.title-bar button{
-  width:35px;
-  height:35px;
-  border-radius:100%;
-  align-self:center;
-  cursor:pointer;
+
+.title-bar button {
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  align-self: center;
+  cursor: pointer;
 }
 
 .tiptap {
@@ -432,9 +479,10 @@ margin:0px;
 .milkdown .ProseMirror ol li::marker {
   color: white;
 }
-.site-buttons{
+
+.site-buttons {
   display: inline-grid;
   grid-template-columns: 1fr 1fr;
   margin: 10px;
-  gap:10px;
+  gap: 10px;
 }

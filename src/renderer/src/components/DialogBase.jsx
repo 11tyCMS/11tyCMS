@@ -1,10 +1,13 @@
 import {useState, useEffect} from 'react';
-function DialogBase({displayStatus, children}){
+function DialogBase({displayStatus, title, children}){
     if(!displayStatus)
         return ''
     return <div className='dialog-modal-bg'>
         <div className="dialog">
-            {children}
+            {title ? <h1>{title}</h1> : ''}
+            <div className='content'>
+                {children}
+            </div>
         </div>
     </div>
 }
