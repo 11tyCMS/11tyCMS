@@ -2,7 +2,6 @@ import { useState } from 'react';
 import FeatherIcon from 'feather-icons-react';
 const Field = ({metadata, itemKey, saveMetadata}) => {
     const key = itemKey;
-    console.log(metadata, key, metadata[key], 'this is key')
     const creating = !key;
     const [selectedType, setSelectedType] = useState(null);
     const [newField, setNewField] = useState({});
@@ -75,7 +74,7 @@ const Field = ({metadata, itemKey, saveMetadata}) => {
                         {renderFieldValueArea(selectedType, newField['name'])}
                     </td>
                     <td>
-                        <button onClick={()=>deleteField}>Delete</button>
+                        <button onClick={()=>deleteField}>Cancel</button>
                     </td>
                     <td>
                         <button onClick={()=>saveField(newField['name'], newField['value'])}>Save</button>
@@ -92,7 +91,7 @@ const Field = ({metadata, itemKey, saveMetadata}) => {
                 {renderFieldValueArea(typeof metadata[key], key)}
             </td>
             <td>
-                <button onClick={() => { }}>Cancel</button>
+                <button onClick={() => {setIsEditing(false)}}>Cancel</button>
             </td>
             <td>
                 <button onClick={()=>saveField(newField['name'], newField['value'])}>Save</button>
