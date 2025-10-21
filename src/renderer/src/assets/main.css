@@ -157,6 +157,10 @@ button.icon svg {
   font-family: arial;
 }
 
+.mdxeditor-container .metadata .buttons{
+  display:none;
+}
+
 .mdxeditor-container .toolbar {
   width: calc(100% - 10px);
   border-radius: 8px;
@@ -226,7 +230,7 @@ button.icon svg {
 }
 
 .mdxeditor-container tr:hover .buttons {
-  display: block;
+  display: flex;
 }
 
 .mdxeditor-container tr:last-of-type {
