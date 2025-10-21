@@ -6,7 +6,7 @@ const Metadata = ({ selectedFile, saveMetadata }) => {
     const [newField, setNewField] = useState(null);
     const [selectedType, setSelectedType] = useState(null);
     const addNewField = () => setNewField({name:null});
-    
+    const cancelAdd = ()=>setNewField(null);
     return <table className="metadata">
         {selectedFile
             ? Object.keys(selectedFile.data)
@@ -15,7 +15,7 @@ const Metadata = ({ selectedFile, saveMetadata }) => {
                     <Field metadata={selectedFile.data} itemKey={key} saveMetadata={saveMetadata}/>
                 ))
             : ''}
-        {newField ? <Field metadata={selectedFile.data} key={undefined} saveMetadata={saveMetadata}/> : ''}
+        {newField ? <Field metadata={selectedFile.data} key={undefined} saveMetadata={saveMetadata} cancelAdd={cancelAdd}/> : ''}
         <tr>
             <td style={{ display: 'block' }}>
                 <button style={{ width: '100%' }} onClick={addNewField} disabled={newField}>Add new property</button>

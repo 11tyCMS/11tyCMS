@@ -1,22 +1,22 @@
 import { useState } from 'react';
 import FeatherIcon from 'feather-icons-react';
-const Field = ({metadata, itemKey, saveMetadata}) => {
+const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
     const key = itemKey;
     const creating = !key;
     const [selectedType, setSelectedType] = useState(null);
     const [newField, setNewField] = useState({});
     const [isEditing, setIsEditing] = useState(false);
-    const deleteField = ()=> {
+    const deleteField = () => {
         setNewField({})
         setSelectedType(null);
     };
-    const saveRemoveField = (field)=>{
-        let updatedMetadata = {...metadata}
+    const saveRemoveField = (field) => {
+        let updatedMetadata = { ...metadata }
         delete updatedMetadata[field];
         saveMetadata(updatedMetadata);
     }
-    const saveField = (key, value)=>{
-        saveMetadata({...metadata, [key]:value})
+    const saveField = (key, value) => {
+        saveMetadata({ ...metadata, [key]: value })
         setIsEditing(false);
         deleteField();
     }
@@ -38,7 +38,7 @@ const Field = ({metadata, itemKey, saveMetadata}) => {
     }
     const renderFieldValueArea = (type, field) => {
         let value = null;
-        if(metadata[field]){
+        if (metadata[field]) {
             value = metadata[field];
         }
         switch (type) {
@@ -74,12 +74,14 @@ const Field = ({metadata, itemKey, saveMetadata}) => {
                         {renderFieldValueArea(selectedType, newField['name'])}
                     </td>
                     <td>
-                        <button onClick={()=>deleteField}>Cancel</button>
+                        <button onClick={cancelAdd}>Cancel</button>
                     </td>
                     <td>
-                        <button onClick={()=>saveField(newField['name'], newField['value'])}>Save</button>
+                        <button onClick={() => saveField(newField['name'], newField['value'])}>Save</button>
                     </td>
-                </>) : ''
+                </>) : <td>
+                    <button onClick={cancelAdd}>Cancel</button>
+                </td>
             }
         </tr>
     if (isEditing)
@@ -91,10 +93,10 @@ const Field = ({metadata, itemKey, saveMetadata}) => {
                 {renderFieldValueArea(typeof metadata[key], key)}
             </td>
             <td>
-                <button onClick={() => {setIsEditing(false)}}>Cancel</button>
+                <button onClick={() => { setIsEditing(false) }}>Cancel</button>
             </td>
             <td>
-                <button onClick={()=>saveField(newField['name'], newField['value'])}>Save</button>
+                <button onClick={() => saveField(newField['name'], newField['value'])}>Save</button>
             </td>
         </tr>
     return <tr>
