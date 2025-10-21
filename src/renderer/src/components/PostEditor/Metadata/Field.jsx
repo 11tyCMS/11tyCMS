@@ -19,6 +19,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
         saveMetadata({ ...metadata, [key]: value })
         setIsEditing(false);
         deleteField();
+        cancelAdd();
     }
     const standardOnChange = (event) => {
         let updatedNewField = { ...newField };
