@@ -108,7 +108,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
             {String(metadata[key])}
         </td>
         <td className='buttons'>
-            <button onClick={() => setIsEditing(true)}><FeatherIcon icon="edit-2" color="#7c8ad6" size={12} /></button>
+            <button onClick={() => {setIsEditing(true); setNewField({name:key, value:metadata[key]})}}><FeatherIcon icon="edit-2" color="#7c8ad6" size={12} /></button>
             <button onClick={() => saveRemoveField(key)}><FeatherIcon icon="trash-2" color="#7c8ad6" size={12} /></button>
         </td>
     </tr>
