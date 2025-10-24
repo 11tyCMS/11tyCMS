@@ -10,7 +10,9 @@ import { CMSDatabase } from './database/models';
 const { Sequelize, DataTypes } = require('sequelize');
 const child_process = require('child_process')
 const sequelize = new Sequelize('sqlite::memory:');
-
+console.dbg = (...args)=>{
+  console.log('%c 11tyCMS Debug ', 'background: black; color: violet; font-weight:800;', ...args);
+}
 let collectionDirectories = [];
 let collectionWatcher = null;
 let browserWindow = null;
@@ -94,7 +96,56 @@ app.whenReady().then(() => {
 
     return net.fetch('file://' + fullPath);
   });
+  const refreshCollectionWatcher = () => {
+    if (collectionWatcher)
+      collectionWatcher.close();
+    console.dbg('Watching these collections:\n', collectionDirectories.join(', '));
+    collectionWatcher = chokidar.watch(collectionDirectories, { persistent: true, ignoreInitial: true });
+    return collectionWatcher
+      .on('add', path => {
+        let explodedPathBefore = path.split('/');
+        const matterData = matter.read(path);
+        const pathArray = path.split('/');
+        let parentPath = [...path.split('/')];
+        parentPath.pop();
+        parentPath = parentPath.join('/')
+        eleventyDB.ItemMetadata.create({
+          collection: explodedPathBefore[explodedPathBefore.length - 2],
+          name: pathArray[pathArray.length - 1],
+          data: matterData.data,
+          path: matterData.path,
+          parentPath: parentPath
+        })
 
+        browserWindow.webContents.send('collectionFileAdded', {
+          collection: explodedPathBefore[explodedPathBefore.length - 2],
+          name: pathArray[pathArray.length - 1],
+          data: matterData.data,
+          path: matterData.path,
+          parentPath: parentPath
+        })
+
+      })
+      .on('unlink', path => browserWindow.webContents.send('collectionFileRemoved', {
+        path,
+        collection: (() => {
+          const lastSlashIndex = path.lastIndexOf('/')
+          let string = path.substring(0, lastSlashIndex);
+          let splitPath = string.split('/');
+          return splitPath[splitPath.length - 1];
+        })()
+      }))
+      .on('unlink', path => {
+        let explodedPath = path.split('/');
+        let collection = explodedPath[explodedPath.length - 2]
+        let fileName = explodedPath[explodedPath.length - 1];
+        eleventyDB.ItemMetadata.destroy({
+          where: { collection, name: fileName }
+        })
+      })
+      .on('change', path => {
+      })
+  }
 
   const openDir = async () => {
     //response.filePaths[0]+'/'+fileName
@@ -144,7 +195,8 @@ app.whenReady().then(() => {
         }
         eleventyDB.ItemMetadata.findAll().then((res) => {
           const files = res.map(({ dataValues }) => dataValues)
-          let structuredCollections = {}
+          let structuredCollections = eleventyStructure['collections'];
+
           files.forEach(file => {
             let currentColllection = structuredCollections[file.collection];
             if (currentColllection)
@@ -156,54 +208,7 @@ app.whenReady().then(() => {
           resolveOuter(eleventyStructure);
         })
 
-        if (collectionWatcher)
-          collectionWatcher.close();
-
-        collectionWatcher = chokidar.watch(collectionDirectories, { persistent: true, ignoreInitial: true });
-        collectionWatcher
-          .on('add', path => {
-            let explodedPathBefore = path.split('/');
-            const matterData = matter.read(path);
-            const pathArray = path.split('/');
-            let parentPath = [...path.split('/')];
-            parentPath.pop();
-            parentPath = parentPath.join('/')
-            eleventyDB.ItemMetadata.create({
-              collection: explodedPathBefore[explodedPathBefore.length - 2],
-              name: pathArray[pathArray.length - 1],
-              data: matterData.data,
-              path: matterData.path,
-              parentPath: parentPath
-            })
-
-            browserWindow.webContents.send('collectionFileAdded', {
-              collection: explodedPathBefore[explodedPathBefore.length - 2],
-              name: pathArray[pathArray.length - 1],
-              data: matterData.data,
-              path: matterData.path,
-              parentPath: parentPath
-            })
-
-          })
-          .on('unlink', path => browserWindow.webContents.send('collectionFileRemoved', {
-            path,
-            collection: (() => {
-              const lastSlashIndex = path.lastIndexOf('/')
-              let string = path.substring(0, lastSlashIndex);
-              let splitPath = string.split('/');
-              return splitPath[splitPath.length - 1];
-            })()
-          }))
-          .on('unlink', path => {
-            let explodedPath = path.split('/');
-            let collection = explodedPath[explodedPath.length - 2]
-            let fileName = explodedPath[explodedPath.length - 1];
-            eleventyDB.ItemMetadata.destroy({
-              where: { collection, name: fileName }
-            })
-          })
-          .on('change', path => {
-          })
+        refreshCollectionWatcher()
       })
     });
   }
@@ -346,8 +351,16 @@ app.whenReady().then(() => {
     })
   }
 
-  const deleteFile = async (event, path)=>{
+  const deleteFile = async (event, path) => {
     return fs.unlinkSync(path)
+  };
+
+  const createCollection = async (event, sitePath, name) => {
+    console.log("creating collection at ", `${sitePath}/${name}`)
+    fs.mkdirSync(`${sitePath}/${name}`);
+    fs.writeFileSync(`${sitePath}/${name}/${name}.json`, JSON.stringify({ "layout": 'post.html', tags: 'post' }))
+    collectionDirectories.push(`${sitePath}/${name}`)
+    refreshCollectionWatcher()
   };
 
   ipcMain.handle('dialog:openDir', openDir)
@@ -360,11 +373,9 @@ app.whenReady().then(() => {
   ipcMain.handle('site:getSiteInfo', getSiteInfo);
   ipcMain.handle('site:build', buildSite);
   ipcMain.handle('site:publish', publishSite);
-
+  ipcMain.handle('collection:create', createCollection);
 
   // IPC test
-
-
   browserWindow = createWindow()
   console.log('window created');
   app.on('activate', function () {
