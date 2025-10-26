@@ -114,7 +114,7 @@ function App() {
             </div></>}
         </div>
         <ul className="containingList">
-          <button onClick={() => { setIsAddingCollection(true)}}>Create collection</button>
+          <span class="listHeader">Collections <button onClick={()=>setIsAddingCollection(true)}>+</button></span>
           {Object.keys(collections).map((collectionName) => (
             <li className="parent">
               <FeatherIcon icon="folder" size={15} fill="#547fdb" />
@@ -128,7 +128,7 @@ function App() {
         </div>
       </div>
       <div className="mdxeditor-container">
-        <AddCollectionDialog siteInfo={selectedSiteInfo} displayStatus={isAddingCollection} setDisplayStatus={setIsAddingCollection} cwd={cwd} setCollections={setCollections} collections={collections}/>
+        <AddCollectionDialog siteInfo={selectedSiteInfo} displayStatus={isAddingCollection} setDisplayStatus={setIsAddingCollection} cwd={cwd} setCollections={setCollections} collections={collections} />
         {!selectedFile ? <PostsList cwd={cwd} fetchFile={fetchFile} collection={selectedCollection} posts={collections[selectedCollection] ? collections[selectedCollection] : []} setSelectedFile={setSelectedFile} /> : ''}
         {selectedFile ? <PostEditor {...{ selectedFile, setTitle, markdownEditorRef, cwd, setCwd, setSelectedFile, selectedCollection }} /> : ""}
       </div>

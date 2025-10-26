@@ -157,8 +157,8 @@ button.icon svg {
   font-family: arial;
 }
 
-.mdxeditor-container .metadata .buttons{
-  display:none;
+.mdxeditor-container .metadata .buttons {
+  display: none;
 }
 
 .mdxeditor-container .toolbar {
@@ -405,7 +405,7 @@ button.icon svg {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index:200;
+  z-index: 200;
 }
 
 .dialog-modal-bg .dialog {
@@ -490,4 +490,24 @@ button.icon svg {
   grid-template-columns: 1fr 1fr;
   margin: 10px;
   gap: 10px;
+}
+
+.containingList span.listHeader {
+  margin-left: 14px;
+  font-size: 14px;
+  color: #acbdd2;
+  font-weight: 500;
+  font-family: Helvetica;
+  display: flex;
+  width: calc(100%-10px);
+  line-height: 19px;
+  justify-content: space-between;
+}
+
+.containingList span.listHeader button {
+  padding: 2px;
+  margin: 0px;
+  min-width: 19px;
+  border-radius: 6px;
+  margin-right: 14px;
 }
