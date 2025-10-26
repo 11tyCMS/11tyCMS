@@ -405,6 +405,7 @@ button.icon svg {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index:200;
 }
 
 .dialog-modal-bg .dialog {

@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
-import AddFileDialog from './AddFileDialog'
+import AddFileDialog from './Dialogs/AddFileDialog'
 import { MDXEditor } from '@mdxeditor/editor'
 import FeatherIcon from 'feather-icons-react'
-import DialogBase from './DialogBase'
-import DeletePostDialog from './DeletePostDialog'
+import DialogBase from './Dialogs/DialogBase'
+import DeletePostDialog from './Dialogs/DeletePostDialog'
 function PostsList({ collection, posts, setSelectedFile, fetchFile, cwd }) {
   const [displayAddFileDialog, setDisplayAddFileDialog] = useState(false)
   const [postToDelete, setPostToDelete] = useState(null);
@@ -11,7 +11,6 @@ function PostsList({ collection, posts, setSelectedFile, fetchFile, cwd }) {
     event.stopPropagation();
     setPostToDelete(post);
   }
-  console.log(posts, 'tesd')
   return (
     <div className="postsList">
       <AddFileDialog

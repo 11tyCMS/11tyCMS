@@ -328,7 +328,12 @@ app.whenReady().then(() => {
   }
   const getSiteInfo = async (event, path) => {
     let otherData = {
+      layouts:{}
     }
+    fs.readdirSync(`${path}/_includes/`, {withFileTypes:true}).forEach(file=>{
+      const matterData = matter.read(`${file.parentPath}/${file.name}`);
+      otherData['layouts'][file.name] = matterData.data
+    })
     const favicon = await getFavicon(path)
     otherData['base64Favicon'] = imageToBase64(favicon, '.svg')
     return { ...JSON.parse(await fs.readFileSync(`${path}/_data/site.json`, 'utf8')), ...otherData };
@@ -355,10 +360,10 @@ app.whenReady().then(() => {
     return fs.unlinkSync(path)
   };
 
-  const createCollection = async (event, sitePath, name) => {
+  const createCollection = async (event, sitePath, name, layout) => {
     console.log("creating collection at ", `${sitePath}/${name}`)
     fs.mkdirSync(`${sitePath}/${name}`);
-    fs.writeFileSync(`${sitePath}/${name}/${name}.json`, JSON.stringify({ "layout": 'post.html', tags: 'post' }))
+    fs.writeFileSync(`${sitePath}/${name}/${name}.json`, JSON.stringify({ "layout": layout, tags: 'post' }))
     collectionDirectories.push(`${sitePath}/${name}`)
     refreshCollectionWatcher()
   };

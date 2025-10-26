@@ -4,12 +4,14 @@ import PostEditor from './components/PostEditor/PostEditor'
 import { Milkdown, MilkdownProvider, useEditor } from "@milkdown/react";
 import FeatherIcon from 'feather-icons-react';
 import { ClipLoader, SyncLoader } from 'react-spinners';
+import AddCollectionDialog from './components/Dialogs/AddCollectionDialog';
 
 function App() {
   const [cwd, setCwd] = useState('')
   const [collections, setCollections] = useState({})
   const [isBuilding, setIsBuilding] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [isAddingCollection, setIsAddingCollection] = useState(false);
   const [selectedSiteInfo, setSelectedSiteInfo] = useState(null)
   const [selectedFile, setSelectedFile] = useState(null)
   const [selectedCollection, setSelectedCollection] = useState(null);
@@ -20,6 +22,7 @@ function App() {
         setSelectedSiteInfo(data)
         setCwd(selected.rootPath)
         setCollections(selected.collections)
+        console.log("collectionssss11111", selected.collections);
       })
     })
 
@@ -56,12 +59,12 @@ function App() {
       updatedCollections[event1.collection] = updatedCollections[event1.collection].filter(post => event1.path != post.path)
       setCollections(updatedCollections);
     });
-    window.ipcRenderer.on("collectionFileModified", (event, eventData)=>{
+    window.ipcRenderer.on("collectionFileModified", (event, eventData) => {
       console.log("collectionFileMOdified!");
-      const {collection, fileName, metadata} = eventData;
-      let updatedCollections = {...collections};
+      const { collection, fileName, metadata } = eventData;
+      let updatedCollections = { ...collections };
       let targetPostIndex = null;
-      targetPostIndex = updatedCollections[collection].findIndex(({name})=>{
+      targetPostIndex = updatedCollections[collection].findIndex(({ name }) => {
         console.log()
         return fileName == name
       })
@@ -78,17 +81,17 @@ function App() {
     }
   }, [collections])
   console.log(selectedSiteInfo, "testing background test");
-  const build = (pubBuild)=>{
+  const build = (pubBuild) => {
     setIsBuilding(true);
-    return window.api.build(cwd).then(()=>{
-        setIsBuilding(false);
+    return window.api.build(cwd).then(() => {
+      setIsBuilding(false);
     })
   }
-  const publish = ()=>{
-    return new Promise((resolve)=>{
-       build(true).then(()=>{
+  const publish = () => {
+    return new Promise((resolve) => {
+      build(true).then(() => {
         setIsPublishing(true);
-        window.api.publish(cwd).then(()=>{
+        window.api.publish(cwd).then(() => {
           setIsPublishing(false)
           resolve();
         })
@@ -111,6 +114,7 @@ function App() {
             </div></>}
         </div>
         <ul className="containingList">
+          <button onClick={() => { setIsAddingCollection(true)}}>Create collection</button>
           {Object.keys(collections).map((collectionName) => (
             <li className="parent">
               <FeatherIcon icon="folder" size={15} fill="#547fdb" />
@@ -119,11 +123,12 @@ function App() {
           ))}
         </ul>
         <div className='site-buttons'>
-          <button onClick={()=>build()} disabled={isBuilding || isPublishing ? true : false}>{isBuilding ? <ClipLoader size={10} color="#a0afc2"/> : <FeatherIcon icon="tool" size={15} />} Build</button>
-          <button onClick={()=>publish()} disabled={isBuilding || isPublishing ? true : false}>{isPublishing ? <ClipLoader size={10} color="#a0afc2"/> : <FeatherIcon icon="upload-cloud" size={15} />} Publish</button>
+          <button onClick={() => build()} disabled={isBuilding || isPublishing ? true : false}>{isBuilding ? <ClipLoader size={10} color="#a0afc2" /> : <FeatherIcon icon="tool" size={15} />} Build</button>
+          <button onClick={() => publish()} disabled={isBuilding || isPublishing ? true : false}>{isPublishing ? <ClipLoader size={10} color="#a0afc2" /> : <FeatherIcon icon="upload-cloud" size={15} />} Publish</button>
         </div>
       </div>
       <div className="mdxeditor-container">
+        <AddCollectionDialog siteInfo={selectedSiteInfo} displayStatus={isAddingCollection} setDisplayStatus={setIsAddingCollection} cwd={cwd} setCollections={setCollections} collections={collections}/>
         {!selectedFile ? <PostsList cwd={cwd} fetchFile={fetchFile} collection={selectedCollection} posts={collections[selectedCollection] ? collections[selectedCollection] : []} setSelectedFile={setSelectedFile} /> : ''}
         {selectedFile ? <PostEditor {...{ selectedFile, setTitle, markdownEditorRef, cwd, setCwd, setSelectedFile, selectedCollection }} /> : ""}
       </div>
