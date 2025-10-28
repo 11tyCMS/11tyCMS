@@ -83,7 +83,7 @@ function App() {
   console.log(selectedSiteInfo, "testing background test");
   const build = (pubBuild) => {
     setIsBuilding(true);
-    return window.api.build(cwd).then(() => {
+    return window.api.buildSite(cwd).then(() => {
       setIsBuilding(false);
     })
   }
@@ -91,7 +91,7 @@ function App() {
     return new Promise((resolve) => {
       build(true).then(() => {
         setIsPublishing(true);
-        window.api.publish(cwd).then(() => {
+        window.api.publishSite(cwd).then(() => {
           setIsPublishing(false)
           resolve();
         })

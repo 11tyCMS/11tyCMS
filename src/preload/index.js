@@ -1,22 +1,22 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, ipcMain} from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import testing from '../functions';
 window.ipcRenderer = require('electron').ipcRenderer;
-// Custom APIs for renderer
-const api = {
-  openDirectory: ()=>ipcRenderer.invoke('dialog:openDir'),
-  openFile: (fileName)=>ipcRenderer.invoke('dialog:openFile', fileName),
-  saveFile: (path, metadata, contents)=>ipcRenderer.invoke('file:save', path, metadata, contents),
-  saveFileMetadata: (path, metadata)=>ipcRenderer.invoke('file:saveMetadata', path, metadata),
-  deleteFile: (path)=>ipcRenderer.invoke('file:delete', path),
-  createCollection: (sitePath, name, layout)=>ipcRenderer.invoke('collection:create', sitePath, name, layout),
+console.log("omg hi preload", testing);
+let api = {
   // deleteCollection: (name)=>ipcRenderer.invoke('collection:delete', name),
   // editCollection: (name)=>ipcRenderer.invoke('collection:edit', name),
-  saveImage: (path, file)=>ipcRenderer.invoke('file:saveImage', path, file),
-  renameFile: (beforePath, afterPath)=>ipcRenderer.invoke('file:rename', beforePath, afterPath),
-  getSiteInfo: (path)=>ipcRenderer.invoke('site:getSiteInfo', path),
-  build: (path)=>ipcRenderer.invoke('site:build', path, path),
-  publish: (path)=>ipcRenderer.invoke('site:publish', path),
 }
+for(const channelName in testing){
+  console.log('registering function', testing[channelName].name, 'with channel', channelName)
+  api[testing[channelName].name] = (...args)=>ipcRenderer.invoke(channelName, ...args)
+}
+const registerApiFunction = (func, channelName)=>{
+  api[func.name] = (...args)=>ipcRenderer.invoke(channelName, ...args)
+  ipcMain.handle(channelName, func)
+  contextBridge.exposeInMainWorld('api', api)
+}
+// Custom APIs for renderer
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
@@ -33,8 +33,11 @@ if (process.contextIsolated) {
   } catch (error) {
     console.error(error)
   }
+
+  
 } else {
   window.electron = electronAPI
   window.api = api
 }
 
+export {registerApiFunction};
