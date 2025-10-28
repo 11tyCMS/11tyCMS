@@ -82,6 +82,33 @@ const functions = {
         console.log("Creating image at " + path)
         return fs.writeFileSync(path, Buffer.from(file));
     },
+    _imageToBase64: (file, ext) => {
+        const base64String = Buffer.from(file, 'utf8').toString('base64');
+        let mimeType;
+        switch (ext) {
+            case '.png':
+                mimeType = 'image/png';
+                break;
+            case '.jpg':
+            case '.jpeg':
+                mimeType = 'image/jpeg';
+                break;
+            case '.gif':
+                mimeType = 'image/gif';
+                break;
+            case '.svg':
+                mimeType = 'image/svg+xml';
+                break;
+            case '.webp':
+                mimeType = 'image/webp';
+                break;
+            default:
+                console.warn(`Unknown image type for ${imagePath}. Defaulting to image/jpeg.`);
+                mimeType = 'image/jpeg';
+        }
+
+        return `data:${mimeType};base64,${base64String}`;
+    }
 }
 
 export default functions;

@@ -4,45 +4,20 @@ import fs from 'node:fs';
 import mainWindow from '../main/window';
 import eleventyDb from '../main/database/eleventyDb';
 import chokidar from 'chokidar';
-import path from 'node:path';
-import { join } from 'path'
+import filesFuncs from './files';
 const child_process = require('child_process')
+
+const { _imageToBase64 } = filesFuncs;
+
 let collectionDirectories = [];
 let collectionWatcher = null;
 let eleventyDir = null;
 let collections = {}
+
 const getFavicon = async (sitePath) => {
     return await fs.readFileSync(`${sitePath}/media/favicon.svg`, 'utf8')
 }
-const imageToBase64 = (file, ext) => {
-    const base64String = Buffer.from(file, 'utf8').toString('base64');
-    let mimeType;
-    switch (ext) {
-        case '.png':
-            mimeType = 'image/png';
-            break;
-        case '.jpg':
-        case '.jpeg':
-            mimeType = 'image/jpeg';
-            break;
-        case '.gif':
-            mimeType = 'image/gif';
-            break;
-        case '.svg':
-            mimeType = 'image/svg+xml';
-            break;
-        case '.webp':
-            mimeType = 'image/webp';
-            break;
-        default:
-            // Fallback for unknown types, or you can throw an error
-            console.warn(`Unknown image type for ${imagePath}. Defaulting to image/jpeg.`);
-            mimeType = 'image/jpeg';
-    }
 
-    // 4. Construct the Base64 data URL
-    return `data:${mimeType};base64,${base64String}`;
-}
 const refreshCollectionWatcher = () => {
     const eleventyDB = eleventyDb.get();
     let browserWindow = mainWindow.get();
@@ -172,7 +147,7 @@ const functions = {
             otherData['layouts'][file.name] = matterData.data
         })
         const favicon = await getFavicon(path)
-        otherData['base64Favicon'] = imageToBase64(favicon, '.svg')
+        otherData['base64Favicon'] = _imageToBase64(favicon, '.svg')
         return { ...JSON.parse(await fs.readFileSync(`${path}/_data/site.json`, 'utf8')), ...otherData };
     },
     createCollection: async (sitePath, name, layout) => {
@@ -198,7 +173,7 @@ const functions = {
             });
         })
     },
-    _getEleventyDir: ()=>eleventyDir
+    _getEleventyDir: () => eleventyDir
 }
 
 export default functions;
