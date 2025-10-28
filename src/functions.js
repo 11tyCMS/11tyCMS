@@ -7,7 +7,7 @@ import fs from 'node:fs';
 let exposedFunctions = {
 
 }
-const registerExposedFunction = (func, channelName) => {
+const exposeChannelFunction = (func, channelName) => {
     exposedFunctions[`${channelName}`] = func;
 }
 
@@ -22,7 +22,7 @@ for (const channelParentName in functionsByChannels) {
             continue;
         }
         console.log("Registering ", childFuncKey, " under ", channelParentName)
-        registerExposedFunction(functionsByChannels[channelParentName][childFuncKey], `${channelParentName}:${childFuncKey}`)
+        exposeChannelFunction(functionsByChannels[channelParentName][childFuncKey], `${channelParentName}:${childFuncKey}`)
     }
 }
 console.log(exposedFunctions)
