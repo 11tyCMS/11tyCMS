@@ -511,3 +511,17 @@ button.icon svg {
   border-radius: 6px;
   margin-right: 14px;
 }
+
+.containingList .parent button {
+  padding: 5px;
+  border-radius: 6px;
+  display:none;
+}
+
+.containingList .parent:hover button {
+  display:inherit;
+}
+
+.containingList .parent button svg {
+  margin-right: 0px;
+}

@@ -98,6 +98,13 @@ function App() {
       });
     })
   }
+
+  const deleteCollection = (collectionName)=>{
+    window.api.deleteCollection(collectionName);
+    let updatedCollections = {...collections};
+    delete updatedCollections[collectionName];
+    setCollections(updatedCollections);
+  }
   return (
     <>
       <div className="sidebar">
@@ -119,6 +126,8 @@ function App() {
             <li className="parent">
               <FeatherIcon icon="folder" size={15} fill="#547fdb" />
               <span className="collectionLabel" onClick={() => setSelectedCollection(collectionName)}>{collectionName}</span>
+              <div style={{flexGrow:1}}></div>
+              <button onClick={()=>deleteCollection(collectionName)}><FeatherIcon icon='trash' size={10}/></button>
             </li>
           ))}
         </ul>

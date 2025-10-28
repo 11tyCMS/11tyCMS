@@ -72,6 +72,14 @@ const refreshCollectionWatcher = () => {
 }
 const functions = {
     openDirectory: async () => {
+        if(collectionWatcher){
+            collectionWatcher.close()
+        }
+        collectionDirectories = [];
+        collectionWatcher = null;
+        eleventyDir = null;
+        collections = {}
+        
         const eleventyDB = eleventyDb.get();
         let browserWindow = mainWindow.get();
         //response.filePaths[0]+'/'+fileName
@@ -156,6 +164,13 @@ const functions = {
         fs.writeFileSync(`${sitePath}/${name}/${name}.json`, JSON.stringify({ "layout": layout, tags: 'post' }))
         collectionDirectories.push(`${sitePath}/${name}`)
         refreshCollectionWatcher()
+    },
+    deleteCollection: async (name)=>{
+        console.log("Deleting collection at ", `${eleventyDir}/${name}`)
+        const status = await fs.rmSync(`${eleventyDir}/${name}`, { recursive: true, force: true });
+
+        refreshCollectionWatcher();
+        return status;
     },
     buildSite: (path) => {
         console.log('building the site')
