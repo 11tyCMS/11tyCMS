@@ -46,7 +46,7 @@ app.whenReady().then(() => {
 
   // Register the protocol handler ONCE
   protocol.handle('eleventy', (request) => {
-    const eleventyDir = siteFuncs._getEleventyDir();
+    const eleventyDir = siteFuncs._getSelectedEleventySiteDir();
 
     console.log(`%c[Eleventy Protocol] Fetching: %c${request.url}%c from 11ty directory: %c ${eleventyDir}`, "color:cyan; font-weight:bold;", "font-style:italic;", "color:cyan; font-weight:bold;")
 

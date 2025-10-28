@@ -173,7 +173,7 @@ const functions = {
             });
         })
     },
-    _getEleventyDir: () => eleventyDir
+    _getSelectedEleventySiteDir: () => eleventyDir
 }
 
 export default functions;
