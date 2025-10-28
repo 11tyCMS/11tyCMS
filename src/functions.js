@@ -11,18 +11,18 @@ const registerExposedFunction = (func, channelName) => {
     exposedFunctions[`${channelName}`] = func;
 }
 
-let functions = {
+let functionsByChannels = {
     files,
     site
 }
 
-for (const channelParentName in functions) {
-    for(const childFuncKey in functions[channelParentName]){
+for (const channelParentName in functionsByChannels) {
+    for(const childFuncKey in functionsByChannels[channelParentName]){
         if(childFuncKey.startsWith("_")){
             continue;
         }
         console.log("Registering ", childFuncKey, " under ", channelParentName)
-        registerExposedFunction(functions[channelParentName][childFuncKey], `${channelParentName}:${childFuncKey}`)
+        registerExposedFunction(functionsByChannels[channelParentName][childFuncKey], `${channelParentName}:${childFuncKey}`)
     }
 }
 console.log(exposedFunctions)
