@@ -1,8 +1,10 @@
 import * as matter from 'gray-matter';
 import fs from 'node:fs';
 import mainWindow from '../main/window';
+import eleventyDb from '../main/database/eleventyDb';
 const functions = {
-    openFile: (filePath, eleventyDB) => {
+    openFile: (filePath) => {
+        const eleventyDB = eleventyDb.get();
         let explodedPath = filePath.split('/');
         let collection = explodedPath[explodedPath.length - 2]
         let fileName = explodedPath[explodedPath.length - 1];
@@ -26,7 +28,8 @@ const functions = {
             })
         });
     },
-    saveFile: (path, metadata, contents, eleventyDB) => {
+    saveFile: (path, metadata, contents) => {
+        const eleventyDB = eleventyDb.get();
         const browserWindow = mainWindow.get()
         let content = contents.replace(/eleventy:\/\//g, "");
         let explodedPath = path.split('/');
@@ -61,7 +64,8 @@ const functions = {
             return fs.writeFileSync(path, fileContents);
         }
     },
-    renameFile: (beforePath, afterPath, eleventyDB) => {
+    renameFile: (beforePath, afterPath) => {
+        const eleventyDB = eleventyDb.get();
         console.log("Renaming file from/to: ", beforePath, afterPath);
         let explodedPathBefore = beforePath.split('/');
         let explodedPathAfter = afterPath.split('/');

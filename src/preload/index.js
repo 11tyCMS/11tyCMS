@@ -2,7 +2,6 @@ import { contextBridge, ipcRenderer, ipcMain} from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import testing from '../functions';
 window.ipcRenderer = require('electron').ipcRenderer;
-console.log("omg hi preload", testing);
 let api = {
   // deleteCollection: (name)=>ipcRenderer.invoke('collection:delete', name),
   // editCollection: (name)=>ipcRenderer.invoke('collection:edit', name),
@@ -33,8 +32,6 @@ if (process.contextIsolated) {
   } catch (error) {
     console.error(error)
   }
-
-  
 } else {
   window.electron = electronAPI
   window.api = api

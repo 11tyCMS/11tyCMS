@@ -1,18 +1,13 @@
 import { app, shell, BrowserWindow, ipcMain, dialog, protocol, net } from 'electron'
-import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
-import fs from 'node:fs';
-import * as matter from 'gray-matter';
-import chokidar from 'chokidar';
 import path from 'node:path';
-import { CMSDatabase } from './database/models';
 import testing from '../functions';
 import myWindow from './window';
 import eleventyDb from './database/eleventyDb';
 import siteFuncs from '../functions/site';
 const { Sequelize, DataTypes } = require('sequelize');
 const child_process = require('child_process')
+
 const sequelize = new Sequelize('sqlite::memory:');
 console.dbg = (...args)=>{
   console.log('%c 11tyCMS Debug ', 'background: black; color: violet; font-weight:800;', ...args);
@@ -20,9 +15,7 @@ console.dbg = (...args)=>{
 
 let collectionWatcher = null;
 let browserWindow = null;
-
 let eleventyDB = eleventyDb.initDbInstance();
-
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -71,7 +64,7 @@ app.whenReady().then(() => {
   });
   
   for(const channelName in testing){
-    ipcMain.handle(channelName, (handle, ...args)=>testing[channelName](...args, eleventyDB, browserWindow));
+    ipcMain.handle(channelName, (handle, ...args)=>testing[channelName](...args));
   }
   // IPC test
   browserWindow = myWindow.createWindow();
