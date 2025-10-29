@@ -1,3 +1,4 @@
+import ConfirmationDialog from "./ConfirmationDialog";
 import DialogBase from "./DialogBase";
 
 const DeletePostDialog = ({ post, setPostToDelete }) => {
@@ -7,13 +8,9 @@ const DeletePostDialog = ({ post, setPostToDelete }) => {
         setPostToDelete(null);
     }
     if (post)
-        return <DialogBase displayStatus={post} title="Are you sure?">
+        return <ConfirmationDialog confirmLabelText="Yes, delete this post" onConfirm={(e) => deletePost(e, post)} onCancel={() => setPostToDelete(null)} displayStatus={post}>
             <p>Are you sure you want to delete <b>{post.data.title}</b>?</p>
-            <div className='buttons'>
-                <button onClick={(e) => deletePost(e, post)}>Yes, delete it</button>
-                <button onClick={()=>setPostToDelete(null)}>No</button>
-            </div>
-        </DialogBase>
+        </ConfirmationDialog>
     else
         return ''
 }

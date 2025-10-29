@@ -1,3 +1,4 @@
+import ConfirmationDialog from "./ConfirmationDialog";
 import DialogBase from "./DialogBase";
 
 const DeleteCollectionDialog = ({ collections, collection, setCollections, setCollectionToDelete }) => {
@@ -9,13 +10,13 @@ const DeleteCollectionDialog = ({ collections, collection, setCollections, setCo
         setCollectionToDelete(null);
     }
     if (collection)
-        return <DialogBase displayStatus={collection} title={`Delete ${collection}?`}>
-            <p>Are you sure you want to delete the collection <b>{collection}</b>? <br /> <i>THIS WILL DELETE ALL POSTS IN THIS COLLECTION</i></p>
-            <div className='buttons'>
-                <button onClick={(e) => deleteCollection(collection)}>Yes, delete collection and it's posts</button>
-                <button onClick={() => setCollectionToDelete(null)}>No</button>
-            </div>
-        </DialogBase>
+        return <ConfirmationDialog confirmLabelText={`Yes, delete ${collection} and all its posts.`} onConfirm={() => deleteCollection(collection)} onCancel={() => setCollectionToDelete(null)} displayStatus={collection}>
+            <p>
+                Are you sure you want to delete the collection <b>{collection}</b>?
+                <br />
+                <i>THIS WILL DELETE ALL POSTS IN THIS COLLECTION</i>
+            </p>
+        </ConfirmationDialog>
     else
         return ''
 }
