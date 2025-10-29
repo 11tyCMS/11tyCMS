@@ -67,8 +67,8 @@ function App() {
         <DeleteCollectionDialog collection={collectionToDelete} collections={collections} setCollections={setCollections} setCollectionToDelete={setCollectionToDelete} />
         <Routes>
           <Route path="/" exact element={<h1>Select collection</h1>} />
-          <Route path=":collectionName/posts" exact element={<PostsList cwd={cwd} collection={selectedCollection} posts={collections[selectedCollection] ? collections[selectedCollection] : []} setSelectedFile={setSelectedFile} />} />
-          <Route path=":collectionName/posts/:postFileName" exact element={<PostEditor {...{ selectedFile, setSelectedFile, cwd }} />} />
+          <Route path=":collectionName/posts" exact element={<PostsList cwd={cwd} posts={collections[selectedCollection] ? collections[selectedCollection] : []} />} />
+          <Route path=":collectionName/posts/:postFileName" exact element={<PostEditor  cwd={cwd} />} />
         </Routes>
       </div>
     </>
