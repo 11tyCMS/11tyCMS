@@ -1,9 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import PostsList from './components/PostsList'
 import PostEditor from './components/PostEditor/PostEditor'
-import { Milkdown, MilkdownProvider, useEditor } from "@milkdown/react";
-import FeatherIcon from 'feather-icons-react';
-import { ClipLoader, SyncLoader } from 'react-spinners';
 import AddCollectionDialog from './components/Dialogs/AddCollectionDialog';
 import DeleteCollectionDialog from './components/Dialogs/DeleteCollectionDialog';
 import Sidebar from './components/Sidebar/Sidebar';
@@ -16,7 +13,6 @@ function App() {
   const [selectedFile, setSelectedFile] = useState(null)
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [collectionToDelete, setCollectionToDelete] = useState(null);
-  const markdownEditorRef = useRef(null)
   const ipcHandle = () => {
     window.api.openDirectory().then((selected) => {
       window.api.getSiteInfo(selected.rootPath).then((data) => {
@@ -68,8 +64,7 @@ function App() {
       <div className="mdxeditor-container">
         <AddCollectionDialog siteInfo={selectedSiteInfo} displayStatus={isAddingCollection} setDisplayStatus={setIsAddingCollection} cwd={cwd} setCollections={setCollections} collections={collections} />
         <DeleteCollectionDialog collection={collectionToDelete} collections={collections} setCollections={setCollections} setCollectionToDelete={setCollectionToDelete} />
-        {!selectedFile ? <PostsList cwd={cwd} collection={selectedCollection} posts={collections[selectedCollection] ? collections[selectedCollection] : []} setSelectedFile={setSelectedFile} /> : ''}
-        {selectedFile ? <PostEditor {...{ selectedFile, markdownEditorRef, cwd, setCwd, setSelectedFile, selectedCollection }} /> : ""}
+        {!selectedFile ? <PostsList cwd={cwd} collection={selectedCollection} posts={collections[selectedCollection] ? collections[selectedCollection] : []} setSelectedFile={setSelectedFile} /> : <PostEditor {...{ selectedFile, setSelectedFile, cwd }} />}
       </div>
     </>
   )

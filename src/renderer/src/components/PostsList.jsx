@@ -1,8 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import AddFileDialog from './Dialogs/AddFileDialog'
-import { MDXEditor } from '@mdxeditor/editor'
 import FeatherIcon from 'feather-icons-react'
-import DialogBase from './Dialogs/DialogBase'
 import DeletePostDialog from './Dialogs/DeletePostDialog'
 function PostsList({ collection, posts, setSelectedFile, cwd }) {
   const [displayAddFileDialog, setDisplayAddFileDialog] = useState(false)

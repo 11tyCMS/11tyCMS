@@ -19,7 +19,7 @@ import Metadata from './Metadata/Metadata';
 
 
 
-function PostEditor({ selectedFile, setSelectedFile, markdownEditorRef, cwd, selectedCollection }) {
+function PostEditor({ selectedFile, setSelectedFile, cwd }) {
   const markdownRef = useRef(null);
   const typingRef = useRef(null)
   const editorRef = useRef(null)
