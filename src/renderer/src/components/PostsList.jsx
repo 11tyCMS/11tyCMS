@@ -15,7 +15,7 @@ function PostsList({ collection, posts, setSelectedFile, cwd }) {
       })
     })
   }
-  const deletePost = (event, post) => {
+  const deletePostConfirm = (event, post) => {
     event.stopPropagation();
     setPostToDelete(post);
   }
@@ -45,7 +45,7 @@ function PostsList({ collection, posts, setSelectedFile, cwd }) {
                 <span style={{ justifySelf: 'end' }}>
                   {new Date(post.data.date).toLocaleDateString('en-US')}
                 </span>
-                <button className='icon' onClick={(e) => deletePost(e, post)}>
+                <button className='icon' onClick={(e) => deletePostConfirm(e, post)}>
                   <FeatherIcon icon='trash' size={16} />
                 </button>
               </div>
