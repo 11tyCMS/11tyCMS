@@ -12,7 +12,6 @@ import fs from 'fs';
 import FeatherIcon from 'feather-icons-react'
 import { useEffect, useRef, useState, useCallback, StrictMode } from 'react'
 function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef }) {
-  const [content, setContent] = useState('')
   const saveTimerRef = useRef(null)
   const editorCtx = useRef(null)
 
