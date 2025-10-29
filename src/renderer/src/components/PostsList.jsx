@@ -4,9 +4,19 @@ import { MDXEditor } from '@mdxeditor/editor'
 import FeatherIcon from 'feather-icons-react'
 import DialogBase from './Dialogs/DialogBase'
 import DeletePostDialog from './Dialogs/DeletePostDialog'
-function PostsList({ collection, posts, setSelectedFile, fetchFile, cwd }) {
+function PostsList({ collection, posts, setSelectedFile, cwd }) {
   const [displayAddFileDialog, setDisplayAddFileDialog] = useState(false)
   const [postToDelete, setPostToDelete] = useState(null);
+  const fetchFile = (fileName) => {
+    window.api.openFile(fileName).then((fileContents) => {
+      setSelectedFile({
+        contents: fileContents.content,
+        data: fileContents.data,
+        content: fileContents.content,
+        fileName,
+      })
+    })
+  }
   const deletePost = (event, post) => {
     event.stopPropagation();
     setPostToDelete(post);
