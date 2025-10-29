@@ -2,9 +2,12 @@ import { useState, useRef, useEffect } from 'react'
 import AddFileDialog from './Dialogs/AddFileDialog'
 import FeatherIcon from 'feather-icons-react'
 import DeletePostDialog from './Dialogs/DeletePostDialog'
+import { useNavigate } from 'react-router-dom'
 function PostsList({ collection, posts, setSelectedFile, cwd }) {
   const [displayAddFileDialog, setDisplayAddFileDialog] = useState(false)
   const [postToDelete, setPostToDelete] = useState(null);
+  console.log(posts);
+  const navigate = useNavigate();
   const fetchFile = (fileName) => {
     window.api.openFile(fileName).then((fileContents) => {
       setSelectedFile({
@@ -39,7 +42,7 @@ function PostsList({ collection, posts, setSelectedFile, cwd }) {
         {posts
           .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
           .map((post) => (
-            <li onClick={() => fetchFile(post.path)}>
+            <li onClick={() => {navigate(`/${collection}/posts/${post.name}`)}}>
               <label>{post.data.title ? post.data.title : post.path}</label>
               <div className='buttons-info'>
                 <span style={{ justifySelf: 'end' }}>

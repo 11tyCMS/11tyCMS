@@ -4,6 +4,7 @@ import PostEditor from './components/PostEditor/PostEditor'
 import AddCollectionDialog from './components/Dialogs/AddCollectionDialog';
 import DeleteCollectionDialog from './components/Dialogs/DeleteCollectionDialog';
 import Sidebar from './components/Sidebar/Sidebar';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 
 function App() {
   const [cwd, setCwd] = useState('')
@@ -64,7 +65,11 @@ function App() {
       <div className="mdxeditor-container">
         <AddCollectionDialog siteInfo={selectedSiteInfo} displayStatus={isAddingCollection} setDisplayStatus={setIsAddingCollection} cwd={cwd} setCollections={setCollections} collections={collections} />
         <DeleteCollectionDialog collection={collectionToDelete} collections={collections} setCollections={setCollections} setCollectionToDelete={setCollectionToDelete} />
-        {!selectedFile ? <PostsList cwd={cwd} collection={selectedCollection} posts={collections[selectedCollection] ? collections[selectedCollection] : []} setSelectedFile={setSelectedFile} /> : <PostEditor {...{ selectedFile, setSelectedFile, cwd }} />}
+        <Routes>
+          <Route path="/" exact element={<h1>Select collection</h1>} />
+          <Route path=":collectionName/posts" exact element={<PostsList cwd={cwd} collection={selectedCollection} posts={collections[selectedCollection] ? collections[selectedCollection] : []} setSelectedFile={setSelectedFile} />} />
+          <Route path=":collectionName/posts/:postFileName" exact element={<PostEditor {...{ selectedFile, setSelectedFile, cwd }} />} />
+        </Routes>
       </div>
     </>
   )

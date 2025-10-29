@@ -38,6 +38,7 @@
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.0",
     "marked": "^15.0.12",
+    "react-router-dom": "^7.9.5",
     "react-spinners": "^0.17.0",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
@@ -45,7 +46,8 @@
     "remark-stringify": "^11.0.0",
     "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7",
-    "turndown": "^7.2.0"
+    "turndown": "^7.2.0",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^2.0.0",

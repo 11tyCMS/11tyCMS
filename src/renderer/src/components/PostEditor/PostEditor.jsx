@@ -7,12 +7,18 @@ import "@milkdown/crepe/theme/frame.css";
 import MilkdownEditorWrapper from '../MilkdownEditor';
 import FeatherIcon from 'feather-icons-react';
 import Metadata from './Metadata/Metadata';
+import { useNavigate, useParams } from 'react-router-dom';
 
-function PostEditor({ selectedFile, setSelectedFile, cwd }) {
+function PostEditor({ cwd }) {
   const markdownRef = useRef(null);
   const typingRef = useRef(null)
   const editorRef = useRef(null)
+  const [selectedFile, setSelectedFile] = useState(null);
+  const {collectionName, postFileName} = useParams();
+  const navigate = useNavigate()
+  console.log(postFileName);
   const fetchFile = (fileName) => {
+    console.log(fileName);
     window.api.openFile(fileName).then((fileContents) => {
       setSelectedFile({
         contents: fileContents.content,
@@ -41,6 +47,7 @@ function PostEditor({ selectedFile, setSelectedFile, cwd }) {
   }
 
   useEffect(() => {
+    fetchFile(`${cwd}/${collectionName}/${postFileName}`);
     return () => {
       if (typingRef.current) clearTimeout(typingRef.current)
     }
@@ -59,25 +66,28 @@ function PostEditor({ selectedFile, setSelectedFile, cwd }) {
     setSelectedFile(updatedSelectedFile);
     window.api.saveFileMetadata(updatedSelectedFile.fileName, metadata)
   }
-  return (
-    <>
-      <div className='title-bar'>
-        <FeatherIcon icon={"arrow-left"} size={25} color="#7c8ad6" className='back-button' onClick={() => setSelectedFile(null)} />
-        <input
-          className="title"
-          value={selectedFile ? selectedFile.data.title : ''}
-          onChange={(e) => {
-            setTitle(e.target.value)
-          }}
-        ></input>
-      </div>
-      <Metadata selectedFile={selectedFile} saveMetadata={saveMetadata} />
-      <div>
-        <MilkdownEditorWrapper selectedFile={selectedFile} editorRef={editorRef} markdownRef={markdownRef} saveFile={saveJustContent} cwd={cwd} />
-      </div>
+  if(selectedFile)
+    return (
+      <>
+        <div className='title-bar'>
+          <FeatherIcon icon={"arrow-left"} size={25} color="#7c8ad6" className='back-button' onClick={() => navigate(`/${collectionName}/posts`)} />
+          <input
+            className="title"
+            value={selectedFile ? selectedFile.data.title : ''}
+            onChange={(e) => {
+              setTitle(e.target.value)
+            }}
+          ></input>
+        </div>
+        <Metadata selectedFile={selectedFile} saveMetadata={saveMetadata} />
+        <div>
+          <MilkdownEditorWrapper selectedFile={selectedFile} editorRef={editorRef} markdownRef={markdownRef} saveFile={saveJustContent} cwd={cwd} />
+        </div>
 
-    </>
-  )
+      </>
+    )
+    else
+      return ''
 }
 
 export default PostEditor
