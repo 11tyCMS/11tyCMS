@@ -1,7 +1,9 @@
 import {useState} from 'react';
 import DialogBase from './DialogBase';
+import { useNavigate } from 'react-router-dom';
 function AddFileDialog({displayStatus, setDisplayStatus, fetchFile, cwd, collection}){
     const [slug, setSlug] = useState('');
+    const navigate = useNavigate();
     const createPost = (slug)=>{
         slug = slug
             .toLowerCase()
@@ -10,7 +12,7 @@ function AddFileDialog({displayStatus, setDisplayStatus, fetchFile, cwd, collect
         const filePath = `${cwd}/${collection}/${slug}.md`
         window.api.saveFile(filePath, {}, "").then(()=>{
             setDisplayStatus(false);
-            fetchFile(filePath)
+            navigate(`/${collection}/posts/${slug}.md`)
         })
     }
     return <DialogBase displayStatus={displayStatus}>
