@@ -9,54 +9,33 @@ import useCollectionsStore from './stores/Collections';
 
 function App() {
   const [cwd, setCwd] = useState('')
-  const [collections, setCollections] = useState({})
   const [isAddingCollection, setIsAddingCollection] = useState(false);
   const [selectedSiteInfo, setSelectedSiteInfo] = useState(null)
-  const [selectedCollection, setSelectedCollection] = useState(null);
   const [collectionToDelete, setCollectionToDelete] = useState(null);
-  const cols = useCollectionsStore(({collections})=>collections);
+  const collections = useCollectionsStore(({collections})=>collections);
   const colActions = useCollectionsStore(({actions})=>actions);
   const ipcHandle = () => {
     window.api.openDirectory().then((selected) => {
       window.api.getSiteInfo(selected.rootPath).then((data) => {
         setSelectedSiteInfo(data)
         setCwd(selected.rootPath)
-        setCollections(selected.collections)
         colActions.setCollections(selected.collections)
       })
     })
   }
 
   useEffect(()=>{
-    console.log(cols, 'collectionsss');
-  }, [cols])
+    console.log(collections, 'collectionsss');
+  }, [collections])
   useEffect(() => {
     window.ipcRenderer
       .on("collectionFileAdded", (event, event1) => {
-        console.log("collectionFileAdded called!", event1)
-        let updatedCollections = { ...collections };
-        updatedCollections[event1.collection] = [...updatedCollections[event1.collection], event1];
-        setCollections(updatedCollections);
         colActions.addFileEntryToCollection(event1);
       })
     window.ipcRenderer.on('collectionFileRemoved', (event, event1) => {
-      let updatedCollections = { ...collections }
-      updatedCollections[event1.collection] = updatedCollections[event1.collection].filter(post => event1.path != post.path)
-      setCollections(updatedCollections);
       colActions.removeFileEntryFromCollection(event1);
     });
     window.ipcRenderer.on("collectionFileModified", (event, eventData) => {
-      console.log("collectionFileMOdified!");
-      const { collection, fileName, metadata } = eventData;
-      let updatedCollections = { ...collections };
-      let targetPostIndex = null;
-      targetPostIndex = updatedCollections[collection].findIndex(({ name }) => {
-        console.log()
-        return fileName == name
-      })
-      console.log(updatedCollections[collection][targetPostIndex], fileName, updatedCollections[collection], eventData);
-      updatedCollections[collection][targetPostIndex]['data'] = metadata;
-      setCollections[updatedCollections];
       colActions.modifyFileEntryFromCollection(eventData);
     });
     return () => {
@@ -70,14 +49,14 @@ function App() {
 
   return (
     <>
-      <Sidebar setCollectionToDelete={setCollectionToDelete} collections={collections} ipcHandle={ipcHandle} selectedSiteInfo={selectedSiteInfo} setIsAddingCollection={setIsAddingCollection} setSelectedCollection={setSelectedCollection} cwd={cwd} />
+      <Sidebar setCollectionToDelete={setCollectionToDelete} ipcHandle={ipcHandle} selectedSiteInfo={selectedSiteInfo} setIsAddingCollection={setIsAddingCollection} cwd={cwd} />
       <div className="mdxeditor-container">
-        <AddCollectionDialog siteInfo={selectedSiteInfo} displayStatus={isAddingCollection} setDisplayStatus={setIsAddingCollection} cwd={cwd} setCollections={setCollections} collections={collections} />
-        <DeleteCollectionDialog collection={collectionToDelete} collections={collections} setCollections={setCollections} setCollectionToDelete={setCollectionToDelete} />
+        <AddCollectionDialog siteInfo={selectedSiteInfo} displayStatus={isAddingCollection} setDisplayStatus={setIsAddingCollection} cwd={cwd} />
+        <DeleteCollectionDialog collection={collectionToDelete} setCollectionToDelete={setCollectionToDelete} />
         <Routes>
           <Route path="/" exact element={<h1>Select collection</h1>} />
-          <Route path=":collectionName/posts" exact element={<PostsList cwd={cwd} posts={collections[selectedCollection] ? collections[selectedCollection] : []} />} />
-          <Route path=":collectionName/posts/:postFileName" exact element={<PostEditor  cwd={cwd} />} />
+          <Route path=":collectionName/posts" exact element={<PostsList cwd={cwd}/>} />
+          <Route path=":collectionName/posts/:postFileName" exact element={<PostEditor cwd={cwd} />} />
         </Routes>
       </div>
     </>

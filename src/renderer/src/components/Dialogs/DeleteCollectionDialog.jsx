@@ -1,12 +1,11 @@
+import useCollectionsStore from "../../stores/Collections";
 import ConfirmationDialog from "./ConfirmationDialog";
 import DialogBase from "./DialogBase";
 
-const DeleteCollectionDialog = ({ collections, collection, setCollections, setCollectionToDelete }) => {
+const DeleteCollectionDialog = ({collection, setCollectionToDelete }) => {
+    const removeCollection = useCollectionsStore(({actions})=>actions.deleteCollection);
     const deleteCollection = (collectionName) => {
-        window.api.deleteCollection(collectionName);
-        let updatedCollections = { ...collections };
-        delete updatedCollections[collectionName];
-        setCollections(updatedCollections);
+        removeCollection(collectionName)
         setCollectionToDelete(null);
     }
     if (collection)

@@ -2,9 +2,11 @@ import { useState, useRef, useEffect } from 'react'
 import FeatherIcon from 'feather-icons-react';
 import { ClipLoader, SyncLoader } from 'react-spinners';
 import { Navigate, useNavigate } from 'react-router-dom';
+import useCollectionsStore from '../../stores/Collections';
 
-const Sidebar = ({ setCollectionToDelete, collections, ipcHandle, selectedSiteInfo, setIsAddingCollection, setSelectedCollection, cwd}) => {
+const Sidebar = ({ setCollectionToDelete, ipcHandle, selectedSiteInfo, setIsAddingCollection, cwd}) => {
     const navigate = useNavigate();
+    const collections = useCollectionsStore(({collections})=>collections);
     const [isBuilding, setIsBuilding] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
     const build = (pubBuild) => {
@@ -44,7 +46,7 @@ const Sidebar = ({ setCollectionToDelete, collections, ipcHandle, selectedSiteIn
             {Object.keys(collections).map((collectionName) => (
                 <li className="parent">
                     <FeatherIcon icon="folder" size={15} fill="#547fdb" />
-                    <span className="collectionLabel" onClick={() => {setSelectedCollection(collectionName); navigate(`/${collectionName}/posts`)}}>{collectionName}</span>
+                    <span className="collectionLabel" onClick={() => {navigate(`/${collectionName}/posts`)}}>{collectionName}</span>
                     <div style={{ flexGrow: 1 }}></div>
                     <button onClick={() => setCollectionToDelete(collectionName)}><FeatherIcon icon='trash' size={10} /></button>
                 </li>

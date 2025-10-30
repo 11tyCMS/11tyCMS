@@ -1,8 +1,10 @@
 import { useState } from "react";
 import DialogBase from "./DialogBase";
+import useCollectionsStore from "../../stores/Collections";
 
-const AddCollectionDialog = ({ siteInfo, displayStatus = false, setDisplayStatus, cwd, setCollections, collections }) => {
+const AddCollectionDialog = ({ siteInfo, displayStatus = false, setDisplayStatus, cwd }) => {
     const [formData, setFormData] = useState(null);
+    const addCollection = useCollectionsStore(({actions})=>actions.addCollection)
     const formHandler = ({ target }) => {
         let updatedFormData
         const { value, name } = target;
@@ -24,10 +26,7 @@ const AddCollectionDialog = ({ siteInfo, displayStatus = false, setDisplayStatus
             </form>
             <div className='buttons'>
                 <button onClick={(e) => {
-                    window.api.createCollection(cwd, formData.name, formData.layout);
-                    let updatedCollections = {...collections}
-                    updatedCollections[formData.name] = [];
-                    setCollections(updatedCollections);
+                    addCollection(cwd, formData);
                     setDisplayStatus(false);
                 }}>Create</button>
                 <button onClick={() => { setDisplayStatus(false) }}>Cancel</button>

@@ -59,7 +59,6 @@ function PostEditor({ cwd }) {
   }
   const saveMetadata = (metadata) => {
     let updatedSelectedFile = { ...selectedFile, data: metadata };
-
     const markdown = editorRef.current.action(getMarkdown());
     updatedSelectedFile['content'] = markdown
     updatedSelectedFile['contents'] = markdown
