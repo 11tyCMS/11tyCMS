@@ -5,37 +5,45 @@ import AddCollectionDialog from './components/Dialogs/AddCollectionDialog';
 import DeleteCollectionDialog from './components/Dialogs/DeleteCollectionDialog';
 import Sidebar from './components/Sidebar/Sidebar';
 import { HashRouter, Route, Routes } from 'react-router-dom';
+import useCollectionsStore from './stores/Collections';
 
 function App() {
   const [cwd, setCwd] = useState('')
   const [collections, setCollections] = useState({})
   const [isAddingCollection, setIsAddingCollection] = useState(false);
   const [selectedSiteInfo, setSelectedSiteInfo] = useState(null)
-  const [selectedFile, setSelectedFile] = useState(null)
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [collectionToDelete, setCollectionToDelete] = useState(null);
+  const cols = useCollectionsStore(({collections})=>collections);
+  const colActions = useCollectionsStore(({actions})=>actions);
   const ipcHandle = () => {
     window.api.openDirectory().then((selected) => {
       window.api.getSiteInfo(selected.rootPath).then((data) => {
         setSelectedSiteInfo(data)
         setCwd(selected.rootPath)
         setCollections(selected.collections)
+        colActions.setCollections(selected.collections)
       })
     })
   }
+
+  useEffect(()=>{
+    console.log(cols, 'collectionsss');
+  }, [cols])
   useEffect(() => {
-    console.log("collectionFileAdded useEffect called!")
     window.ipcRenderer
       .on("collectionFileAdded", (event, event1) => {
         console.log("collectionFileAdded called!", event1)
         let updatedCollections = { ...collections };
         updatedCollections[event1.collection] = [...updatedCollections[event1.collection], event1];
         setCollections(updatedCollections);
+        colActions.addFileEntryToCollection(event1);
       })
     window.ipcRenderer.on('collectionFileRemoved', (event, event1) => {
       let updatedCollections = { ...collections }
       updatedCollections[event1.collection] = updatedCollections[event1.collection].filter(post => event1.path != post.path)
       setCollections(updatedCollections);
+      colActions.removeFileEntryFromCollection(event1);
     });
     window.ipcRenderer.on("collectionFileModified", (event, eventData) => {
       console.log("collectionFileMOdified!");
@@ -49,6 +57,7 @@ function App() {
       console.log(updatedCollections[collection][targetPostIndex], fileName, updatedCollections[collection], eventData);
       updatedCollections[collection][targetPostIndex]['data'] = metadata;
       setCollections[updatedCollections];
+      colActions.modifyFileEntryFromCollection(eventData);
     });
     return () => {
       if (window.ipcRenderer) {
