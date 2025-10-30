@@ -6,27 +6,21 @@ import DeleteCollectionDialog from './components/Dialogs/DeleteCollectionDialog'
 import Sidebar from './components/Sidebar/Sidebar';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import useCollectionsStore from './stores/Collections';
+import useSiteStore from './stores/Site';
+import { shallow } from 'zustand/shallow';
 
 function App() {
-  const [cwd, setCwd] = useState('')
   const [isAddingCollection, setIsAddingCollection] = useState(false);
-  const [selectedSiteInfo, setSelectedSiteInfo] = useState(null)
   const [collectionToDelete, setCollectionToDelete] = useState(null);
-  const collections = useCollectionsStore(({collections})=>collections);
-  const colActions = useCollectionsStore(({actions})=>actions);
+  const collections = useCollectionsStore(({ collections }) => collections);
+  const colActions = useCollectionsStore(({ actions }) => actions);
+  const cwd = useSiteStore((state) => state.cwd);
+  const selectedSiteInfo = useSiteStore((state) => state.selectedSiteInfo);
+  const openSiteFolder = useSiteStore(({ actions }) => actions.openSiteFolder);
   const ipcHandle = () => {
-    window.api.openDirectory().then((selected) => {
-      window.api.getSiteInfo(selected.rootPath).then((data) => {
-        setSelectedSiteInfo(data)
-        setCwd(selected.rootPath)
-        colActions.setCollections(selected.collections)
-      })
-    })
+    openSiteFolder();
   }
 
-  useEffect(()=>{
-    console.log(collections, 'collectionsss');
-  }, [collections])
   useEffect(() => {
     window.ipcRenderer
       .on("collectionFileAdded", (event, event1) => {
@@ -55,8 +49,8 @@ function App() {
         <DeleteCollectionDialog collection={collectionToDelete} setCollectionToDelete={setCollectionToDelete} />
         <Routes>
           <Route path="/" exact element={<h1>Select collection</h1>} />
-          <Route path=":collectionName/posts" exact element={<PostsList cwd={cwd}/>} />
-          <Route path=":collectionName/posts/:postFileName" exact element={<PostEditor cwd={cwd} />} />
+          <Route path=":collectionName/posts" exact element={<PostsList/>} />
+          <Route path=":collectionName/posts/:postFileName" exact element={<PostEditor/>} />
         </Routes>
       </div>
     </>

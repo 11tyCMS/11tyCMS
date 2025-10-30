@@ -4,11 +4,13 @@ import FeatherIcon from 'feather-icons-react'
 import DeletePostDialog from './Dialogs/DeletePostDialog'
 import { useNavigate, useParams } from 'react-router-dom'
 import useCollectionsStore from '../stores/Collections'
-function PostsList({ cwd }) {
+import useSiteStore from '../stores/Site'
+function PostsList() {
   const [displayAddFileDialog, setDisplayAddFileDialog] = useState(false)
   const [postToDelete, setPostToDelete] = useState(null);
   const {collectionName} = useParams();
   const posts = useCollectionsStore(({collections})=>collections[collectionName]);
+  const cwd = useSiteStore(({cwd})=>cwd);
   const navigate = useNavigate();
   const deletePostConfirm = (event, post) => {
     event.stopPropagation();
