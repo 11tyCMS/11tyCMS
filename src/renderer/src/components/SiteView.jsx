@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet} from "react-router-dom";
 import AddCollectionDialog from './Dialogs/AddCollectionDialog';
 import DeleteCollectionDialog from './Dialogs/DeleteCollectionDialog';
 import Sidebar from './Sidebar/Sidebar';
@@ -32,6 +32,11 @@ const SiteView = () => {
             }
         }
     }, [collections])
+
+    if(selectedSiteInfo == null){
+        return <Navigate to="/"/>
+    }
+    
     return <>
         <Sidebar setCollectionToDelete={setCollectionToDelete} setIsAddingCollection={setIsAddingCollection} />
         <div className="mdxeditor-container">
