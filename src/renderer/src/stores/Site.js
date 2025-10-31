@@ -29,6 +29,11 @@ const useSiteStore = create((set) => ({
             updateSelectedSitesHistory(selectedSite.rootPath, siteInfoData);
             useCollectionsStore.getState().actions.setCollections(selectedSite.collections)
             navigate('/site/')
+        },
+        resetSelection: async(navigate)=>{
+            set(useSiteStore.getInitialState());
+            useCollectionsStore.setState(useCollectionsStore.getInitialState())
+            navigate('/')
         }
     }
 }))

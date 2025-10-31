@@ -13,7 +13,6 @@ const SiteView = () => {
     const colActions = useCollectionsStore(({ actions }) => actions);
     const cwd = useSiteStore((state) => state.cwd);
     const selectedSiteInfo = useSiteStore((state) => state.selectedSiteInfo);
-
     useEffect(() => {
         window.ipcRenderer
             .on("collectionFileAdded", (event, event1) => {

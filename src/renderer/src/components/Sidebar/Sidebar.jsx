@@ -10,6 +10,7 @@ const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
     const collections = useCollectionsStore(({ collections }) => collections);
     const openSiteFolder = useSiteStore(({ actions }) => actions.openSiteFolder);
     const selectedSiteInfo = useSiteStore((state) => state.selectedSiteInfo);
+    const resetSelectedSite = useSiteStore((state) => state.actions.resetSelection);
     const cwd = useSiteStore((state) => state.cwd);
     const [isBuilding, setIsBuilding] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
@@ -33,17 +34,16 @@ const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
 
 
     return <div className="sidebar">
-        <div className='siteInfo' onClick={() => openSiteFolder()}>
-            {Object.keys(collections).length != 0 ? <><div className='favicon-container'>
+        <div className='siteInfo'>
+            <div className='favicon-container'>
                 <div className='favicon'>
                     <img src={selectedSiteInfo['base64Favicon']}></img>
                 </div>
             </div>
-                <div className='info'>
-                    <h1>{selectedSiteInfo.title}</h1>
-                </div> </> : <><div className='info select-button'>
-                    <h1>Select 11ty site</h1>
-                </div></>}
+            <div className='info'>
+                <h1>{selectedSiteInfo.title}</h1>
+                <button onClick={()=>resetSelectedSite(navigate)}><FeatherIcon icon="log-out" size={14}/></button>
+            </div>
         </div>
         <ul className="containingList">
             <span class="listHeader">Collections <button onClick={() => setIsAddingCollection(true)}>+</button></span>
