@@ -515,13 +515,46 @@ button.icon svg {
 .containingList .parent button {
   padding: 5px;
   border-radius: 6px;
-  display:none;
+  display: none;
 }
 
 .containingList .parent:hover button {
-  display:inherit;
+  display: inherit;
 }
 
 .containingList .parent button svg {
   margin-right: 0px;
+}
+
+.siteSelector {
+  background-color: rgb(14 24 44);
+  border-radius:6px;
+  padding:10px;
+  display:flex;
+  flex-direction: column;
+}
+
+.siteSelector .siteInfo{
+  display:flex;
+  align-items:center;
+  padding:14px;
+  cursor:pointer;
+  margin-bottom:5px;
+}
+
+.siteSelector .siteInfo:hover{
+  background:rgb(29, 48, 87);
+  border-radius:8px;
+}
+
+.siteSelector .siteInfo .favicon-container{
+  width:25px;
+  height:25px;
+  margin-right:8px;
+}
+
+.siteSelector .siteInfo .info{
+  font-family: sans-serif;
+  font-size:16px;
+  color:#bcd6f6;
 }

@@ -71,7 +71,7 @@ function PostEditor() {
     return (
       <>
         <div className='title-bar'>
-          <FeatherIcon icon={"arrow-left"} size={25} color="#7c8ad6" className='back-button' onClick={() => navigate(`/${collectionName}/posts`)} />
+          <FeatherIcon icon={"arrow-left"} size={25} color="#7c8ad6" className='back-button' onClick={() => navigate(`/site/${collectionName}/posts`)} />
           <input
             className="title"
             value={selectedFile ? selectedFile.data.title : ''}

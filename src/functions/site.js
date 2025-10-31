@@ -71,79 +71,84 @@ const refreshCollectionWatcher = () => {
         })
 }
 const functions = {
-    openDirectory: async () => {
-        if(collectionWatcher){
+    openDirectory: async (selectedSiteDir, resolveOuter) => {
+        if (collectionWatcher) {
             collectionWatcher.close()
         }
         collectionDirectories = [];
         collectionWatcher = null;
-        eleventyDir = null;
         collections = {}
-        
+        eleventyDir = selectedSiteDir
         const eleventyDB = eleventyDb.get();
         let browserWindow = mainWindow.get();
+
+        /* 
+          We need a function that will return all the directories at the root of the 11ty src folder.
+          It will then need to check through any folders that arent _* to see if its a collection, by checking to see if there is a child file with a matching name to its containing folder.
+        */
+        eleventyDB.ItemMetadata.destroy({
+            truncate: true
+        })
+        const isDirCollection = (path, folderName) => {
+            const isFolderInternal = folderName[0] == '_'
+            const files = fs.readdirSync(`${path}/${folderName}`, { withFileTypes: true }).map(file => file.name).includes(`${folderName}.json`)
+            return !isFolderInternal && files;
+        };
+
+        const collectionsFactory = (collectionDirectories) => {
+            collectionDirectories.forEach(dir => {
+                collections[dir.name] = []
+                fs.readdirSync(`${dir.path}/${dir.name}`, { withFileTypes: true }).filter(file => file.name.includes('.md')).forEach(file => {
+                    const matterData = matter.read(`${file.parentPath}/${file.name}`);
+                    eleventyDB.ItemMetadata.create({
+                        collection: dir.name,
+                        name: file.name,
+                        data: matterData.data,
+                        path: matterData.path,
+                        parentPath: file.parentPath
+                    })
+                })
+            })
+            return collections
+        }
+
+        console.log(selectedSiteDir, "this is the dir")
+        const eleventyRootDirs = fs.readdirSync(selectedSiteDir, { withFileTypes: true }).filter(dirFile => dirFile.isDirectory())
+
+        const collectionDirs = eleventyRootDirs.filter(dir => isDirCollection(selectedSiteDir, dir.name));
+        collectionDirectories = collectionDirs.map(dir => `${dir.path}/${dir.name}`)
+        let eleventyStructure = {
+            rootPath: selectedSiteDir,
+            code: eleventyRootDirs.filter(dir => dir.name[0] == '_'),
+            collections: collectionsFactory(collectionDirs)
+        }
+        const thePromise = new Promise(resolveOuter2 => {
+            eleventyDB.ItemMetadata.findAll().then((res) => {
+                const files = res.map(({ dataValues }) => dataValues)
+                let structuredCollections = eleventyStructure['collections'];
+
+                files.forEach(file => {
+                    let currentColllection = structuredCollections[file.collection];
+                    if (currentColllection)
+                        structuredCollections[file.collection].push(file);
+                    else
+                        structuredCollections[file.collection] = [file];
+                });
+                eleventyStructure['collections'] = structuredCollections;
+                if (resolveOuter)
+                    resolveOuter(eleventyStructure);
+                resolveOuter2(eleventyStructure)
+            })
+        })
+        refreshCollectionWatcher()
+        return thePromise
+    },
+    openDirectoryWithDialog: async () => {
         //response.filePaths[0]+'/'+fileName
         return new Promise(resolveOuter => {
             dialog.showOpenDialog({
                 properties: ['openDirectory']
-            }).then((response) => {
-                eleventyDir = response.filePaths[0];
-                /* 
-                  We need a function that will return all the directories at the root of the 11ty src folder.
-                  It will then need to check through any folders that arent _* to see if its a collection, by checking to see if there is a child file with a matching name to its containing folder.
-                */
-                eleventyDB.ItemMetadata.destroy({
-                    truncate: true
-                })
-                const isDirCollection = (path, folderName) => {
-                    const isFolderInternal = folderName[0] == '_'
-                    const files = fs.readdirSync(`${path}/${folderName}`, { withFileTypes: true }).map(file => file.name).includes(`${folderName}.json`)
-                    return !isFolderInternal && files;
-                };
-
-                const collectionsFactory = (collectionDirectories) => {
-                    collectionDirectories.forEach(dir => {
-                        collections[dir.name] = []
-                        fs.readdirSync(`${dir.path}/${dir.name}`, { withFileTypes: true }).filter(file => file.name.includes('.md')).forEach(file => {
-                            const matterData = matter.read(`${file.parentPath}/${file.name}`);
-                            eleventyDB.ItemMetadata.create({
-                                collection: dir.name,
-                                name: file.name,
-                                data: matterData.data,
-                                path: matterData.path,
-                                parentPath: file.parentPath
-                            })
-                        })
-                    })
-                    return collections
-                }
-
-                const eleventyRootDirs = fs.readdirSync(response.filePaths[0], { withFileTypes: true }).filter(dirFile => dirFile.isDirectory())
-
-                const collectionDirs = eleventyRootDirs.filter(dir => isDirCollection(response.filePaths[0], dir.name));
-                collectionDirectories = collectionDirs.map(dir => `${dir.path}/${dir.name}`)
-                let eleventyStructure = {
-                    rootPath: response.filePaths[0],
-                    code: eleventyRootDirs.filter(dir => dir.name[0] == '_'),
-                    collections: collectionsFactory(collectionDirs)
-                }
-                eleventyDB.ItemMetadata.findAll().then((res) => {
-                    const files = res.map(({ dataValues }) => dataValues)
-                    let structuredCollections = eleventyStructure['collections'];
-
-                    files.forEach(file => {
-                        let currentColllection = structuredCollections[file.collection];
-                        if (currentColllection)
-                            structuredCollections[file.collection].push(file);
-                        else
-                            structuredCollections[file.collection] = [file];
-                    });
-                    eleventyStructure['collections'] = structuredCollections;
-                    resolveOuter(eleventyStructure);
-                })
-
-                refreshCollectionWatcher()
-            })
+            }).then((response) => functions.openDirectory(response.filePaths[0], resolveOuter))
         });
     },
     getSiteInfo: async (path) => {
@@ -165,7 +170,7 @@ const functions = {
         collectionDirectories.push(`${sitePath}/${name}`)
         refreshCollectionWatcher()
     },
-    deleteCollection: async (name)=>{
+    deleteCollection: async (name) => {
         console.log("Deleting collection at ", `${eleventyDir}/${name}`)
         const status = await fs.rmSync(`${eleventyDir}/${name}`, { recursive: true, force: true });
 

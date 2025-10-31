@@ -12,7 +12,7 @@ function AddFileDialog({displayStatus, setDisplayStatus, fetchFile, cwd, collect
         const filePath = `${cwd}/${collection}/${slug}.md`
         window.api.saveFile(filePath, {}, "").then(()=>{
             setDisplayStatus(false);
-            navigate(`/${collection}/posts/${slug}.md`)
+            navigate(`/site/${collection}/posts/${slug}.md`)
         })
     }
     return <DialogBase displayStatus={displayStatus}>

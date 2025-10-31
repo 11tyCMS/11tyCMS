@@ -3,10 +3,14 @@ import FeatherIcon from 'feather-icons-react';
 import { ClipLoader, SyncLoader } from 'react-spinners';
 import { Navigate, useNavigate } from 'react-router-dom';
 import useCollectionsStore from '../../stores/Collections';
+import useSiteStore from '../../stores/Site';
 
-const Sidebar = ({ setCollectionToDelete, ipcHandle, selectedSiteInfo, setIsAddingCollection, cwd}) => {
+const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
     const navigate = useNavigate();
-    const collections = useCollectionsStore(({collections})=>collections);
+    const collections = useCollectionsStore(({ collections }) => collections);
+    const openSiteFolder = useSiteStore(({ actions }) => actions.openSiteFolder);
+    const selectedSiteInfo = useSiteStore((state) => state.selectedSiteInfo);
+    const cwd = useSiteStore((state) => state.cwd);
     const [isBuilding, setIsBuilding] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
     const build = (pubBuild) => {
@@ -29,7 +33,7 @@ const Sidebar = ({ setCollectionToDelete, ipcHandle, selectedSiteInfo, setIsAddi
 
 
     return <div className="sidebar">
-        <div className='siteInfo' onClick={() => ipcHandle()}>
+        <div className='siteInfo' onClick={() => openSiteFolder()}>
             {Object.keys(collections).length != 0 ? <><div className='favicon-container'>
                 <div className='favicon'>
                     <img src={selectedSiteInfo['base64Favicon']}></img>
@@ -46,7 +50,7 @@ const Sidebar = ({ setCollectionToDelete, ipcHandle, selectedSiteInfo, setIsAddi
             {Object.keys(collections).map((collectionName) => (
                 <li className="parent">
                     <FeatherIcon icon="folder" size={15} fill="#547fdb" />
-                    <span className="collectionLabel" onClick={() => {navigate(`/${collectionName}/posts`)}}>{collectionName}</span>
+                    <span className="collectionLabel" onClick={() => { navigate(`/site/${collectionName}/posts`) }}>{collectionName}</span>
                     <div style={{ flexGrow: 1 }}></div>
                     <button onClick={() => setCollectionToDelete(collectionName)}><FeatherIcon icon='trash' size={10} /></button>
                 </li>

@@ -35,7 +35,7 @@ function PostsList() {
         {posts
           .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
           .map((post) => (
-            <li onClick={() => {navigate(`/${collectionName}/posts/${post.name}`)}}>
+            <li onClick={() => {navigate(`/site/${collectionName}/posts/${post.name}`)}}>
               <label>{post.data.title ? post.data.title : post.path}</label>
               <div className='buttons-info'>
                 <span style={{ justifySelf: 'end' }}>
