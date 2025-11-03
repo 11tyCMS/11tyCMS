@@ -8,11 +8,12 @@ import filesFuncs from './files';
 const child_process = require('child_process')
 
 const { _imageToBase64 } = filesFuncs;
-
+let siteInfoData = {};
 let collectionDirectories = [];
 let collectionWatcher = null;
 let eleventyDir = null;
 let collections = {}
+let siteInfoPath = null;
 
 const getFavicon = async (sitePath) => {
     return await fs.readFileSync(`${sitePath}/media/favicon.svg`, 'utf8')
@@ -151,6 +152,12 @@ const functions = {
             }).then((response) => functions.openDirectory(response.filePaths[0], resolveOuter))
         });
     },
+    _getSiteInfoFilePath: async ()=>{
+        const infoFile = await fs.readdirSync(`${eleventyDir}/_data/`, {withFileTypes:true}).filter(file=>(file.name.endsWith(".js") || file.name.endsWith(".jsx") || file.name.endsWith('.json')) && (file.name.includes('site.') || file.name.includes('metadata.')))[0];
+        if(infoFile.length == 0)
+            throw new Error("No metadata/site.js/json file found!")
+        return `${infoFile.parentPath}${infoFile.name}`
+    },
     getSiteInfo: async (path) => {
         let otherData = {
             layouts: {}
@@ -161,7 +168,16 @@ const functions = {
         })
         const favicon = await getFavicon(path)
         otherData['base64Favicon'] = _imageToBase64(favicon, '.svg')
-        return { ...JSON.parse(await fs.readFileSync(`${path}/_data/site.json`, 'utf8')), ...otherData };
+        
+        siteInfoPath = await functions._getSiteInfoFilePath();
+        siteInfoData = await filesFuncs._importDataFile(siteInfoPath)
+        return { ...siteInfoData, ...otherData };;
+    },
+    setSiteInfo: async (data)=>{
+        console.log(data);
+        const writeFileResult = fs.writeFileSync(siteInfoPath, JSON.stringify(data));
+        siteInfoData = data;
+        return writeFileResult
     },
     createCollection: async (sitePath, name, layout) => {
         console.log("creating collection at ", `${sitePath}/${name}`)

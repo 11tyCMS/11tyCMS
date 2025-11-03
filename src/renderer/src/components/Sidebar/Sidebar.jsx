@@ -34,7 +34,7 @@ const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
 
 
     return <div className="sidebar">
-        <div className='siteInfo'>
+        <div className='siteInfo' onClick={()=>navigate('/site/dashboard')}>
             <div className='favicon-container'>
                 <div className='favicon'>
                     <img src={selectedSiteInfo['base64Favicon']}></img>

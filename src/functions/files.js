@@ -2,6 +2,7 @@ import * as matter from 'gray-matter';
 import fs from 'node:fs';
 import mainWindow from '../main/window';
 import eleventyDb from '../main/database/eleventyDb';
+import path from 'path'
 const functions = {
     openFile: (filePath) => {
         const eleventyDB = eleventyDb.get();
@@ -112,6 +113,22 @@ const functions = {
         }
 
         return `data:${mimeType};base64,${base64String}`;
+    },
+    _importDataFile: async (dataFilePath, encoding="utf8")=>{
+        const extension = path.extname(dataFilePath);
+        switch (extension) {
+            case '.js':
+            case '.jsx':
+                return require(dataFilePath);
+                break;
+            case '.json':
+                return JSON.parse(await fs.readFileSync(dataFilePath, encoding))
+                break;
+        
+            default:
+                throw new Error("Not a supported file format. Supported files are: .js .jsx and .json")
+                break;
+        }
     }
 }
 

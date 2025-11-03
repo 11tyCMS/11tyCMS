@@ -4,6 +4,7 @@ import PostsList from './components/PostsList'
 import PostEditor from './components/PostEditor/PostEditor'
 import SiteView from './components/SiteView';
 import SelectSiteView from './components/SelectSiteView';
+import DashboardView from './components/DashboardView';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Route index exact path="/" element={<SelectSiteView/>} />
       <Route exact path="site" element={<SiteView />}>
         <Route path="" exact element={<h1>Select collection</h1>} />
+        <Route path="dashboard" exact element={<DashboardView/>} />
         <Route path=":collectionName/posts" exact element={<PostsList />} />
         <Route path=":collectionName/posts/:postFileName" exact element={<PostEditor />} />
       </Route>
