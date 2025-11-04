@@ -4,7 +4,7 @@ import PostsList from './components/PostsList'
 import PostEditor from './components/PostEditor/PostEditor'
 import SiteView from './components/SiteView';
 import SelectSiteView from './components/SelectSiteView';
-import DashboardView from './components/DashboardView';
+import DashboardView from './components/Dashboard/DashboardView';
 
 function App() {
   return (

@@ -164,6 +164,13 @@ const functions = {
             }).then((response) => functions.openDirectory(response.filePaths[0], resolveOuter))
         });
     },
+    getSiteConfig: ()=>{
+        return site11tyCMSConfig
+    },
+    setSiteConfig: (data)=>{
+        console.log("this is the config data coming into the ufnction", data);
+        return fs.writeFileSync(`${eleventyDir}/_11tycms.json`, JSON.stringify(data));
+    },
     _getSiteInfoFilePath: async ()=>{
         const infoFile = await fs.readdirSync(`${eleventyDir}/_data/`, {withFileTypes:true}).filter(file=>(file.name.endsWith(".js") || file.name.endsWith(".jsx") || file.name.endsWith('.json')) && (file.name.includes('site.') || file.name.includes('metadata.')))[0];
         if(infoFile.length == 0)
@@ -183,7 +190,7 @@ const functions = {
         
         siteInfoPath = await functions._getSiteInfoFilePath();
         siteInfoData = await filesFuncs._importDataFile(siteInfoPath)
-        return { ...siteInfoData, ...otherData };;
+        return { ...siteInfoData, ...otherData };
     },
     setSiteInfo: async (data)=>{
         console.log(data);
