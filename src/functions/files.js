@@ -79,6 +79,19 @@ const functions = {
     deleteFile: async (path) => {
         return fs.unlinkSync(path)
     },
+    _writeDataFile: async (path, data, shallow = false, encoding = "utf8") => {
+        if (await fs.existsSync(path)) {
+            if (shallow) {
+                let existingData = JSON.parse(await fs.readFileSync(path, encoding));
+                existingData = { ...existingData, ...data }
+                return await fs.writeFileSync(path, JSON.stringify(existingData));
+            } else{
+                return await fs.writeFileSync(path, JSON.stringify(data));
+            }
+        }
+        else
+            return await fs.writeFileSync(path, JSON.stringify(data));
+    },
     saveFileMetadata: (path, metadata, ...args) => {
         let file = matter.read(path);
         functions.saveFile(path, metadata, file.content, ...args);
@@ -114,7 +127,7 @@ const functions = {
 
         return `data:${mimeType};base64,${base64String}`;
     },
-    _importDataFile: async (dataFilePath, encoding="utf8")=>{
+    _importDataFile: async (dataFilePath, encoding = "utf8") => {
         const extension = path.extname(dataFilePath);
         switch (extension) {
             case '.js':
@@ -124,7 +137,7 @@ const functions = {
             case '.json':
                 return JSON.parse(await fs.readFileSync(dataFilePath, encoding))
                 break;
-        
+
             default:
                 throw new Error("Not a supported file format. Supported files are: .js .jsx and .json")
                 break;

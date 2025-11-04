@@ -14,6 +14,7 @@ let collectionWatcher = null;
 let eleventyDir = null;
 let collections = {}
 let siteInfoPath = null;
+let site11tyCMSConfig = null;
 
 const getFavicon = async (sitePath) => {
     return await fs.readFileSync(`${sitePath}/media/favicon.svg`, 'utf8')
@@ -141,6 +142,17 @@ const functions = {
                 resolveOuter2(eleventyStructure)
             })
         })
+
+        const configFilePath = `${selectedSiteDir}/_11tycms.json`
+        if(fs.existsSync(configFilePath)){
+            console.log("11tyCMS config FOUND!")
+            site11tyCMSConfig = JSON.parse(await fs.readFileSync(configFilePath, 'utf8'))
+        } 
+        else{
+            console.log("11tyCMS config not found, creating new one")
+            filesFuncs._writeDataFile(configFilePath, {});
+        }
+            
         refreshCollectionWatcher()
         return thePromise
     },
@@ -196,15 +208,14 @@ const functions = {
     buildSite: (path) => {
         console.log('building the site')
         return new Promise((resolve) => {
-            child_process.exec('npx @11ty/eleventy', { cwd: path }, function (err, stdout, stderr) {
+            child_process.exec(site11tyCMSConfig.build, { cwd: path }, function (err, stdout, stderr) {
                 resolve(err, stdout, stderr);
             });
         })
     },
     publishSite: async (path) => {
         return new Promise((resolve) => {
-            child_process.exec('/Users/jessie/.gem/ruby/3.4.0/bin/neocities push .', { cwd: `${path}/_site` }, function (err, stdout, stderr) {
-                console.log(stdout, stderr);
+            child_process.exec(site11tyCMSConfig.publish, { cwd: `${path}/_site` }, function (err, stdout, stderr) {
                 resolve(err, stdout, stderr);
             });
         })
