@@ -15,14 +15,14 @@ const DashboardView = () => {
         setFormData(selectedSiteInfo);
     }, [selectedSiteInfo])
     const onFormChangeValue = ({ target }) => setFormData({ ...formData, [target.name]: target.value })
-    const onSiteConfigFormChange = (({target})=>setSiteConfig({...siteConfigForm, [target.name]:target.value}))
+    const onSiteConfigFormChange = (({ target }) => setSiteConfig({ ...siteConfigForm, [target.name]: target.value }))
     const renderForm = (data) => {
         const dataKeys = Object.keys(data).filter(excludedSiteInfoKeysFilter)
         return dataKeys.map(key => {
             if (typeof data[key] != "object") {
-                return <><span><b>{key}:</b> <input type="text" name={key} defaultValue={data[key]} onChange={onFormChangeValue} /></span>  </>
+                return <><span><b>{key}</b> <input type="text" name={key} defaultValue={data[key]} onChange={onFormChangeValue} /></span>  </>
             } else {
-                return <><h2>{key}</h2> <br /> {renderForm(data[key])}</>
+                return <><h2>{key}</h2>{renderForm(data[key])}</>
             }
         })
     }
@@ -37,11 +37,14 @@ const DashboardView = () => {
     }
     if (selectedSiteInfo && siteConfig)
         return <>
-            <h1>{selectedSiteInfo.title}</h1>
-            {renderForm(selectedSiteInfo)}
-            <h2>Build & publish</h2>
-            <span><b>Build command:</b> <input name="build" defaultValue={siteConfig.build} onChange={onSiteConfigFormChange}/></span><br />
-            <span><b>Publish command:</b> <input name="publish" defaultValue={siteConfig.publish} onChange={onSiteConfigFormChange}/></span>
+
+            <div className="dashboardForm">
+                <h1>{selectedSiteInfo.title}</h1>
+                {renderForm(selectedSiteInfo)}
+                <h2>Build & publish</h2>
+                <span><b>Build command</b> <input name="build" defaultValue={siteConfig.build} onChange={onSiteConfigFormChange} /></span>
+                <span><b>Publish command</b> <input name="publish" defaultValue={siteConfig.publish} onChange={onSiteConfigFormChange} /></span>
+            </div>
             <button onClick={saveSiteInfo}>Save site info</button>
         </>
     else
