@@ -41,7 +41,7 @@ const DashboardView = () => {
             {renderForm(selectedSiteInfo)}
             <h2>Build & publish</h2>
             <span><b>Build command:</b> <input name="build" defaultValue={siteConfig.build} onChange={onSiteConfigFormChange}/></span><br />
-            <span><b>Publish command:</b> <input name="build" defaultValue={siteConfig.publish} onChange={onSiteConfigFormChange}/></span>
+            <span><b>Publish command:</b> <input name="publish" defaultValue={siteConfig.publish} onChange={onSiteConfigFormChange}/></span>
             <button onClick={saveSiteInfo}>Save site info</button>
         </>
     else
