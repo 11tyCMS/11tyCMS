@@ -340,6 +340,7 @@ button.icon svg {
   max-width: 70%;
   overflow: hidden;
   cursor: pointer;
+  font-size:16px;
 }
 
 .postsList ul {
@@ -399,7 +400,7 @@ button.icon svg {
 }
 
 .postsList ul li span {
-  font-size: 16px;
+  font-size: 14px;
   color: grey;
   justify-self: end;
   text-align: right;
@@ -514,6 +515,7 @@ button.icon svg {
   width: calc(100%-10px);
   line-height: 19px;
   justify-content: space-between;
+  margin-right: 18px;
 }
 
 .containingList span.listHeader button {
@@ -521,7 +523,8 @@ button.icon svg {
   margin: 0px;
   min-width: 19px;
   border-radius: 6px;
-  margin-right: 14px;
+  width:20px;
+  height:20px;
 }
 
 .containingList .parent button {
@@ -590,6 +593,7 @@ button.icon svg {
   display: flex;
   align-items: center;
   color: #acc7ff;
+  font-weight:500;
 }
 
 .dashboardForm h2,
