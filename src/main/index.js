@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain, dialog, protocol, net } from 'electron'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import path from 'node:path';
-import testing from '../functions';
+import exopsedFunctions from '../functions';
 import myWindow from './window';
 import eleventyDb from './database/eleventyDb';
 import siteFuncs from '../functions/site';
@@ -63,8 +63,8 @@ app.whenReady().then(() => {
     return net.fetch('file://' + fullPath);
   });
   
-  for(const channelName in testing){
-    ipcMain.handle(channelName, (handle, ...args)=>testing[channelName](...args));
+  for(const channelName in exopsedFunctions){
+    ipcMain.handle(channelName, (handle, ...args)=>exopsedFunctions[channelName](...args));
   }
   // IPC test
   browserWindow = myWindow.createWindow();

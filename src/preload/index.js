@@ -1,14 +1,11 @@
 import { contextBridge, ipcRenderer, ipcMain} from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import testing from '../functions';
+import exposedFunctions from '../functions';
 window.ipcRenderer = require('electron').ipcRenderer;
-let api = {
-  // deleteCollection: (name)=>ipcRenderer.invoke('collection:delete', name),
-  // editCollection: (name)=>ipcRenderer.invoke('collection:edit', name),
-}
-for(const channelName in testing){
-  console.log('registering function', testing[channelName].name, 'with channel', channelName)
-  api[testing[channelName].name] = (...args)=>ipcRenderer.invoke(channelName, ...args)
+let api = {}
+for(const channelName in exposedFunctions){
+  console.log('registering function', exposedFunctions[channelName].name, 'with channel', channelName)
+  api[exposedFunctions[channelName].name] = (...args)=>ipcRenderer.invoke(channelName, ...args)
 }
 const registerApiFunction = (func, channelName)=>{
   api[func.name] = (...args)=>ipcRenderer.invoke(channelName, ...args)

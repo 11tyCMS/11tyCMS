@@ -1,12 +1,9 @@
 const { app } = require('electron');
-import * as matter from 'gray-matter';
 import files from './functions/files';
 import site from './functions/site'
-import fs from 'node:fs';
 
-let exposedFunctions = {
+let exposedFunctions = {}
 
-}
 const exposeChannelFunction = (func, channelName) => {
     exposedFunctions[`${channelName}`] = func;
 }
@@ -25,5 +22,4 @@ for (const channelParentName in functionsByChannels) {
         exposeChannelFunction(functionsByChannels[channelParentName][childFuncKey], `${channelParentName}:${childFuncKey}`)
     }
 }
-console.log(exposedFunctions)
 export default exposedFunctions
