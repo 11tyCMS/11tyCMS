@@ -14,7 +14,7 @@ let collectionWatcher = null;
 let eleventyDir = null;
 let collections = {}
 let siteInfoPath = null;
-let site11tyCMSConfig = null;
+let siteConfig = null;
 
 const getFavicon = async (sitePath) => {
     return await fs.readFileSync(`${sitePath}/media/favicon.svg`, 'utf8')
@@ -73,7 +73,7 @@ const refreshCollectionWatcher = () => {
         })
 }
 const functions = {
-    openDirectory: async (selectedSiteDir, resolveOuter) => {
+    openDirectory: async (selectedSiteDir) => {
         if (collectionWatcher) {
             collectionWatcher.close()
         }
@@ -130,12 +130,11 @@ const functions = {
             code: eleventyRootDirs.filter(dir => dir.name[0] == '_'),
             collections: processedCollections
         }
-        console.log(processedCollections, 'this is processed collections');
 
         const configFilePath = `${selectedSiteDir}/_11tycms.json`
         if (fs.existsSync(configFilePath)) {
             console.log("11tyCMS config FOUND!")
-            site11tyCMSConfig = JSON.parse(await fs.readFileSync(configFilePath, 'utf8'))
+            siteConfig = JSON.parse(await fs.readFileSync(configFilePath, 'utf8'))
         }
         else {
             console.log("11tyCMS config not found, creating new one")
@@ -154,7 +153,7 @@ const functions = {
         });
     },
     getSiteConfig: () => {
-        return site11tyCMSConfig
+        return siteConfig
     },
     setSiteConfig: (data) => {
         console.log("this is the config data coming into the ufnction", data);
@@ -197,21 +196,20 @@ const functions = {
     deleteCollection: async (name) => {
         console.log("Deleting collection at ", `${eleventyDir}/${name}`)
         const status = await fs.rmSync(`${eleventyDir}/${name}`, { recursive: true, force: true });
-
         refreshCollectionWatcher();
         return status;
     },
     buildSite: (path) => {
         console.log('building the site')
         return new Promise((resolve) => {
-            child_process.exec(site11tyCMSConfig.build, { cwd: path }, function (err, stdout, stderr) {
+            child_process.exec(siteConfig.build, { cwd: path }, function (err, stdout, stderr) {
                 resolve(err, stdout, stderr);
             });
         })
     },
     publishSite: async (path) => {
         return new Promise((resolve) => {
-            child_process.exec(site11tyCMSConfig.publish, { cwd: `${path}/_site` }, function (err, stdout, stderr) {
+            child_process.exec(siteConfig.publish, { cwd: `${path}/_site` }, function (err, stdout, stderr) {
                 console.log(err, stdout, stderr);
                 resolve(err, stdout, stderr);
             });
