@@ -8,13 +8,13 @@ import filesFuncs from './files';
 const child_process = require('child_process')
 
 const { _imageToBase64 } = filesFuncs;
-let siteInfoData = {};
-let collectionDirectories = [];
-let collectionWatcher = null;
-let eleventyDir = null;
-let collections = {}
-let siteInfoPath = null;
+
 let siteConfig = null;
+let collectionWatcher = null;
+
+let selectedSiteDir = null; 
+let siteInfoFilePath = null;
+let collectionDirectories = [];
 
 const getFavicon = async (sitePath) => {
     return await fs.readFileSync(`${sitePath}/media/favicon.svg`, 'utf8')
@@ -73,14 +73,13 @@ const refreshCollectionWatcher = () => {
         })
 }
 const functions = {
-    openDirectory: async (selectedSiteDir) => {
+    openDirectory: async (selectedDirectory) => {
         if (collectionWatcher) {
             collectionWatcher.close()
         }
         collectionDirectories = [];
         collectionWatcher = null;
-        collections = {}
-        eleventyDir = selectedSiteDir
+        selectedSiteDir = selectedDirectory
         const eleventyDB = eleventyDb.get();
         /* 
           We need a function that will return all the directories at the root of the 11ty src folder.
@@ -100,7 +99,7 @@ const functions = {
                 const dirArray = directoryPath.split('/')
                 return dirArray[dirArray.length - 1]
             }
-
+            let collections = {}
             for (const directoryPath of collectionDirectories) {
                 const collectionDirectoryName = getDirectoryName(directoryPath);
                 collections[collectionDirectoryName] = []
@@ -157,10 +156,10 @@ const functions = {
     },
     setSiteConfig: (data) => {
         console.log("this is the config data coming into the ufnction", data);
-        return fs.writeFileSync(`${eleventyDir}/_11tycms.json`, JSON.stringify(data));
+        return fs.writeFileSync(`${selectedSiteDir}/_11tycms.json`, JSON.stringify(data));
     },
     _getSiteInfoFilePath: async () => {
-        const infoFile = await fs.readdirSync(`${eleventyDir}/_data/`, { withFileTypes: true }).filter(file => (file.name.endsWith(".js") || file.name.endsWith(".jsx") || file.name.endsWith('.json')) && (file.name.includes('site.') || file.name.includes('metadata.')))[0];
+        const infoFile = await fs.readdirSync(`${selectedSiteDir}/_data/`, { withFileTypes: true }).filter(file => (file.name.endsWith(".js") || file.name.endsWith(".jsx") || file.name.endsWith('.json')) && (file.name.includes('site.') || file.name.includes('metadata.')))[0];
         if (infoFile.length == 0)
             throw new Error("No metadata/site.js/json file found!")
         return `${infoFile.parentPath}${infoFile.name}`
@@ -176,14 +175,13 @@ const functions = {
         const favicon = await getFavicon(path)
         otherData['base64Favicon'] = _imageToBase64(favicon, '.svg')
 
-        siteInfoPath = await functions._getSiteInfoFilePath();
-        siteInfoData = await filesFuncs._importDataFile(siteInfoPath)
+        siteInfoFilePath = await functions._getSiteInfoFilePath();
+        const siteInfoData = await filesFuncs._importDataFile(siteInfoFilePath)
         return { ...siteInfoData, ...otherData };
     },
     setSiteInfo: async (data) => {
         console.log(data);
-        const writeFileResult = fs.writeFileSync(siteInfoPath, JSON.stringify(data));
-        siteInfoData = data;
+        const writeFileResult = fs.writeFileSync(siteInfoFilePath, JSON.stringify(data));
         return writeFileResult
     },
     createCollection: async (sitePath, name, layout) => {
@@ -194,8 +192,8 @@ const functions = {
         refreshCollectionWatcher()
     },
     deleteCollection: async (name) => {
-        console.log("Deleting collection at ", `${eleventyDir}/${name}`)
-        const status = await fs.rmSync(`${eleventyDir}/${name}`, { recursive: true, force: true });
+        console.log("Deleting collection at ", `${selectedSiteDir}/${name}`)
+        const status = await fs.rmSync(`${selectedSiteDir}/${name}`, { recursive: true, force: true });
         refreshCollectionWatcher();
         return status;
     },
@@ -215,7 +213,7 @@ const functions = {
             });
         })
     },
-    _getSelectedEleventySiteDir: () => eleventyDir
+    _getSelectedEleventySiteDir: () => selectedSiteDir
 }
 
 export default functions;
