@@ -88,9 +88,21 @@ const functions = {
         eleventyDB.ItemMetadata.destroy({
             truncate: true
         })
+
+        const doesCollectionDirConfigExist = (path, folderName)=>{
+            const supportedConfigExtensions = ['.js', '.json', '.ts'];
+            for(const extension of supportedConfigExtensions){
+                const collectionConfigPath = `${path}/${folderName}/${folderName}${extension}`
+                if(fs.existsSync(collectionConfigPath)){
+                    return collectionConfigPath
+                }
+                    
+            }
+            return false;
+        };
         const isDirCollection = (path, folderName) => {
             const isFolderInternal = folderName[0] == '_'
-            const isCollectionFolder = fs.existsSync(`${path}/${folderName}/${folderName}.json`);
+            const isCollectionFolder = doesCollectionDirConfigExist(path, folderName);
             return !isFolderInternal && isCollectionFolder;
         };
 
@@ -121,12 +133,12 @@ const functions = {
             return collections
         }
 
-        const eleventyRootDirs = fs.readdirSync(selectedSiteDir, { withFileTypes: true }).filter(dirEntry => dirEntry.isDirectory())
-        collectionDirectories = eleventyRootDirs.filter(dir => isDirCollection(selectedSiteDir, dir.name)).map(dir => `${dir.path}/${dir.name}`)
+        const siteRootDirectories = fs.readdirSync(selectedSiteDir, { withFileTypes: true }).filter(dirEntry => dirEntry.isDirectory())
+        collectionDirectories = siteRootDirectories.filter(dir => isDirCollection(selectedSiteDir, dir.name)).map(dir => `${dir.path}/${dir.name}`)
         const processedCollections = await collectionsFactory(collectionDirectories);
         let eleventyStructure = {
             rootPath: selectedSiteDir,
-            code: eleventyRootDirs.filter(dir => dir.name[0] == '_'),
+            code: siteRootDirectories.filter(dir => dir.name[0] == '_'),
             collections: processedCollections
         }
 
@@ -155,7 +167,7 @@ const functions = {
         return siteConfig
     },
     setSiteConfig: (data) => {
-        console.log("this is the config data coming into the ufnction", data);
+        siteConfig = data;
         return fs.writeFileSync(`${selectedSiteDir}/_11tycms.json`, JSON.stringify(data));
     },
     _getSiteInfoFilePath: async () => {
