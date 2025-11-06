@@ -142,10 +142,10 @@ const functions = {
             collections: processedCollections
         }
 
-        const configFilePath = `${selectedSiteDir}/_11tycms.json`
-        if (fs.existsSync(configFilePath)) {
+        const configFile = await fs.readdirSync(`${selectedSiteDir}`, { withFileTypes: true }).filter(file => ['_11tycms.json', '_11tycms.js', '_11tycms.ts'].includes(file.name))[0];
+        if (configFile) {
             console.log("11tyCMS config FOUND!")
-            siteConfig = JSON.parse(await fs.readFileSync(configFilePath, 'utf8'))
+            siteConfig = filesFuncs._importDataFile(`${selectedSiteDir}/${configFile.name}`);
         }
         else {
             console.log("11tyCMS config not found, creating new one")
