@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { getMarkdown, insert, replaceAll } from "@milkdown/kit/utils";
 
 import "@milkdown/crepe/theme/common/style.css";
-import "@milkdown/crepe/theme/frame.css";
+
 
 import MilkdownEditorWrapper from '../MilkdownEditor';
 import FeatherIcon from 'feather-icons-react';

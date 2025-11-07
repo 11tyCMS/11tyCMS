@@ -4,13 +4,21 @@ import { commonmark } from '@milkdown/kit/preset/commonmark'
 import { Milkdown, MilkdownProvider, useEditor } from '@milkdown/react'
 import { replaceAll, getMarkdown, insert } from '@milkdown/utils'
 import { listener, listenerCtx } from '@milkdown/kit/plugin/listener'
-import '@milkdown/crepe/theme/common/style.css'
-import '@milkdown/crepe/theme/frame.css'
 import { automd } from '@milkdown/plugin-automd'
 import { clipboard } from '@milkdown/plugin-clipboard'
 import fs from 'fs';
 import FeatherIcon from 'feather-icons-react'
 import { useEffect, useRef, useState, useCallback, StrictMode } from 'react'
+import { defaultKeymap } from '@codemirror/commands'
+import { languages } from '@codemirror/language-data'
+import { oneDark } from '@codemirror/theme-one-dark'
+import { keymap } from '@codemirror/view'
+import { basicSetup } from 'codemirror'
+
+import {
+  codeBlockComponent,
+  codeBlockConfig,
+} from '@milkdown/components/code-block'
 function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef }) {
   const saveTimerRef = useRef(null)
   const editorCtx = useRef(null)
@@ -30,11 +38,19 @@ function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef })
           }
           saveTimerRef.current = setTimeout(() => saveFile(markdown), 1000)
         })
+        ctx.update(codeBlockConfig.key, (defaultConfig) => ({
+          ...defaultConfig,
+          languages,
+          extensions: [basicSetup, oneDark, keymap.of(defaultKeymap)],
+          renderLanguage: (language, selected) =>
+            selected ? `✔ ${language}` : language,
+        }))
       })
       .use(commonmark)
       .use(listener)
       .use(automd)
       .use(clipboard)
+      .use(codeBlockComponent)
   )
 
   // Example function to get current content
@@ -80,10 +96,10 @@ function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef })
     fileUpload.click()
 
   }
-  const updateBoldState = useCallback(()=>{
+  const updateBoldState = useCallback(() => {
     const editor = get();
-    if(!editor) return;
-    editor.action((ctx)=>{
+    if (!editor) return;
+    editor.action((ctx) => {
       const active = bold(ctx);
       console.log(active);
     });
