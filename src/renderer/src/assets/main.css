@@ -340,7 +340,7 @@ button.icon svg {
   max-width: 70%;
   overflow: hidden;
   cursor: pointer;
-  font-size:16px;
+  font-size: 16px;
 }
 
 .postsList ul {
@@ -523,8 +523,8 @@ button.icon svg {
   margin: 0px;
   min-width: 19px;
   border-radius: 6px;
-  width:20px;
-  height:20px;
+  width: 20px;
+  height: 20px;
 }
 
 .containingList .parent button {
@@ -593,7 +593,7 @@ button.icon svg {
   display: flex;
   align-items: center;
   color: #acc7ff;
-  font-weight:500;
+  font-weight: 500;
 }
 
 .dashboardForm h2,
@@ -609,4 +609,22 @@ button.icon svg {
 
 .dashboardForm h2 {
   margin-bottom: 18px;
+}
+
+.milkdown::selection {
+  color: #c4dfff !important;
+  background: #2e3455;
+}
+
+.milkdown .ProseMirror code {
+  border-radius: 4px;
+  background: #1d2f57 !important;
+  padding: 4px !important;
+  font-size: 12px !important;
+
+}
+
+.milkdown .ProseMirror p {
+    line-height: 1.6 !important;
+    color: #bcd6f6 !important;
 }
