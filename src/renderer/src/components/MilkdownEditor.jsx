@@ -28,7 +28,6 @@ function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef })
       .config((ctx) => {
         editorCtx.current = ctx
         ctx.set(rootCtx, root)
-        ctx.set(defaultValueCtx, '# Hello World')
         // Set up listeners
         ctx.get(listenerCtx).markdownUpdated((ctx, markdown, prevMarkdown) => {
           markdownRef.current = markdown;
