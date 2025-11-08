@@ -149,7 +149,7 @@ const functions = {
         }
         else {
             console.log("11tyCMS config not found, creating new one")
-            filesFuncs._writeDataFile(configFilePath, {});
+            filesFuncs._writeDataFile(`${selectedSiteDir}/_11tycms.json`, {});
         }
 
         refreshCollectionWatcher()
