@@ -683,10 +683,18 @@ button.icon svg {
 
 .wizard .wizardContent form label{
   display:flex;
-  gap:10px;
+  gap:30px;
   padding:10px;
   padding-left:0px;
   padding-right:0px;
+}
+
+.wizard .wizardContent form label b{
+  width:100px;
+  align-content: center;
+}
+.wizard .wizardContent form label input{
+  height:38px;
 }
 
 .wizard .wizardContent form label:first-of-type{
