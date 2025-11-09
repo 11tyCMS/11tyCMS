@@ -7,13 +7,13 @@ import SelectSiteView from './components/SelectSiteView';
 import DashboardView from './components/Dashboard/DashboardView';
 import WelcomeWizardConstructorRoutes from './components/Wizard/Steps/Welcome/WelcomeWizardConstructor';
 import Wizard from './components/Wizard/Wizard';
-
+import { defaultWelcomeWizardState } from './components/Wizard/Steps/Welcome/WelcomeWizardConstructor';
 function App() {
   const navigate = useNavigate();
   return (
     <Routes>
       <Route index exact path="/" element={<SelectSiteView />} />
-      <Route exact path="welcome" element={<Wizard routes={WelcomeWizardConstructorRoutes} rootRoute={"/welcome"}/>}>
+      <Route exact path="welcome" element={<Wizard routes={WelcomeWizardConstructorRoutes} rootRoute={"/welcome"} defaultState={defaultWelcomeWizardState}/>}>
         {WelcomeWizardConstructorRoutes.map(route => <Route exact path={route.path} element={route.element} />)}
       </Route>
       <Route exact path="site" element={<SiteView />}>

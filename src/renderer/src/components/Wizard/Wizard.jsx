@@ -1,11 +1,14 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import ProgressStepper from "./ProgressStepper";
 import { useLocation } from "react-router-dom";
+import { useState } from "react";
 
 
-const Wizard = ({ routes, rootRoute }) => {
+const Wizard = ({ routes, defaultState=null, rootRoute }) => {
     const { pathname } = useLocation();
     const navigate = useNavigate()
+    const [state, setState] = useState(defaultState);
+
     const routeIndexFromPathname = (pathname) => {
         if (rootRoute == pathname) {
             return 0
@@ -25,7 +28,7 @@ const Wizard = ({ routes, rootRoute }) => {
             <ProgressStepper routes={routes} rootRoute={rootRoute} />
         </div>
         <div className="wizardContent" style={{flexDirection: routes[currentRouteIndex]['layoutDirection']}}>
-            <Outlet />
+            <Outlet context={[state, setState]}/>
         </div>
         <div className="wizardActions">
             {currentRouteIndex == 0 ? '' : <button onClick={()=>navigate(`${rootRoute}/${routes[currentRouteIndex-1]['path']}`)}>Previous</button>}
