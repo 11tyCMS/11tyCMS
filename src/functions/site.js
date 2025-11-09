@@ -12,7 +12,13 @@ const { _imageToBase64 } = filesFuncs;
 let siteConfig = null;
 let collectionWatcher = null;
 
-let selectedSiteDir = null; 
+let selectedSiteDir = null;
+let selectedSiteDirectories = {
+    input: '',
+    includes: '_includes',
+    data: '_data',
+    output: '_site'
+}
 let siteInfoFilePath = null;
 let collectionDirectories = [];
 
@@ -73,7 +79,10 @@ const refreshCollectionWatcher = () => {
         })
 }
 const functions = {
-    openDirectory: async (selectedDirectory) => {
+    openDirectory: async (selectedDirectory, cmsConfigData) => {
+        if(!fs.existsSync(`${selectedDirectory}/eleventy.config.js`)){
+            throw new Error(`This doesn't appear to be an Eleventy website! Ensure you select a directory with an 'eleventy.config.js' file in its root.`)
+        }
         if (collectionWatcher) {
             collectionWatcher.close()
         }
@@ -81,6 +90,21 @@ const functions = {
         collectionWatcher = null;
         selectedSiteDir = selectedDirectory
         const eleventyDB = eleventyDb.get();
+
+        const cmsConfigFile = await fs.readdirSync(`${selectedSiteDir}`, { withFileTypes: true }).filter(file => ['_11tycms.json', '_11tycms.js', '_11tycms.ts'].includes(file.name))[0];
+        if (cmsConfigFile) {
+            console.log("11tyCMS config FOUND!")
+            siteConfig = filesFuncs._importDataFile(`${selectedSiteDir}/${cmsConfigFile.name}`);
+        }
+        else {
+            console.log("11tyCMS config not found, creating new one")
+            if(!cmsConfigData){
+                return 'NEW';
+            } else{
+                filesFuncs._writeDataFile(`${selectedSiteDir}/_11tycms.json`, cmsConfigData);
+                siteConfig = cmsConfigData;
+            }
+        }
         /* 
           We need a function that will return all the directories at the root of the 11ty src folder.
           It will then need to check through any folders that arent _* to see if its a collection, by checking to see if there is a child file with a matching name to its containing folder.
@@ -140,16 +164,6 @@ const functions = {
             rootPath: selectedSiteDir,
             code: siteRootDirectories.filter(dir => dir.name[0] == '_'),
             collections: processedCollections
-        }
-
-        const configFile = await fs.readdirSync(`${selectedSiteDir}`, { withFileTypes: true }).filter(file => ['_11tycms.json', '_11tycms.js', '_11tycms.ts'].includes(file.name))[0];
-        if (configFile) {
-            console.log("11tyCMS config FOUND!")
-            siteConfig = filesFuncs._importDataFile(`${selectedSiteDir}/${configFile.name}`);
-        }
-        else {
-            console.log("11tyCMS config not found, creating new one")
-            filesFuncs._writeDataFile(`${selectedSiteDir}/_11tycms.json`, {});
         }
 
         refreshCollectionWatcher()

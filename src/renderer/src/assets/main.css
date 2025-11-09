@@ -7,6 +7,11 @@ html {
   font-family: sans-serif;
 }
 
+p {
+  line-height: 1.6;
+  margin: 0px;
+}
+
 button {
   border-radius: 8px;
   padding: 10px;
@@ -625,6 +630,82 @@ button.icon svg {
 }
 
 .milkdown .ProseMirror p {
-    line-height: 1.6 !important;
-    color: #bcd6f6 !important;
+  line-height: 1.6 !important;
+  color: #bcd6f6 !important;
+}
+
+.wizard {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  height: fit-content;
+  border-radius: 6px;
+  background-color: rgb(14 24 44);
+  align-self: center;
+  margin: 0px auto;
+  color: #d7e3fd;
+}
+
+.wizard .progressStepper {
+  display: flex;
+  flex-direction: row;
+  gap: 1px;
+}
+
+.wizard .progressStepper .step {
+  flex-grow: 1;
+  padding: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #3a5273;
+}
+
+.wizard .progressStepper .step.active {
+  border-bottom: 2px solid #5a7fb3;
+  font-weight: bold;
+}
+
+.wizard .progressStepper .step label {
+  color: #acc7ff;
+  font-size: 12px;
+}
+
+.wizard .wizardContent {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+.wizard .wizardContent form{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.wizard .wizardContent form label{
+  display:flex;
+  gap:10px;
+  padding:10px;
+  padding-left:0px;
+  padding-right:0px;
+}
+
+.wizard .wizardContent form label:first-of-type{
+  padding-top:0px;
+}
+
+
+.wizard .wizardActions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px;
+  padding-top: 0px;
+}
+
+.wizard .wizardActions button {
+  min-width: 70px;
+}
+
+.wizard .wizardActions button:only-of-type{
+  margin-left:auto;
 }

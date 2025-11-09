@@ -5,14 +5,20 @@ import PostEditor from './components/PostEditor/PostEditor'
 import SiteView from './components/SiteView';
 import SelectSiteView from './components/SelectSiteView';
 import DashboardView from './components/Dashboard/DashboardView';
+import WelcomeWizardConstructorRoutes from './components/Wizard/Steps/Welcome/WelcomeWizardConstructor';
+import Wizard from './components/Wizard/Wizard';
 
 function App() {
+  const navigate = useNavigate();
   return (
     <Routes>
-      <Route index exact path="/" element={<SelectSiteView/>} />
+      <Route index exact path="/" element={<SelectSiteView />} />
+      <Route exact path="welcome" element={<Wizard routes={WelcomeWizardConstructorRoutes} rootRoute={"/welcome"}/>}>
+        {WelcomeWizardConstructorRoutes.map(route => <Route exact path={route.path} element={route.element} />)}
+      </Route>
       <Route exact path="site" element={<SiteView />}>
-        <Route path="" exact element={<h1>Select collection</h1>} />
-        <Route path="dashboard" exact element={<DashboardView/>} />
+        <Route path="" exact element={<h1>Select collection <button onClick={()=>navigate('/welcome')}>nav</button></h1>} />
+        <Route path="dashboard" exact element={<DashboardView />} />
         <Route path=":collectionName/posts" exact element={<PostsList />} />
         <Route path=":collectionName/posts/:postFileName" exact element={<PostEditor />} />
       </Route>
