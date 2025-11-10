@@ -1,3 +1,4 @@
+import useSiteStore from "../../../../stores/Site";
 import BuildAndPublishConfig from "./BuildAndPublishConfig"
 import Finished from "./Finished";
 import SelectSiteFolders from "./SelectSiteFolders"
@@ -17,4 +18,9 @@ export const defaultWelcomeWizardState = {
     output: "",
     build: "npx @11ty/eleventy",
     publish: ""
+}
+
+export const finalAction = (wizardState, navigate)=>{
+    const cwd = useSiteStore.getState().cwd;
+    useSiteStore.getState().actions.openSiteByDir(navigate, cwd, wizardState);
 }

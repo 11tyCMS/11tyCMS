@@ -97,9 +97,8 @@ const functions = {
             siteConfig = filesFuncs._importDataFile(`${selectedSiteDir}/${cmsConfigFile.name}`);
         }
         else {
-            console.log("11tyCMS config not found, creating new one")
             if(!cmsConfigData){
-                return 'NEW';
+                return {status:"NEW", selectedDirectory};
             } else{
                 filesFuncs._writeDataFile(`${selectedSiteDir}/_11tycms.json`, cmsConfigData);
                 siteConfig = cmsConfigData;
@@ -174,7 +173,7 @@ const functions = {
         return new Promise(resolveOuter => {
             dialog.showOpenDialog({
                 properties: ['openDirectory']
-            }).then((response) => functions.openDirectory(response.filePaths[0], resolveOuter))
+            }).then((response) => functions.openDirectory(response.filePaths[0]).then((res)=>resolveOuter(res)))
         });
     },
     getSiteConfig: () => {
