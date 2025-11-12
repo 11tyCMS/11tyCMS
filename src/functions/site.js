@@ -80,7 +80,7 @@ const refreshCollectionWatcher = () => {
 }
 const functions = {
     openDirectory: async (selectedDirectory, cmsConfigData) => {
-        if(!fs.existsSync(`${selectedDirectory}/eleventy.config.js`)){
+        if (!fs.existsSync(`${selectedDirectory}/eleventy.config.js`)) {
             throw new Error(`This doesn't appear to be an Eleventy website! Ensure you select a directory with an 'eleventy.config.js' file in its root.`)
         }
         if (collectionWatcher) {
@@ -94,12 +94,12 @@ const functions = {
         const cmsConfigFile = await fs.readdirSync(`${selectedSiteDir}`, { withFileTypes: true }).filter(file => ['_11tycms.json', '_11tycms.js', '_11tycms.ts'].includes(file.name))[0];
         if (cmsConfigFile) {
             console.log("11tyCMS config FOUND!")
-            siteConfig = filesFuncs._importDataFile(`${selectedSiteDir}/${cmsConfigFile.name}`);
+            siteConfig = await filesFuncs._importDataFile(`${selectedSiteDir}/${cmsConfigFile.name}`);
         }
         else {
-            if(!cmsConfigData){
-                return {status:"NEW", selectedDirectory};
-            } else{
+            if (!cmsConfigData) {
+                return { status: "NEW", selectedDirectory };
+            } else {
                 filesFuncs._writeDataFile(`${selectedSiteDir}/_11tycms.json`, cmsConfigData);
                 siteConfig = cmsConfigData;
             }
@@ -112,14 +112,13 @@ const functions = {
             truncate: true
         })
 
-        const doesCollectionDirConfigExist = (path, folderName)=>{
+        const doesCollectionDirConfigExist = (path, folderName) => {
             const supportedConfigExtensions = ['.js', '.json', '.ts'];
-            for(const extension of supportedConfigExtensions){
-                const collectionConfigPath = `${path}/${folderName}/${folderName}${extension}`
-                if(fs.existsSync(collectionConfigPath)){
+            for (const extension of supportedConfigExtensions) {
+                const collectionConfigPath = `${path}/${folderName}/${folderName}.11tydata${extension}`
+                if (fs.existsSync(collectionConfigPath)) {
                     return collectionConfigPath
                 }
-                    
             }
             return false;
         };
@@ -139,25 +138,36 @@ const functions = {
                 const collectionDirectoryName = getDirectoryName(directoryPath);
                 collections[collectionDirectoryName] = []
                 const collectionFiles = fs.readdirSync(directoryPath, { withFileTypes: true }).filter(file => file.name.includes('.md'));
+                console.log('found these files', collectionFiles);
                 for (const file of collectionFiles) {
-                    const filename = `${file.parentPath}/${file.name}`;
-                    const fileFrontmatterData = (await matter.read(`${file.parentPath}/${file.name}`))['data'];
-                    const fileMetadata = (await eleventyDB.ItemMetadata.create({
-                        collection: collectionDirectoryName,
-                        name: file.name,
-                        data: fileFrontmatterData,
-                        path: filename,
-                        parentPath: file.parentPath
-                    }))['dataValues']
-                    collections[collectionDirectoryName].push(fileMetadata);
+                    try {
+
+                        const filename = `${file.parentPath}/${file.name}`;
+                        console.log("trying to read file", filename)
+                        const fileFrontmatterData = (await matter.read(`${file.parentPath}/${file.name}`))['data'];
+                        console.log(fileFrontmatterData, file);
+                        const fileMetadata = (await eleventyDB.ItemMetadata.create({
+                            collection: collectionDirectoryName,
+                            name: file.name,
+                            data: fileFrontmatterData,
+                            path: filename,
+                            parentPath: file.parentPath
+                        }))['dataValues']
+                        collections[collectionDirectoryName].push(fileMetadata);
+                    } catch (error) {
+                        console.log("this is an error here", error)
+                    }
+
                 }
             }
 
             return collections
         }
 
-        const siteRootDirectories = fs.readdirSync(selectedSiteDir, { withFileTypes: true }).filter(dirEntry => dirEntry.isDirectory())
-        collectionDirectories = siteRootDirectories.filter(dir => isDirCollection(selectedSiteDir, dir.name)).map(dir => `${dir.path}/${dir.name}`)
+        const siteRootDirectories = fs.readdirSync(`${selectedSiteDir}`, { withFileTypes: true }).filter(dirEntry => dirEntry.isDirectory())
+        const siteInputDirectories = fs.readdirSync(`${selectedSiteDir}${siteConfig.input ? `/${siteConfig.input}` : ''}`, { withFileTypes: true }).filter(dirEntry => dirEntry.isDirectory())
+
+        collectionDirectories = siteInputDirectories.filter(dir => isDirCollection(`${selectedSiteDir}${siteConfig.input ? `/${siteConfig.input}` : ''}`, dir.name)).map(dir => `${dir.path}/${dir.name}`)
         const processedCollections = await collectionsFactory(collectionDirectories);
         let eleventyStructure = {
             rootPath: selectedSiteDir,
@@ -169,11 +179,10 @@ const functions = {
         return eleventyStructure
     },
     openDirectoryWithDialog: async () => {
-        //response.filePaths[0]+'/'+fileName
         return new Promise(resolveOuter => {
             dialog.showOpenDialog({
                 properties: ['openDirectory']
-            }).then((response) => functions.openDirectory(response.filePaths[0]).then((res)=>resolveOuter(res)))
+            }).then((response) => functions.openDirectory(response.filePaths[0]).then((res) => resolveOuter(res)))
         });
     },
     getSiteConfig: () => {
@@ -184,7 +193,7 @@ const functions = {
         return fs.writeFileSync(`${selectedSiteDir}/_11tycms.json`, JSON.stringify(data));
     },
     _getSiteInfoFilePath: async () => {
-        const infoFile = await fs.readdirSync(`${selectedSiteDir}/_data/`, { withFileTypes: true }).filter(file => (file.name.endsWith(".js") || file.name.endsWith(".jsx") || file.name.endsWith('.json')) && (file.name.includes('site.') || file.name.includes('metadata.')))[0];
+        const infoFile = await fs.readdirSync(`${selectedSiteDir}/${siteConfig.data}/`, { withFileTypes: true }).filter(file => (file.name.endsWith(".js") || file.name.endsWith(".jsx") || file.name.endsWith('.json')) && (file.name.includes('site.') || file.name.includes('metadata.')))[0];
         if (infoFile.length == 0)
             throw new Error("No metadata/site.js/json file found!")
         return `${infoFile.parentPath}${infoFile.name}`
@@ -193,9 +202,8 @@ const functions = {
         let otherData = {
             layouts: {}
         }
-        fs.readdirSync(`${path}/_includes/`, { withFileTypes: true }).forEach(file => {
-            const matterData = matter.read(`${file.parentPath}/${file.name}`);
-            otherData['layouts'][file.name] = matterData.data
+        fs.readdirSync(`${path}/${siteConfig.includes}`, { withFileTypes: true }).forEach(file => {
+            otherData['layouts'][file.name] = { title: file.name }
         })
         const favicon = await getFavicon(path)
         otherData['base64Favicon'] = _imageToBase64(favicon, '.svg')
@@ -210,20 +218,17 @@ const functions = {
         return writeFileResult
     },
     createCollection: async (sitePath, name, layout) => {
-        console.log("creating collection at ", `${sitePath}/${name}`)
         fs.mkdirSync(`${sitePath}/${name}`);
         fs.writeFileSync(`${sitePath}/${name}/${name}.json`, JSON.stringify({ "layout": layout, tags: 'post' }))
         collectionDirectories.push(`${sitePath}/${name}`)
         refreshCollectionWatcher()
     },
     deleteCollection: async (name) => {
-        console.log("Deleting collection at ", `${selectedSiteDir}/${name}`)
         const status = await fs.rmSync(`${selectedSiteDir}/${name}`, { recursive: true, force: true });
         refreshCollectionWatcher();
         return status;
     },
     buildSite: (path) => {
-        console.log('building the site')
         return new Promise((resolve) => {
             child_process.exec(siteConfig.build, { cwd: path }, function (err, stdout, stderr) {
                 resolve(err, stdout, stderr);
@@ -232,7 +237,7 @@ const functions = {
     },
     publishSite: async (path) => {
         return new Promise((resolve) => {
-            child_process.exec(siteConfig.publish, { cwd: `${path}/_site` }, function (err, stdout, stderr) {
+            child_process.exec(siteConfig.publish, { cwd: `${path}/${siteConfig.output}` }, function (err, stdout, stderr) {
                 console.log(err, stdout, stderr);
                 resolve(err, stdout, stderr);
             });

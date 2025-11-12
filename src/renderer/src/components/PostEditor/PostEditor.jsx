@@ -17,6 +17,7 @@ function PostEditor() {
   const [selectedFile, setSelectedFile] = useState(null);
   const {collectionName, postFileName} = useParams();
   const cwd = useSiteStore(({cwd})=>cwd);
+  const getInputDir = useSiteStore(({actions})=>actions.getInputDir);
   const navigate = useNavigate()
   console.log(postFileName);
   const fetchFile = (fileName) => {
@@ -49,7 +50,7 @@ function PostEditor() {
   }
 
   useEffect(() => {
-    fetchFile(`${cwd}/${collectionName}/${postFileName}`);
+    fetchFile(`${getInputDir()}${collectionName}/${postFileName}`);
     return () => {
       if (typingRef.current) clearTimeout(typingRef.current)
     }

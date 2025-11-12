@@ -132,7 +132,7 @@ const functions = {
         switch (extension) {
             case '.js':
             case '.jsx':
-                return require(dataFilePath)['default'];
+                return await require(dataFilePath)['default'];
                 break;
             case '.json':
                 return JSON.parse(await fs.readFileSync(dataFilePath, encoding))

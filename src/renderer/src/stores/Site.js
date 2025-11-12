@@ -58,6 +58,11 @@ const useSiteStore = create((set) => ({
             set(useSiteStore.getInitialState());
             useCollectionsStore.setState(useCollectionsStore.getInitialState())
             navigate('/')
+        },
+        getInputDir: ()=>{
+            const state = useSiteStore.getState();
+            console.log(state)
+            return `${state.cwd}/${state.selectedSiteConfig.input ? state.selectedSiteConfig.input : ''}/`
         }
     }
 }))
