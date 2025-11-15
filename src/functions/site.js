@@ -213,8 +213,7 @@ const functions = {
         return { ...siteInfoData, ...otherData };
     },
     setSiteInfo: async (data) => {
-        console.log(data);
-        const writeFileResult = fs.writeFileSync(siteInfoFilePath, JSON.stringify(data));
+        const writeFileResult = filesFuncs._writeDataFile(siteInfoFilePath, data)
         return writeFileResult
     },
     createCollection: async (sitePath, name, layout) => {

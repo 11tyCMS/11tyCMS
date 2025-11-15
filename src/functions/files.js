@@ -3,6 +3,21 @@ import fs from 'node:fs';
 import mainWindow from '../main/window';
 import eleventyDb from '../main/database/eleventyDb';
 import path from 'path'
+import magicast from 'magicast';
+const doesFileExtensionMatch = (path, ext) => {
+    console.log('Checking if ', path, 'is of type(s)', ext);
+    const splitPath = path.split('.');
+    const fileExtension = splitPath[splitPath.length - 1];
+    if (typeof ext == "string")
+        return fileExtension == ext
+    if (Array.isArray(ext))
+        return ext.includes(fileExtension);
+}
+async function requireUncached(modulePath) {
+    const cacheBuster = `?update=${Date.now()}`;
+    const module = await import(modulePath + cacheBuster);
+    return module.default;
+}
 const functions = {
     openFile: (filePath) => {
         const eleventyDB = eleventyDb.get();
@@ -81,16 +96,33 @@ const functions = {
     },
     _writeDataFile: async (path, data, shallow = false, encoding = "utf8") => {
         if (await fs.existsSync(path)) {
+            const isJsFile = doesFileExtensionMatch(path, ['js', 'ts']);
+            async function writeFile(path, data) {
+                if (isJsFile) {
+                    const jsFile = magicast.parseModule((await fs.readFileSync(path, { encoding })))
+                    for (const key in data) {
+                        jsFile.exports.default[key] = data[key];
+                    }
+                    return await magicast.writeFile(jsFile, path);
+                } else {
+                    return fs.writeFileSync(path, JSON.stringify(data));;
+                }
+            }
+
             if (shallow) {
-                let existingData = JSON.parse(await fs.readFileSync(path, encoding));
+                let existingData;
+                if (!isJsFile)
+                    existingData = JSON.parse(await fs.readFileSync(path, encoding));
+                else
+                    existingData = (await magicast.loadFile(path)).exports.default;
                 existingData = { ...existingData, ...data }
-                return await fs.writeFileSync(path, JSON.stringify(existingData));
-            } else{
-                return await fs.writeFileSync(path, JSON.stringify(data));
+                return await writeFile(path, existingData);
+            } else {
+                return await writeFile(path, data);
             }
         }
         else
-            return await fs.writeFileSync(path, JSON.stringify(data));
+            return await writeFile(path, data);
     },
     saveFileMetadata: (path, metadata, ...args) => {
         let file = matter.read(path);
@@ -132,12 +164,11 @@ const functions = {
         switch (extension) {
             case '.js':
             case '.jsx':
-                return await require(dataFilePath)['default'];
+                return await requireUncached(dataFilePath);
                 break;
             case '.json':
                 return JSON.parse(await fs.readFileSync(dataFilePath, encoding))
                 break;
-
             default:
                 throw new Error("Not a supported file format. Supported files are: .js .jsx and .json")
                 break;
