@@ -17,6 +17,7 @@ let selectedSiteDirectories = {
     input: '',
     includes: '_includes',
     data: '_data',
+    media: 'media',
     output: '_site'
 }
 let siteInfoFilePath = null;
@@ -217,13 +218,13 @@ const functions = {
         return writeFileResult
     },
     createCollection: async (sitePath, name, layout) => {
-        fs.mkdirSync(`${sitePath}/${name}`);
-        fs.writeFileSync(`${sitePath}/${name}/${name}.json`, JSON.stringify({ "layout": layout, tags: 'post' }))
-        collectionDirectories.push(`${sitePath}/${name}`)
+        fs.mkdirSync(`${sitePath}/${siteConfig.input}/${name}`);
+        fs.writeFileSync(`${sitePath}/${siteConfig.input}/${name}/${name}.json`, JSON.stringify({ "layout": layout, tags: 'post' }))
+        collectionDirectories.push(`${sitePath}/${siteConfig.input}/${name}`)
         refreshCollectionWatcher()
     },
     deleteCollection: async (name) => {
-        const status = await fs.rmSync(`${selectedSiteDir}/${name}`, { recursive: true, force: true });
+        const status = await fs.rmSync(`${selectedSiteDir}/${siteConfig.input}/${name}`, { recursive: true, force: true });
         refreshCollectionWatcher();
         return status;
     },
