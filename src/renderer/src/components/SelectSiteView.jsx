@@ -14,7 +14,7 @@ const SelectSiteView = () => {
     }, []);
     return <div style={{width:'100vw', display:'flex', alignItems:'center', justifyContent:'center'}}>
         <div className="siteSelector">
-            {selectedSiteHistory.map((site) => <div className='siteInfo' onClick={()=>openSiteByDir(navigate, site.cwd)}>
+            {selectedSiteHistory.map((site) => <button className='siteInfo' onClick={()=>openSiteByDir(navigate, site.cwd)}>
                 <div className='favicon-container'>
                     <div className='favicon'>
                         <img src={site['base64Favicon']}></img>
@@ -23,7 +23,7 @@ const SelectSiteView = () => {
                 <div className='info'>
                     <span>{site.title}</span>
                 </div>
-            </div>)}
+            </button>)}
             <button onClick={()=>openSiteFolder(navigate)} style={{marginTop:10}}>Open 11ty site</button>
         </div>
 

@@ -49,9 +49,9 @@ const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
             <span class="listHeader">Collections <button onClick={() => setIsAddingCollection(true)}>+</button></span>
             {Object.keys(collections).map((collectionName) => (
                 <li className="parent">
-                    <button className='parent'>
+                    <button className='parent' onClick={() => { navigate(`/site/${collectionName}/posts`) }}>
                         <FeatherIcon icon="folder" size={15} fill="#547fdb" />
-                        <span className="collectionLabel" onClick={() => { navigate(`/site/${collectionName}/posts`) }}>{collectionName}</span>
+                        <span className="collectionLabel">{collectionName}</span>
                         <div style={{ flexGrow: 1 }}></div>
                         <button onClick={() => setCollectionToDelete(collectionName)}><FeatherIcon icon='trash' size={10} /></button>
                     </button>

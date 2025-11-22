@@ -85,9 +85,10 @@ button.icon svg {
   height: 30px;
   border-radius: 100%;
 }
-.containingList{
-    padding-right: 8px;
-    padding-left:8px !important;
+
+.containingList {
+  padding-right: 8px;
+  padding-left: 8px !important;
 }
 
 .sidebar .siteInfo .favicon-container .favicon.no-icon {
@@ -111,7 +112,7 @@ button.icon svg {
   font-weight: 500;
   padding: 0px;
   margin: 0px;
-  text-align:left;
+  text-align: left;
 }
 
 .sidebar .siteInfo .info button {
@@ -296,24 +297,26 @@ button.icon svg {
   display: flex;
   border-bottom: none;
 }
-.sidebar ul li button.parent{
-  flex-grow:1;
-  display:flex;
+
+.sidebar ul li button.parent {
+  flex-grow: 1;
+  display: flex;
   align-items: anchor-center;
   font-size: 18px;
   font-weight: 400;
   padding: 18px;
-  padding-right:8px;
-  padding-top:7px;
-  padding-bottom:7px;
-  background:none;
+  padding-right: 8px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  background: none;
 }
 
-.sidebar ul li button.parent:focus button{
-  visibility:visible;
+.sidebar ul li button.parent:focus button {
+  visibility: visible;
 }
-.sidebar ul li button.parent:focus-within button{
-visibility: visible;
+
+.sidebar ul li button.parent:focus-within button {
+  visibility: visible;
 }
 
 
@@ -359,7 +362,27 @@ visibility: visible;
   margin: 0;
 }
 
-.postsList ul li label {
+.postsList ul li {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.postsList ul li button {
+  flex-grow: 1;
+  padding: unset;
+  margin: unset;
+  justify-content: space-between;
+  padding-left: 15px;
+  padding-right: 15px;
+  background: none;
+  height: 50px;
+}
+
+.postsList ul li button:focus-within .buttons-info button {
+  display: flex;
+}
+
+.postsList ul li button label {
   white-space: pre;
   text-overflow: ellipsis;
   max-width: 70%;
@@ -373,18 +396,23 @@ visibility: visible;
   margin-top: 20px;
 }
 
-.postsList ul li {
+
+.postsList ul li button .buttons-info button {
+  padding: unset;
+  margin: unset;
+  background: unset;
+  flex-grow: 1;
+  display: none;
   box-sizing: border-box;
   margin: 10px;
-  margin-right: 24px;
   margin-left: 24px;
   /* width: 100%; */
   height: 50px;
+  width: 50px;
   /* border: 1px solid #333a5f; */
   border-radius: 5px;
   font-size: 20px;
   color: #d7e3fd;
-  display: flex;
   align-items: center;
   padding-left: 15px;
   padding-right: 15px;
@@ -401,11 +429,11 @@ visibility: visible;
 
 .postsList ul li .buttons-info button {
   margin-left: 10px;
-  display: none;
+  display: block;
 }
 
-.postsList ul li:hover button {
-  display: block;
+.postsList ul li button:hover .buttons-info button {
+  display: flex;
   z-index: 100
 }
 
@@ -415,12 +443,10 @@ visibility: visible;
 }
 
 .postsList .head-container button {
-  height: 35px;
-  width: 35px;
-  border-radius: 100%;
+  background: none;
 }
 
-.postsList ul li:hover {
+.postsList ul li button:hover {
   background: #2e3455;
 }
 
@@ -555,12 +581,12 @@ visibility: visible;
 .containingList button.parent button {
   padding: 5px;
   border-radius: 6px;
-  visibility:hidden;
+  visibility: hidden;
 }
 
 .containingList button.parent:hover button {
   display: inherit;
-  visibility:visible;
+  visibility: visible;
 }
 
 .containingList .parent button svg {
@@ -581,6 +607,9 @@ visibility: visible;
   padding: 14px;
   cursor: pointer;
   margin-bottom: 5px;
+  justify-content: flex-start;
+  gap: 8px;
+  background: none;
 }
 
 .siteSelector .siteInfo:hover {
@@ -696,30 +725,31 @@ visibility: visible;
   padding: 20px;
 }
 
-.wizard .wizardContent form{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+.wizard .wizardContent form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.wizard .wizardContent form label{
-  display:flex;
-  gap:30px;
-  padding:10px;
-  padding-left:0px;
-  padding-right:0px;
+.wizard .wizardContent form label {
+  display: flex;
+  gap: 30px;
+  padding: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
-.wizard .wizardContent form label b{
-  width:100px;
+.wizard .wizardContent form label b {
+  width: 100px;
   align-content: center;
 }
-.wizard .wizardContent form label input{
-  height:38px;
+
+.wizard .wizardContent form label input {
+  height: 38px;
 }
 
-.wizard .wizardContent form label:first-of-type{
-  padding-top:0px;
+.wizard .wizardContent form label:first-of-type {
+  padding-top: 0px;
 }
 
 
@@ -735,6 +765,6 @@ visibility: visible;
   min-width: 70px;
 }
 
-.wizard .wizardActions button:only-of-type{
-  margin-left:auto;
+.wizard .wizardActions button:only-of-type {
+  margin-left: auto;
 }
