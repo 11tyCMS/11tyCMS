@@ -34,7 +34,7 @@ const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
 
 
     return <div className="sidebar">
-        <div className='siteInfo' onClick={()=>navigate('/site/dashboard')}>
+        <button className='siteInfo' onClick={() => navigate('/site/dashboard')}>
             <div className='favicon-container'>
                 <div className='favicon'>
                     <img src={selectedSiteInfo['base64Favicon']}></img>
@@ -42,17 +42,19 @@ const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
             </div>
             <div className='info'>
                 <h1>{selectedSiteInfo.title}</h1>
-                <button onClick={()=>resetSelectedSite(navigate)}><FeatherIcon icon="log-out" size={14}/></button>
+                <button onClick={() => resetSelectedSite(navigate)}><FeatherIcon icon="log-out" size={14} /></button>
             </div>
-        </div>
+        </button>
         <ul className="containingList">
             <span class="listHeader">Collections <button onClick={() => setIsAddingCollection(true)}>+</button></span>
             {Object.keys(collections).map((collectionName) => (
                 <li className="parent">
-                    <FeatherIcon icon="folder" size={15} fill="#547fdb" />
-                    <span className="collectionLabel" onClick={() => { navigate(`/site/${collectionName}/posts`) }}>{collectionName}</span>
-                    <div style={{ flexGrow: 1 }}></div>
-                    <button onClick={() => setCollectionToDelete(collectionName)}><FeatherIcon icon='trash' size={10} /></button>
+                    <button className='parent'>
+                        <FeatherIcon icon="folder" size={15} fill="#547fdb" />
+                        <span className="collectionLabel" onClick={() => { navigate(`/site/${collectionName}/posts`) }}>{collectionName}</span>
+                        <div style={{ flexGrow: 1 }}></div>
+                        <button onClick={() => setCollectionToDelete(collectionName)}><FeatherIcon icon='trash' size={10} /></button>
+                    </button>
                 </li>
             ))}
         </ul>

@@ -87,6 +87,7 @@ button.icon svg {
 }
 .containingList{
     padding-right: 8px;
+    padding-left:8px !important;
 }
 
 .sidebar .siteInfo .favicon-container .favicon.no-icon {
@@ -110,6 +111,7 @@ button.icon svg {
   font-weight: 500;
   padding: 0px;
   margin: 0px;
+  text-align:left;
 }
 
 .sidebar .siteInfo .info button {
@@ -292,12 +294,28 @@ button.icon svg {
 
 .sidebar ul li.parent {
   display: flex;
+  border-bottom: none;
+}
+.sidebar ul li button.parent{
+  flex-grow:1;
+  display:flex;
   align-items: anchor-center;
   font-size: 18px;
   font-weight: 400;
-  border-bottom: none;
   padding: 18px;
+  padding-right:8px;
+  padding-top:7px;
+  padding-bottom:7px;
+  background:none;
 }
+
+.sidebar ul li button.parent:focus button{
+  visibility:visible;
+}
+.sidebar ul li button.parent:focus-within button{
+visibility: visible;
+}
+
 
 .sidebar ul li .collectionLabel {
   color: #cddff5;
@@ -534,14 +552,15 @@ button.icon svg {
   height: 20px;
 }
 
-.containingList .parent button {
+.containingList button.parent button {
   padding: 5px;
   border-radius: 6px;
-  display: none;
+  visibility:hidden;
 }
 
-.containingList .parent:hover button {
+.containingList button.parent:hover button {
   display: inherit;
+  visibility:visible;
 }
 
 .containingList .parent button svg {
