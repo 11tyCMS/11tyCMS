@@ -16,6 +16,11 @@ function PostsList() {
     event.stopPropagation();
     setPostToDelete(post);
   }
+  useEffect(()=>{
+    if(!posts)
+      navigate('/site')
+  }, posts)
+  if(posts)
   return (
     <div className="postsList">
       <AddFileDialog
