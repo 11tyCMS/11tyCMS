@@ -6,6 +6,7 @@ function SelectSiteFolders() {
     const folderLabels = {
         input: "Input/content folder",
         includes: "Includes folder",
+        media: "Media uploads",
         data: "Data folder",
         output: "Output folder"
     }

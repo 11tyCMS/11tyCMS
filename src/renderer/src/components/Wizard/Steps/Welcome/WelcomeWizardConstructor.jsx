@@ -16,6 +16,7 @@ export const defaultWelcomeWizardState = {
     includes: "",
     data: "",
     output: "",
+    media: "",
     build: "npx @11ty/eleventy",
     publish: ""
 }
