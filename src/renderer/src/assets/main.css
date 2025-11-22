@@ -511,11 +511,9 @@ button.icon svg {
 }
 
 .title-bar button {
-  width: 35px;
-  height: 35px;
-  border-radius: 100%;
   align-self: center;
   cursor: pointer;
+  background:none;
 }
 
 .tiptap {
