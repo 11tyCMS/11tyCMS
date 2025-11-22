@@ -85,6 +85,9 @@ button.icon svg {
   height: 30px;
   border-radius: 100%;
 }
+.containingList{
+    padding-right: 8px;
+}
 
 .sidebar .siteInfo .favicon-container .favicon.no-icon {
   background: grey;
@@ -320,9 +323,8 @@ button.icon svg {
 }
 
 .postsList {
-  padding: 10px;
+  padding: 15px;
   height: 100%;
-  padding-top: 0px;
   position: relative;
 }
 
