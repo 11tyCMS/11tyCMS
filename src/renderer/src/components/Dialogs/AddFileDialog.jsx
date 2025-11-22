@@ -1,15 +1,17 @@
 import {useState} from 'react';
 import DialogBase from './DialogBase';
 import { useNavigate } from 'react-router-dom';
+import useSiteStore from '../../stores/Site';
 function AddFileDialog({displayStatus, setDisplayStatus, fetchFile, cwd, collection}){
     const [slug, setSlug] = useState('');
     const navigate = useNavigate();
+    const getInputDir = useSiteStore(({actions})=>actions.getInputDir);
     const createPost = (slug)=>{
         slug = slug
             .toLowerCase()
             .replace(/[^a-zA-Z0-9 ]/g, '')
             .replaceAll(' ', '-')
-        const filePath = `${cwd}/${collection}/${slug}.md`
+        const filePath = `${getInputDir()}/${collection}/${slug}.md`
         window.api.saveFile(filePath, {}, "").then(()=>{
             setDisplayStatus(false);
             navigate(`/site/${collection}/posts/${slug}.md`)
