@@ -376,6 +376,7 @@ button.icon svg {
   padding-right: 15px;
   background: none;
   height: 50px;
+  width:100%;
 }
 
 .postsList ul li button:focus-within .buttons-info button {
