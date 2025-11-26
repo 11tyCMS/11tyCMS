@@ -14,7 +14,7 @@ import { languages } from '@codemirror/language-data'
 import { oneDark } from '@codemirror/theme-one-dark'
 import { keymap } from '@codemirror/view'
 import { basicSetup } from 'codemirror'
-
+import { imageBlockComponent, imageBlockConfig } from './PostEditor/plugins/11tycms-image-block/image-block'
 import {
   codeBlockComponent,
   codeBlockConfig,
@@ -44,12 +44,16 @@ function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef })
           renderLanguage: (language, selected) =>
             selected ? `✔ ${language}` : language,
         }))
+        ctx.update(imageBlockConfig.key, (defaultConfig)=>({
+          ...defaultConfig,
+        }))
       })
       .use(commonmark)
       .use(listener)
       .use(automd)
       .use(clipboard)
       .use(codeBlockComponent)
+      .use(imageBlockComponent)
   )
 
   // Example function to get current content
