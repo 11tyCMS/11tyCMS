@@ -44,3 +44,17 @@ const useCollectionsStore = create((set) => ({
 }));
 
 export default useCollectionsStore;
+
+export const useCollections = ()=>useCollectionsStore(({collections})=>collections);
+export const useCollectionByKey = (key)=>useCollectionsStore(({collections})=>collections[key]);
+export const useSelectedCollectionKey = ()=>useCollectionsStore(({selectedCollectionKey})=>selectedCollectionKey);
+
+// Actions:
+export const useCollectionsActions = ()=>useCollectionsStore(({actions})=>actions);
+export const useSetCollections = ()=>useCollectionsStore(({actions})=>actions.setCollections);
+export const useSetSelectedCollectionKey = ()=>useCollectionsStore(({actions})=>actions.setSelectedCollectionKey);
+export const useAddFileEntryToCollection = ()=>useCollectionsStore(({actions})=>actions.addFileEntryToCollection);
+export const useRemoveFileEntryFromCollection = ()=>useCollectionsStore(({actions})=>actions.removeFileEntryFromCollection);
+export const useModifyFileEntryFromCollecton = ()=>useCollectionsStore(({actions})=>actions.modifyFileEntryFromCollection);
+export const useAddCollection = ()=>useCollectionsStore(({actions})=>actions.addCollection);
+export const useDeleteCollection = ()=>useCollectionsStore(({actions})=>actions.deleteCollection);

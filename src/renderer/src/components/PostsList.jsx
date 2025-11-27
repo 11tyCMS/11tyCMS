@@ -3,13 +3,13 @@ import AddFileDialog from './Dialogs/AddFileDialog'
 import FeatherIcon from 'feather-icons-react'
 import DeletePostDialog from './Dialogs/DeletePostDialog'
 import { useNavigate, useParams } from 'react-router-dom'
-import useCollectionsStore from '../stores/Collections'
+import useCollectionsStore, { useCollectionByKey } from '../stores/Collections'
 import useSiteStore from '../stores/Site'
 function PostsList() {
   const [displayAddFileDialog, setDisplayAddFileDialog] = useState(false)
   const [postToDelete, setPostToDelete] = useState(null);
   const { collectionName } = useParams();
-  const posts = useCollectionsStore(({ collections }) => collections[collectionName]);
+  const posts = useCollectionByKey(collectionName);
   const cwd = useSiteStore(({ cwd }) => cwd);
   const navigate = useNavigate();
   const deletePostConfirm = (event, post) => {

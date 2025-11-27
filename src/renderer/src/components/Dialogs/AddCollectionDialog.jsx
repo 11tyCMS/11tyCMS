@@ -1,10 +1,10 @@
 import { useState } from "react";
 import DialogBase from "./DialogBase";
-import useCollectionsStore from "../../stores/Collections";
+import useCollectionsStore, { useAddCollection } from "../../stores/Collections";
 
 const AddCollectionDialog = ({ siteInfo, displayStatus = false, setDisplayStatus, cwd }) => {
     const [formData, setFormData] = useState(null);
-    const addCollection = useCollectionsStore(({actions})=>actions.addCollection)
+    const addCollection = useAddCollection();
     const formHandler = ({ target }) => {
         let updatedFormData
         const { value, name } = target;

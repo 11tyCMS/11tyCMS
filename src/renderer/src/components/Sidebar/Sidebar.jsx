@@ -2,13 +2,12 @@ import { useState, useRef, useEffect } from 'react'
 import FeatherIcon from 'feather-icons-react';
 import { ClipLoader, SyncLoader } from 'react-spinners';
 import { Navigate, useNavigate } from 'react-router-dom';
-import useCollectionsStore from '../../stores/Collections';
+import useCollectionsStore, { useCollections } from '../../stores/Collections';
 import useSiteStore from '../../stores/Site';
 
 const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
     const navigate = useNavigate();
-    const collections = useCollectionsStore(({ collections }) => collections);
-    const openSiteFolder = useSiteStore(({ actions }) => actions.openSiteFolder);
+    const collections = useCollections();
     const selectedSiteInfo = useSiteStore((state) => state.selectedSiteInfo);
     const resetSelectedSite = useSiteStore((state) => state.actions.resetSelection);
     const cwd = useSiteStore((state) => state.cwd);

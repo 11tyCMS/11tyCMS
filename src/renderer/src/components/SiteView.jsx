@@ -3,14 +3,14 @@ import { Navigate, Outlet, useLocation, useMatch, useMatches} from "react-router
 import AddCollectionDialog from './Dialogs/AddCollectionDialog';
 import DeleteCollectionDialog from './Dialogs/DeleteCollectionDialog';
 import Sidebar from './Sidebar/Sidebar';
-import useCollectionsStore from '../stores/Collections';
+import useCollectionsStore, { useCollections, useCollectionsActions } from '../stores/Collections';
 import useSiteStore from '../stores/Site';
 
 const SiteView = () => {
     const [isAddingCollection, setIsAddingCollection] = useState(false);
     const [collectionToDelete, setCollectionToDelete] = useState(null);
-    const collections = useCollectionsStore(({ collections }) => collections);
-    const colActions = useCollectionsStore(({ actions }) => actions);
+    const collections = useCollections()
+    const colActions = useCollectionsActions();
     const cwd = useSiteStore((state) => state.cwd);
     const selectedSiteInfo = useSiteStore((state) => state.selectedSiteInfo);
     useEffect(() => {
