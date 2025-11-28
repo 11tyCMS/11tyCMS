@@ -4,15 +4,15 @@ import AddCollectionDialog from './Dialogs/AddCollectionDialog';
 import DeleteCollectionDialog from './Dialogs/DeleteCollectionDialog';
 import Sidebar from './Sidebar/Sidebar';
 import useCollectionsStore, { useCollections, useCollectionsActions } from '../stores/Collections';
-import useSiteStore from '../stores/Site';
+import useSiteStore, { useCwd, useSelectedSiteInfo } from '../stores/Site';
 
 const SiteView = () => {
     const [isAddingCollection, setIsAddingCollection] = useState(false);
     const [collectionToDelete, setCollectionToDelete] = useState(null);
     const collections = useCollections()
     const colActions = useCollectionsActions();
-    const cwd = useSiteStore((state) => state.cwd);
-    const selectedSiteInfo = useSiteStore((state) => state.selectedSiteInfo);
+    const cwd = useCwd()
+    const selectedSiteInfo = useSelectedSiteInfo();
     useEffect(() => {
         window.ipcRenderer
             .on("collectionFileAdded", (event, event1) => {

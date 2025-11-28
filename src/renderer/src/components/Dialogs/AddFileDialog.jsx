@@ -1,11 +1,11 @@
 import {useState} from 'react';
 import DialogBase from './DialogBase';
 import { useNavigate } from 'react-router-dom';
-import useSiteStore from '../../stores/Site';
+import useSiteStore, { useGetInputDir } from '../../stores/Site';
 function AddFileDialog({displayStatus, setDisplayStatus, fetchFile, cwd, collection}){
     const [slug, setSlug] = useState('');
     const navigate = useNavigate();
-    const getInputDir = useSiteStore(({actions})=>actions.getInputDir);
+    const getInputDir = useGetInputDir()
     const createPost = (slug)=>{
         slug = slug
             .toLowerCase()

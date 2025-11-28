@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import useSiteStore from "../stores/Site";
+import useSiteStore, { useOpenSiteByDir, useOpenSiteFolder } from "../stores/Site";
 import { useEffect, useState } from "react";
 
 const SelectSiteView = () => {
     const [selectedSiteHistory, setSelectedSiteHistory] = useState([]);
-    const openSiteFolder = useSiteStore(({ actions }) => actions.openSiteFolder);
-    const openSiteByDir = useSiteStore(({ actions }) => actions.openSiteByDir);
+    const openSiteFolder = useOpenSiteFolder();
+    const openSiteByDir = useOpenSiteByDir();
     const navigate = useNavigate();
     useEffect(() => {
         const selectedSiteHistoryJSON = localStorage.getItem('selectedSiteHistory');

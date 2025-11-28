@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import useSiteStore from "../../stores/Site";
+import useSiteStore, { useSelectedSiteConfig, useSelectedSiteInfo, useSetSelectedSiteConfig, useUpdateSelectedSiteInfo } from "../../stores/Site";
 const excludedKeys = ['layouts', 'base64Favicon']
 const excludedSiteInfoKeysFilter = key => !excludedKeys.includes(key)
 const DashboardView = () => {
-    const selectedSiteInfo = useSiteStore(({ selectedSiteInfo }) => selectedSiteInfo);
-    const updateSelectedSiteInfo = useSiteStore(({ actions }) => actions.updateSelectedSiteInfo);
-    const setSelectedSiteConfig = useSiteStore(({ actions }) => actions.setSelectedSiteConfig);
-    const siteConfig = useSiteStore(({ selectedSiteConfig }) => selectedSiteConfig);
+    const selectedSiteInfo = useSelectedSiteInfo()
+    const updateSelectedSiteInfo = useUpdateSelectedSiteInfo()
+    const setSelectedSiteConfig = useSetSelectedSiteConfig()
+    const siteConfig = useSelectedSiteConfig()
     const [formData, setFormData] = useState({});
     const [siteConfigForm, setSiteConfig] = useState(siteConfig)
     useEffect(() => {

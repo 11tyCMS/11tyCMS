@@ -68,3 +68,14 @@ const useSiteStore = create((set) => ({
 }))
 
 export default useSiteStore;
+export const useCwd = ()=>useSiteStore(({cwd})=>cwd);
+export const useSelectedSiteInfo = ()=>useSiteStore(({selectedSiteInfo})=>selectedSiteInfo);
+export const useSelectedSiteConfig = ()=>useSiteStore(({selectedSiteConfig})=>selectedSiteConfig);
+
+// Actions:
+export const useOpenSiteFolder = ()=>useSiteStore(({actions})=>actions.openSiteFolder);
+export const useOpenSiteByDir = ()=>useSiteStore(({actions})=>actions.openSiteByDir);
+export const useUpdateSelectedSiteInfo = ()=>useSiteStore(({actions})=>actions.updateSelectedSiteInfo);
+export const useSetSelectedSiteConfig = ()=>useSiteStore(({actions})=>actions.setSelectedSiteConfig);
+export const useResetSelection = ()=>useSiteStore(({actions})=>actions.resetSelection);
+export const useGetInputDir = ()=>useSiteStore(({actions})=>actions.getInputDir);

@@ -3,14 +3,14 @@ import FeatherIcon from 'feather-icons-react';
 import { ClipLoader, SyncLoader } from 'react-spinners';
 import { Navigate, useNavigate } from 'react-router-dom';
 import useCollectionsStore, { useCollections } from '../../stores/Collections';
-import useSiteStore from '../../stores/Site';
+import useSiteStore, { useCwd, useResetSelection, useSelectedSiteInfo } from '../../stores/Site';
 
 const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
     const navigate = useNavigate();
     const collections = useCollections();
-    const selectedSiteInfo = useSiteStore((state) => state.selectedSiteInfo);
-    const resetSelectedSite = useSiteStore((state) => state.actions.resetSelection);
-    const cwd = useSiteStore((state) => state.cwd);
+    const selectedSiteInfo = useSelectedSiteInfo()
+    const resetSelectedSite = useResetSelection();
+    const cwd = useCwd()
     const [isBuilding, setIsBuilding] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
     const build = (pubBuild) => {

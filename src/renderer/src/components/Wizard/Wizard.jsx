@@ -2,7 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import ProgressStepper from "./ProgressStepper";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import useSiteStore from "../../stores/Site";
+import useSiteStore, { useCwd } from "../../stores/Site";
 
 
 const Wizard = ({ routes, defaultState = null, rootRoute, finalAction }) => {
@@ -13,7 +13,7 @@ const Wizard = ({ routes, defaultState = null, rootRoute, finalAction }) => {
     const navigate = useNavigate()
     const [state, setState] = useState(defaultState);
     const [permittedSteps, setPermittedSteps] = useState(["", rootRoute]);
-    const cwd = useSiteStore((state)=>state.cwd);
+    const cwd = useCwd()
     const routeIndexFromPathname = (pathname) => {
         if (rootRoute == pathname) {
             return 0

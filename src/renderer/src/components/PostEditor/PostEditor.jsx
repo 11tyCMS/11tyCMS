@@ -8,7 +8,7 @@ import MilkdownEditorWrapper from '../MilkdownEditor';
 import FeatherIcon from 'feather-icons-react';
 import Metadata from './Metadata/Metadata';
 import { useNavigate, useParams } from 'react-router-dom';
-import useSiteStore from '../../stores/Site';
+import useSiteStore, { useCwd, useGetInputDir } from '../../stores/Site';
 
 function PostEditor() {
   const markdownRef = useRef(null);
@@ -16,8 +16,8 @@ function PostEditor() {
   const editorRef = useRef(null)
   const [selectedFile, setSelectedFile] = useState(null);
   const {collectionName, postFileName} = useParams();
-  const cwd = useSiteStore(({cwd})=>cwd);
-  const getInputDir = useSiteStore(({actions})=>actions.getInputDir);
+  const cwd = useCwd()
+  const getInputDir = useGetInputDir()
   const navigate = useNavigate()
   console.log(postFileName);
   const fetchFile = (fileName) => {
