@@ -24,7 +24,9 @@ let siteInfoFilePath = null;
 let collectionDirectories = [];
 
 const getFavicon = async (sitePath) => {
-    return await fs.readFileSync(`${sitePath}/media/favicon.svg`, 'utf8')
+    const extensions = ['svg', 'png', 'ico', 'jpg', 'jpeg', 'gif']
+    const extension = extensions.find((ext)=>fs.existsSync(`${sitePath}/${siteConfig.output}/favicon.${ext}`));
+    return await fs.readFileSync(`${sitePath}/${siteConfig.output}/favicon.${extension}`, 'utf8')
 }
 
 const refreshCollectionWatcher = () => {
