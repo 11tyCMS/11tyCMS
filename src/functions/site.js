@@ -25,7 +25,7 @@ let collectionDirectories = [];
 
 const getFavicon = async (sitePath) => {
     const extensions = ['svg', 'png', 'ico', 'jpg', 'jpeg', 'gif']
-    const extension = extensions.find((ext)=>fs.existsSync(`${sitePath}/${siteConfig.output}/favicon.${ext}`));
+    const extension = extensions.find((ext) => fs.existsSync(`${sitePath}/${siteConfig.output}/favicon.${ext}`));
     return await fs.readFileSync(`${sitePath}/${siteConfig.output}/favicon.${extension}`, 'utf8')
 }
 
@@ -81,6 +81,35 @@ const refreshCollectionWatcher = () => {
         .on('change', path => {
         })
 }
+const initSiteConfigWithFile = async (cmsConfigFile) => {
+    if (cmsConfigFile) {
+        console.log("11tyCMS config FOUND!")
+        siteConfig = await filesFuncs._importDataFile(`${selectedSiteDir}/${cmsConfigFile.name}`);
+    }
+    else {
+        if (!cmsConfigData) {
+            return { status: "NEW", selectedDirectory };
+        } else {
+            filesFuncs._writeDataFile(`${selectedSiteDir}/_11tycms.json`, cmsConfigData);
+            siteConfig = cmsConfigData;
+        }
+    }
+}
+const doesCollectionDirConfigExist = (path, folderName) => {
+    const supportedConfigExtensions = ['.js', '.json', '.ts'];
+    for (const extension of supportedConfigExtensions) {
+        const collectionConfigPath = `${path}/${folderName}/${folderName}.11tydata${extension}`
+        if (fs.existsSync(collectionConfigPath)) {
+            return collectionConfigPath
+        }
+    }
+    return false;
+};
+const isDirCollection = (path, folderName) => {
+    const isFolderInternal = folderName[0] == '_'
+    const isCollectionFolder = doesCollectionDirConfigExist(path, folderName);
+    return !isFolderInternal && isCollectionFolder;
+};
 const functions = {
     openDirectory: async (selectedDirectory, cmsConfigData) => {
         if (!fs.existsSync(`${selectedDirectory}/eleventy.config.js`)) {
@@ -93,77 +122,53 @@ const functions = {
         collectionWatcher = null;
         selectedSiteDir = selectedDirectory
         const eleventyDB = eleventyDb.get();
-
-        const cmsConfigFile = await fs.readdirSync(`${selectedSiteDir}`, { withFileTypes: true }).filter(file => ['_11tycms.json', '_11tycms.js', '_11tycms.ts'].includes(file.name))[0];
-        if (cmsConfigFile) {
-            console.log("11tyCMS config FOUND!")
-            siteConfig = await filesFuncs._importDataFile(`${selectedSiteDir}/${cmsConfigFile.name}`);
-        }
-        else {
-            if (!cmsConfigData) {
-                return { status: "NEW", selectedDirectory };
-            } else {
-                filesFuncs._writeDataFile(`${selectedSiteDir}/_11tycms.json`, cmsConfigData);
-                siteConfig = cmsConfigData;
-            }
-        }
-        /* 
-          We need a function that will return all the directories at the root of the 11ty src folder.
-          It will then need to check through any folders that arent _* to see if its a collection, by checking to see if there is a child file with a matching name to its containing folder.
-        */
         eleventyDB.ItemMetadata.destroy({
             truncate: true
         })
+        const cmsConfigFile = await fs.readdirSync(`${selectedSiteDir}`, { withFileTypes: true }).filter(file => ['_11tycms.json', '_11tycms.js', '_11tycms.ts'].includes(file.name))[0];
+        await initSiteConfigWithFile(cmsConfigFile);
 
-        const doesCollectionDirConfigExist = (path, folderName) => {
-            const supportedConfigExtensions = ['.js', '.json', '.ts'];
-            for (const extension of supportedConfigExtensions) {
-                const collectionConfigPath = `${path}/${folderName}/${folderName}.11tydata${extension}`
-                if (fs.existsSync(collectionConfigPath)) {
-                    return collectionConfigPath
+        const collectionsFactory = async (collectionDirectories, nested) => {
+            const getDirectoryName = (directoryPath, nestedDirectory) => {
+                if (!nestedDirectory) {
+                    const dirArray = directoryPath.split('/')
+                    return dirArray[dirArray.length - 1]
+                } else {
+                    return directoryPath.substring(selectedSiteDir.length + siteConfig.input.length+1);
                 }
             }
-            return false;
-        };
-        const isDirCollection = (path, folderName) => {
-            const isFolderInternal = folderName[0] == '_'
-            const isCollectionFolder = doesCollectionDirConfigExist(path, folderName);
-            return !isFolderInternal && isCollectionFolder;
-        };
-
-        const collectionsFactory = async (collectionDirectories) => {
-            const getDirectoryName = (directoryPath) => {
-                const dirArray = directoryPath.split('/')
-                return dirArray[dirArray.length - 1]
+            const addFileToCollectionCache = async (file, fileCollectionDir) => {
+                try {
+                    const filename = `${file.parentPath}/${file.name}`;
+                    const frontmatterData = (await matter.read(`${file.parentPath}/${file.name}`))['data'];
+                    console.log('adding file ', filename)
+                    const dbFileMetadata = (await eleventyDB.ItemMetadata.create({
+                        collection: fileCollectionDir,
+                        isNested:nested,
+                        name: file.name,
+                        data: frontmatterData,
+                        path: filename,
+                        parentPath: file.parentPath
+                    }))['dataValues']
+                    collections[fileCollectionDir].push(dbFileMetadata);
+                } catch (error) {
+                    console.log("this is an error here", error)
+                }
             }
             let collections = {}
+
             for (const directoryPath of collectionDirectories) {
-                const collectionDirectoryName = getDirectoryName(directoryPath);
+                console.log(directoryPath, "this is a dirpath");
+                const collectionDirectoryName = getDirectoryName(directoryPath, nested);
                 collections[collectionDirectoryName] = []
-                const collectionFiles = fs.readdirSync(directoryPath, { withFileTypes: true }).filter(file => file.name.includes('.md'));
-                console.log('found these files', collectionFiles);
+                const collectionFilesAndDirs = fs.readdirSync(directoryPath, { withFileTypes: true });
+                const collectionDirectories = collectionFilesAndDirs.filter(entry => entry.isDirectory()).map(({path, name})=>`${path}/${name}`);
+                const collectionFiles = collectionFilesAndDirs.filter(file => file.name.includes('.md'));
+                collections = {...collections, ...(await collectionsFactory(collectionDirectories, true))}
                 for (const file of collectionFiles) {
-                    try {
-
-                        const filename = `${file.parentPath}/${file.name}`;
-                        console.log("trying to read file", filename)
-                        const fileFrontmatterData = (await matter.read(`${file.parentPath}/${file.name}`))['data'];
-                        console.log(fileFrontmatterData, file);
-                        const fileMetadata = (await eleventyDB.ItemMetadata.create({
-                            collection: collectionDirectoryName,
-                            name: file.name,
-                            data: fileFrontmatterData,
-                            path: filename,
-                            parentPath: file.parentPath
-                        }))['dataValues']
-                        collections[collectionDirectoryName].push(fileMetadata);
-                    } catch (error) {
-                        console.log("this is an error here", error)
-                    }
-
+                    await addFileToCollectionCache(file, collectionDirectoryName)
                 }
             }
-
             return collections
         }
 

@@ -12,6 +12,10 @@ class CMSDatabase {
                 type: DataTypes.STRING,
                 allowNull: false
             },
+            isNested:{
+                type: DataTypes.BOOLEAN,
+                default:false
+            },
             name: {
                 type: DataTypes.STRING,
                 allowNull: false
