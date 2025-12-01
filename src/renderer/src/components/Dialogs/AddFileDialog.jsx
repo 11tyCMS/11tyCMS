@@ -2,6 +2,7 @@ import {useState} from 'react';
 import DialogBase from './DialogBase';
 import { useNavigate } from 'react-router-dom';
 import useSiteStore, { useGetInputDir } from '../../stores/Site';
+import ConfirmationDialog from './ConfirmationDialog';
 function AddFileDialog({displayStatus, setDisplayStatus, fetchFile, cwd, collection}){
     const [slug, setSlug] = useState('');
     const navigate = useNavigate();
@@ -17,10 +18,9 @@ function AddFileDialog({displayStatus, setDisplayStatus, fetchFile, cwd, collect
             navigate(`/site/${collection}/posts/${slug}.md`)
         })
     }
-    return <DialogBase displayStatus={displayStatus}>
+    return <ConfirmationDialog displayStatus={displayStatus} confirmLabelText="Save" headerLabelText={`Add post to ${collection}`} onConfirm={()=>createPost(slug)} onCancel={()=>setDisplayStatus(false)}>
         <input placeholder='File name here' onChange={(e)=>setSlug(e.target.value)}></input>
-        <button onClick={()=>createPost(slug)}>Save</button>
-    </DialogBase>
+    </ConfirmationDialog>
 
 }
 
