@@ -28,7 +28,7 @@ function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef })
       .config((ctx) => {
         editorCtx.current = ctx
         ctx.set(rootCtx, root)
-        // Set up listeners
+
         ctx.get(listenerCtx).markdownUpdated((ctx, markdown, prevMarkdown) => {
           markdownRef.current = markdown;
           if (saveTimerRef.current) {
@@ -56,7 +56,6 @@ function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef })
       .use(imageBlockComponent)
   )
 
-  // Example function to get current content
   const getCurrentContent = async () => {
     const editor = await get()
     const markdown = editor.action(getMarkdown())
@@ -64,7 +63,6 @@ function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef })
     return markdown
   }
 
-  // Example function to set content
   const setEditorContent = async (newContent) => {
     const editor = await get()
     console.log(editor, get())
@@ -115,12 +113,8 @@ function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef })
     let isBoldActive = false;
     const { from, to, empty } = selection;
     if (empty) {
-      // If the selection is empty (just a cursor), check two places:
-      // 1. storedMarks: Marks that will be applied to the next typed characters.
-      // 2. marks at the cursor position: Marks that are already applied to the text *under* the cursor.
       isBoldActive = strongType.isInSet(editorState.storedMarks || selection.$from.marks());
     } else {
-      // If there's a range selection, check if any part of the selection has the strong mark.
       isBoldActive = editorState.doc.rangeHasMark(from, to, strongType);
     }
 
@@ -129,8 +123,7 @@ function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef })
   return (
     <>
       <div className="toolbar">
-        <button onClick={insertImage}><FeatherIcon icon={"image"} size={15} color="#7c8ad6" /></button>
-        <button onClick={bold}>b</button>
+        <button onClick={insertImage} className='darkest'><FeatherIcon icon={"image"} size={15} /></button>
       </div>
       <div>
         <Milkdown />

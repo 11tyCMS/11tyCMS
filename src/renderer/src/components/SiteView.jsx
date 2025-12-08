@@ -39,7 +39,7 @@ const SiteView = () => {
     
     return <>
         <Sidebar setCollectionToDelete={setCollectionToDelete} setIsAddingCollection={setIsAddingCollection} />
-        <div className="mdxeditor-container">
+        <div className="main-view">
             <AddCollectionDialog siteInfo={selectedSiteInfo} displayStatus={isAddingCollection} setDisplayStatus={setIsAddingCollection} cwd={cwd} />
             <DeleteCollectionDialog collection={collectionToDelete} setCollectionToDelete={setCollectionToDelete} />
             <Outlet />

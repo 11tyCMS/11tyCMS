@@ -41,10 +41,10 @@ const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
             </div>
             <div className='info'>
                 <h1>{selectedSiteInfo.title}</h1>
-                <button onClick={() => resetSelectedSite(navigate)}><FeatherIcon icon="log-out" size={14} /></button>
+                <button onClick={() => resetSelectedSite(navigate)} className='darkest'><FeatherIcon icon="log-out" size={14} /></button>
             </div>
         </button>
-        <ul className="containingList">
+        <ul>
             <span class="listHeader">Collections <button onClick={() => setIsAddingCollection(true)}>+</button></span>
             {Object.keys(collections).map((collectionName) => (
                 <li className="parent">

@@ -20,6 +20,12 @@ function PostEditor() {
   const getInputDir = useGetInputDir()
   const navigate = useNavigate()
   console.log(postFileName);
+  useEffect(()=>{
+    document.getElementsByClassName('main-view')[0].classList.toggle("thin-padding")
+    return ()=>{
+      document.getElementsByClassName('main-view')[0].classList.remove('thin-padding')
+    }
+  }, []);
   const fetchFile = (fileName) => {
     console.log(fileName);
     window.api.openFile(fileName).then((fileContents) => {
