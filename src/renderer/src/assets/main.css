@@ -35,7 +35,7 @@ button {
   padding: 10px;
   border: none;
   background: #1e3563;
-  color: #cddff5;
+  color: var(--lightest-text-color);
   cursor: pointer;
   display: flex;
   align-items: anchor-center;
@@ -95,7 +95,7 @@ button:hover{
   box-sizing: border-box;
 }
 .siteSelector {
-  background-color: rgb(14 24 44);
+  background-color: var(--primary-color);
   border-radius: 6px;
   padding: 10px;
   display: flex;
@@ -114,7 +114,7 @@ button:hover{
 }
 
 .siteSelector .siteInfo:hover {
-  background: rgb(29, 48, 87);
+  background: var(--secondary-color);
   border-radius: 8px;
 }
 
@@ -127,7 +127,7 @@ button:hover{
 .siteSelector .siteInfo .info {
   font-family: sans-serif;
   font-size: 16px;
-  color: #bcd6f6;
+  color: var(--lighter-text-color);
 }
 .sidebar {
   min-width: 200px;
@@ -172,7 +172,7 @@ button:hover{
 
 .sidebar .siteInfo .info h1 {
   font-size: 14px;
-  color: #bcd6f6;
+  color: var(--lighter-text-color);
   font-family: sans-serif;
   font-weight: 500;
   padding: 0px;
@@ -198,7 +198,7 @@ button:hover{
 }
 .sidebar ul li {
   height: fit-content;
-  color: rgb(209, 217, 236);
+  color: var(--lightest-text-color);
   font-size: 14px;
   border-bottom: 1px solid #162748;
   font-weight: 100;
@@ -245,7 +245,7 @@ button:hover{
   word-break: break-word;
   font-family: Arial, Helvetica, sans-serif;
   cursor: pointer;
-  color: #acc7ff;
+  color: var(--lightest-text-color);
 }
 
 .site-buttons {
@@ -458,6 +458,7 @@ table.metadata tr td {
   overflow: hidden;
   cursor: pointer;
   font-size: 16px;
+  color: var(--lightest-text-color);
 }
 
 .postsList ul li button .buttons-info button {
@@ -470,7 +471,6 @@ table.metadata tr td {
   height: 50px;
   width: 50px;
   font-size: 20px;
-  color: #d7e3fd;
   align-items: center;
   padding-left: 15px;
   padding-right: 15px;
@@ -496,6 +496,7 @@ table.metadata tr td {
 .postsList .head-container {
   display: flex;
   justify-content: space-between;
+  margin-bottom:10px;
 }
 
 .postsList .head-container button {
@@ -615,13 +616,13 @@ table.metadata tr td {
   width: 100px;
   display: flex;
   align-items: center;
-  color: #acc7ff;
+  color: var(--lighter-text-color);
   font-weight: 500;
 }
 
 .dashboardForm h2,
 .dashboardForm h1 {
-  color: #d7e3fd;
+  color: var(--lightest-text-color);
 }
 
 .dashboardForm h1 {
@@ -640,10 +641,10 @@ table.metadata tr td {
   width: 500px;
   height: fit-content;
   border-radius: 6px;
-  background-color: rgb(14 24 44);
+  background-color: var(--primary-color);
   align-self: center;
   margin: 0px auto;
-  color: #d7e3fd;
+  color: var(--lightest-text-color);
 }
 
 .wizard .progressStepper {
@@ -660,12 +661,12 @@ table.metadata tr td {
 }
 
 .wizard .progressStepper .step.active {
-  border-bottom: 2px solid #5a7fb3;
+  border-bottom: 2px solid var(--lighter-text-color);
   font-weight: bold;
 }
 
 .wizard .progressStepper .step label {
-  color: #acc7ff;
+  color: var(--lighter-text-color);
   font-size: 12px;
 }
 
