@@ -341,7 +341,6 @@ table.metadata table tr td{
   height:26px;
 }
 table.metadata tr {
-  border-bottom: 1px solid #0e182d;
   display: block;
   padding: 8px;
   display: flex;
