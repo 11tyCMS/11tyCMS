@@ -8,7 +8,7 @@ const DeletePostDialog = ({ post, setPostToDelete }) => {
         setPostToDelete(null);
     }
     if (post)
-        return <ConfirmationDialog confirmLabelText="Yes, delete this post" onConfirm={(e) => deletePost(e, post)} onCancel={() => setPostToDelete(null)} displayStatus={post}>
+        return <ConfirmationDialog confirmLabelText="Yes, delete this post" onConfirm={(e) => deletePost(e, post)} onCancel={() => setPostToDelete(null)} displayStatus={post} isConfirmDangerous={true}>
             <p>Are you sure you want to delete <b>{post.data.title}</b>?</p>
         </ConfirmationDialog>
     else
