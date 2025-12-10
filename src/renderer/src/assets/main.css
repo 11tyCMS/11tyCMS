@@ -350,7 +350,7 @@ table.metadata tr {
 }
 
 table.metadata tr .buttons {
-  margin-left: auto;
+  margin-left: 15px;
   display: none;
 }
 table.metadata tr .buttons button {
