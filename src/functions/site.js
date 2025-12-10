@@ -4,22 +4,13 @@ import fs from 'node:fs';
 import mainWindow from '../main/window';
 import eleventyDb from '../main/database/eleventyDb';
 import chokidar from 'chokidar';
-import filesFuncs from './files';
+import { imageToBase64, importDataFile, writeDataFile } from '../utils/utils';
 const child_process = require('child_process')
-
-const { _imageToBase64 } = filesFuncs;
 
 let siteConfig = null;
 let collectionWatcher = null;
 
 let selectedSiteDir = null;
-let selectedSiteDirectories = {
-    input: '',
-    includes: '_includes',
-    data: '_data',
-    media: 'media',
-    output: '_site'
-}
 let siteInfoFilePath = null;
 let collectionDirectories = [];
 
@@ -84,13 +75,13 @@ const refreshCollectionWatcher = () => {
 const initSiteConfigWithFile = async (cmsConfigFile) => {
     if (cmsConfigFile) {
         console.log("11tyCMS config FOUND!")
-        siteConfig = await filesFuncs._importDataFile(`${selectedSiteDir}/${cmsConfigFile.name}`);
+        siteConfig = await importDataFile(`${selectedSiteDir}/${cmsConfigFile.name}`);
     }
     else {
         if (!cmsConfigData) {
             return { status: "NEW", selectedDirectory };
         } else {
-            filesFuncs._writeDataFile(`${selectedSiteDir}/_11tycms.json`, cmsConfigData);
+            writeDataFile(`${selectedSiteDir}/_11tycms.json`, cmsConfigData);
             siteConfig = cmsConfigData;
         }
     }
@@ -214,14 +205,14 @@ const functions = {
             otherData['layouts'][file.name] = { title: file.name }
         })
         const favicon = await getFavicon(path)
-        otherData['base64Favicon'] = _imageToBase64(favicon, '.svg')
+        otherData['base64Favicon'] = imageToBase64(favicon, '.svg')
 
         siteInfoFilePath = await functions._getSiteInfoFilePath();
-        const siteInfoData = await filesFuncs._importDataFile(siteInfoFilePath)
+        const siteInfoData = await importDataFile(siteInfoFilePath)
         return { ...siteInfoData, ...otherData };
     },
     setSiteInfo: async (data) => {
-        const writeFileResult = filesFuncs._writeDataFile(siteInfoFilePath, data)
+        const writeFileResult = writeDataFile(siteInfoFilePath, data)
         return writeFileResult
     },
     createCollection: async (sitePath, name, layout) => {
@@ -254,3 +245,4 @@ const functions = {
 }
 
 export default functions;
+export const selectedsite = selectedSiteDir
