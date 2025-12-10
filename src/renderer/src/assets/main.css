@@ -13,6 +13,8 @@
   --background-color: hsl(var(--primary-hue), var(--primary-sat), var(--background-brightness));
   --lighter-text-color: hsl(var(--primary-hue), var(--tertiary-sat), 84%);
   --lightest-text-color: hsl(var(--primary-hue), var(--tertiary-sat), 100%);
+  --text-highlight-color: hsl(var(--primary-hue), var(--primary-sat), 35%);
+  --text-highlighted-color: hsl(var(--primary-hue), var(--primary-sat), 95%);
   --squarcle-radius: 6px;
 }
 
@@ -34,7 +36,7 @@ button {
   border-radius: 8px;
   padding: 10px;
   border: none;
-  background: #1e3563;
+  background: var(--secondary-color);
   color: var(--lightest-text-color);
   cursor: pointer;
   display: flex;
@@ -182,7 +184,6 @@ button:hover{
 
 .sidebar .siteInfo .info button {
   padding: 5px;
-  background: #143477
 }
 
 .sidebar .siteInfo .info button svg {
@@ -560,7 +561,7 @@ table.metadata tr td {
 
 .milkdown .ProseMirror {
   padding: 20px !important;
-  background: #0e182d;
+  background: var(--primary-color);
   color: #dee7f6;
 
 }
@@ -582,13 +583,13 @@ table.metadata tr td {
   color: white;
 }
 .milkdown::selection {
-  color: #c4dfff !important;
-  background: #2e3455;
+  color: var(--text-highlighted-color) !important;
+  background: var(--text-highlight-color);
 }
 
 .milkdown .ProseMirror code {
   border-radius: 4px;
-  background: #1d2f57 !important;
+  background: var(--secondary-color) !important;
   padding: 4px !important;
   font-size: 12px !important;
 
