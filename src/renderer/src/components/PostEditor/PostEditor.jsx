@@ -15,14 +15,14 @@ function PostEditor() {
   const typingRef = useRef(null)
   const editorRef = useRef(null)
   const [selectedFile, setSelectedFile] = useState(null);
-  const {collectionName, postFileName} = useParams();
+  const { collectionName, postFileName } = useParams();
   const cwd = useCwd()
   const getInputDir = useGetInputDir()
   const navigate = useNavigate()
   console.log(postFileName);
-  useEffect(()=>{
+  useEffect(() => {
     document.getElementsByClassName('main-view')[0].classList.toggle("thin-padding")
-    return ()=>{
+    return () => {
       document.getElementsByClassName('main-view')[0].classList.remove('thin-padding')
     }
   }, []);
@@ -41,18 +41,6 @@ function PostEditor() {
     let updatedMetadata = { ...selectedFile.data }
     updatedMetadata['title'] = value
     saveMetadata(updatedMetadata);
-  }
-
-  const updateFileName = (title) => {
-
-    const fileName = title
-      .toLowerCase()
-      .replace(/[^a-zA-Z0-9 ]/g, '')
-      .replaceAll(' ', '-')
-
-    window.api.renameFile(selectedFile.fileName, cwd + `/${fileName}.md`).then(() => {
-      fetchFile(cwd + `/${fileName}.md`)
-    })
   }
 
   useEffect(() => {
@@ -74,14 +62,14 @@ function PostEditor() {
     setSelectedFile(updatedSelectedFile);
     window.api.saveFileMetadata(updatedSelectedFile.fileName, metadata)
   }
-  if(selectedFile)
+  if (selectedFile)
     return (
       <>
         <div className='title-bar'>
           <button onClick={() => navigate(`/site/${collectionName}/posts`)}>
             <FeatherIcon icon={"arrow-left"} size={25} color="#7c8ad6" className='back-button' />
           </button>
-          
+
           <input
             className="title"
             value={selectedFile ? selectedFile.data.title : ''}
@@ -91,14 +79,11 @@ function PostEditor() {
           ></input>
         </div>
         <Metadata selectedFile={selectedFile} saveMetadata={saveMetadata} />
-        <div>
-          <MilkdownEditorWrapper selectedFile={selectedFile} editorRef={editorRef} markdownRef={markdownRef} saveFile={saveJustContent} cwd={cwd} />
-        </div>
-
+        <MilkdownEditorWrapper selectedFile={selectedFile} editorRef={editorRef} markdownRef={markdownRef} saveFile={saveJustContent} cwd={cwd} />
       </>
     )
-    else
-      return ''
+  else
+    return ''
 }
 
 export default PostEditor
