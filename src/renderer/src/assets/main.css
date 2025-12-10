@@ -11,6 +11,7 @@
   --secondary-color: hsl(var(--primary-hue), var(--primary-sat), var(--secondary-brightness));
   --tertiary-color: hsl(var(--primary-hue), var(--tertiary-sat), var(--tertiary-lightness));
   --background-color: hsl(var(--primary-hue), var(--primary-sat), var(--background-brightness));
+  --button-warning-color:hsl(0, var(--primary-sat), 35%,  1);
   --lighter-text-color: hsl(var(--primary-hue), var(--tertiary-sat), 84%);
   --lightest-text-color: hsl(var(--primary-hue), var(--tertiary-sat), 100%);
   --text-highlight-color: hsl(var(--primary-hue), var(--primary-sat), 35%);
@@ -43,7 +44,9 @@ button {
   align-items: anchor-center;
   justify-content: center;
 }
-
+button.warning{
+  background:var(--button-warning-color) !important;
+}
 button.no-style {
   border-radius: none;
   padding: 0px;
@@ -528,6 +531,7 @@ table.metadata tr td {
   justify-content: center;
   align-items: center;
   z-index: 200;
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .dialog-modal-bg .dialog {
@@ -538,8 +542,9 @@ table.metadata tr td {
 
 .dialog-modal-bg .dialog h1:first-of-type {
   font-size: 24px;
-  border-bottom: 1px solid #143477;
-  padding: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  padding: 16px;
+  margin: 0px;
 }
 
 .dialog-modal-bg .dialog .content {
@@ -553,6 +558,10 @@ table.metadata tr td {
 .dialog-modal-bg .dialog .buttons {
   display: flex;
   margin-top: 14px;
+}
+
+.dialog-modal-bg .dialog .buttons button{
+  background: var(--primary-color);
 }
 
 .dialog-modal-bg .dialog .buttons button:not(:first-child) {
