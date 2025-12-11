@@ -72,8 +72,8 @@ const functions = {
         eleventyDB.ItemMetadata.update({ name: fileNameAfter }, { where: { name: fileNameBefore, collection: collection } })
         return fs.rename(beforePath, afterPath, () => { });
     },
-    deleteFile: async (path) => {
-        return fs.unlinkSync(path)
+    deleteFile: async (collection, fileName) => {
+        return fs.unlinkSync(`${getSiteDir()}/${getSiteConfig().input}/${collection}/${fileName}`);
     },
     saveFileMetadata: (collection, fileName, metadata, ...args) => {
         const path = `${getSiteDir()}/${getSiteConfig().input}/${collection}/${fileName}`

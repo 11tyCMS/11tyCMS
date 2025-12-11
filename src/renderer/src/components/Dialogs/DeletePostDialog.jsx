@@ -4,7 +4,7 @@ import DialogBase from "./DialogBase";
 const DeletePostDialog = ({ post, setPostToDelete }) => {
     const deletePost = (event, post) => {
         event.stopPropagation();
-        window.api.deleteFile(post.path);
+        window.api.deleteFile(post.collection, post.name);
         setPostToDelete(null);
     }
     if (post)
