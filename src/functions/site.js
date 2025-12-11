@@ -245,4 +245,5 @@ const functions = {
 }
 
 export default functions;
-export const selectedsite = selectedSiteDir
+export const getSiteDir = functions._getSelectedEleventySiteDir
+export const getSiteConfig = functions.getSiteConfig;

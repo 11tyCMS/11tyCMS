@@ -2,39 +2,37 @@ import * as matter from 'gray-matter';
 import fs from 'node:fs';
 import mainWindow from '../main/window';
 import eleventyDb from '../main/database/eleventyDb';
+import { getSiteDir, getSiteConfig } from './site';
 const functions = {
-    openFile: (filePath) => {
+    openFile: (collection, fileName) => {
+        console.log("finding post in", collection, "called", fileName);
         const eleventyDB = eleventyDb.get();
-        let explodedPath = filePath.split('/');
-        let collection = explodedPath[explodedPath.length - 2]
-        let fileName = explodedPath[explodedPath.length - 1];
-        let fileData = matter.read(filePath);
-        const regex = /!\[(.*?)\]\((?!https?:\/\/)(.*?)\)/g;
-        let content = fileData.content
-        content = content.replace(regex, (fullMatch, altText, relativeUrl) => {
-            return `![${altText}](${"eleventy://"}${relativeUrl})`;
-        })
-        fileData.content = content
         return new Promise(resolve => {
-            eleventyDB.ItemMetadata.findAll({
+            eleventyDB.ItemMetadata.findOne({
                 where: {
                     collection,
                     name: fileName
                 }
-            }).then(results => {
-                results = results.map(item => item.dataValues)[0]['data'];
-                fileData.data = results
+            }).then(result => {
+                let fileData = matter.read(result.dataValues.path);
+                const regex = /!\[(.*?)\]\((?!https?:\/\/)(.*?)\)/g;
+                let content = fileData.content
+                content = content.replace(regex, (fullMatch, altText, relativeUrl) => {
+                    return `![${altText}](${"eleventy://"}${relativeUrl})`;
+                })
+                fileData.content = content
+
+                result = result['dataValues']['data'];
+                fileData.data = result
                 resolve(fileData);
             })
         });
     },
-    saveFile: (path, metadata, contents) => {
+    saveFile: (collection, fileName, metadata, contents) => {
+        const path = `${getSiteDir()}/${getSiteConfig().input}/${collection}/${fileName}`
         const eleventyDB = eleventyDb.get();
         const browserWindow = mainWindow.get()
         let content = contents.replace(/eleventy:\/\//g, "");
-        let explodedPath = path.split('/');
-        let collection = explodedPath[explodedPath.length - 2]
-        let fileName = explodedPath[explodedPath.length - 1];
         if (fs.existsSync(path)) {
             let fileData = matter.read(path)['data'];
             const metadataWithDate = metadata ? (metadata.date ? metadata : { ...metadata, date: new Date().toISOString() }) : fileData
@@ -47,8 +45,8 @@ const functions = {
         } else {
             const metadataWithDate = metadata.date ? metadata : { ...metadata, date: new Date().toISOString() }
             // eleventyDB.ItemMetadata.update({data:metadataWithDate}, { where: { name: fileName, collection: collection } })
-
-            let parentPath = [...explodedPath];
+            
+            let parentPath = path.split('/');
             parentPath.pop();
             parentPath = parentPath.join('/')
             eleventyDB.ItemMetadata.create({
@@ -59,7 +57,6 @@ const functions = {
                 parentPath
             })
             const fileContents = matter.stringify(content, metadataWithDate);
-            //browserWindow.webContents.send('collectionFileModified', {collection, fileName, metadata:metadataWithDate})
             console.log("Creating/writing file at " + path)
             return fs.writeFileSync(path, fileContents);
         }
@@ -78,13 +75,17 @@ const functions = {
     deleteFile: async (path) => {
         return fs.unlinkSync(path)
     },
-    saveFileMetadata: (path, metadata, ...args) => {
+    saveFileMetadata: (collection, fileName, metadata, ...args) => {
+        const path = `${getSiteDir()}/${getSiteConfig().input}/${collection}/${fileName}`
+        console.log("this is the save file metadata path", path)
         let file = matter.read(path);
-        functions.saveFile(path, metadata, file.content, ...args);
+        console.log('this is the savefilemetadata file', file);
+        functions.saveFile(collection, fileName, metadata, file.content, ...args);
     },
-    saveImage: (path, file) => {
-        console.log("Creating image at " + path, _getSelectedEleventySiteDir)
-        return fs.writeFileSync(path, Buffer.from(file));
+    saveImage: (fileName, file) => {
+        const mediaPath = getSiteConfig().media;
+        const siteDir = getSiteDir();
+        return fs.writeFileSync(`${siteDir}/${mediaPath}/${fileName}`, Buffer.from(file));
     },
 }
 

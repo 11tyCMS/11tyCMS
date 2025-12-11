@@ -19,10 +19,11 @@ import {
   codeBlockComponent,
   codeBlockConfig,
 } from '@milkdown/components/code-block'
+import { useSelectedSiteConfig } from '../stores/Site'
 function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef }) {
   const saveTimerRef = useRef(null)
   const editorCtx = useRef(null)
-
+  const siteConfig = useSelectedSiteConfig();
   const { loading, get } = useEditor((root) =>
     Editor.make()
       .config((ctx) => {
@@ -84,11 +85,9 @@ function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef })
       reader.onload = (e) => {
         console.log(fileUpload.files[0], e.target.result)
         const fileName = fileUpload.files[0].name.split(" ").join("-").toLowerCase();
-        window.api.saveImage(`${cwd}/media/${fileName}`, e.target.result).then(async () => {
-
+        window.api.saveImage(fileName, e.target.result).then(async () => {
           const editor = await get();
-          console.log('done!', editor);
-          editor.action(insert(`![image](eleventy:///media/${fileName})`))
+          editor.action(insert(`![image](eleventy:///${siteConfig.media}/${fileName})`))
         })
       }
       reader.readAsArrayBuffer(fileUpload.files[0])

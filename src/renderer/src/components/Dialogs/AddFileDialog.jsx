@@ -12,8 +12,7 @@ function AddFileDialog({displayStatus, setDisplayStatus, fetchFile, cwd, collect
             .toLowerCase()
             .replace(/[^a-zA-Z0-9 ]/g, '')
             .replaceAll(' ', '-')
-        const filePath = `${getInputDir()}/${collection}/${slug}.md`
-        window.api.saveFile(filePath, {}, "").then(()=>{
+        window.api.saveFile(collection, `${slug}.md`, {}, "").then(()=>{
             setDisplayStatus(false);
             navigate(`/site/${collection}/posts/${slug}.md`)
         })

@@ -26,9 +26,10 @@ function PostEditor() {
       document.getElementsByClassName('main-view')[0].classList.remove('thin-padding')
     }
   }, []);
-  const fetchFile = (fileName) => {
+  const fetchFile = (collectionName, fileName) => {
     console.log(fileName);
-    window.api.openFile(fileName).then((fileContents) => {
+    window.api.openFile(collectionName, fileName).then((fileContents) => {
+      console.log(fileContents, "this is the selected file");
       setSelectedFile({
         contents: fileContents.content,
         data: fileContents.data,
@@ -44,14 +45,14 @@ function PostEditor() {
   }
 
   useEffect(() => {
-    fetchFile(`${getInputDir()}${collectionName}/${postFileName}`);
+    fetchFile(collectionName, postFileName);
     return () => {
       if (typingRef.current) clearTimeout(typingRef.current)
     }
   }, [])
 
   const saveJustContent = (content) => {
-    window.api.saveFile(selectedFile.fileName, null, content).then((test) => {
+    window.api.saveFile(collectionName, postFileName, null, content).then((test) => {
     })
   }
   const saveMetadata = (metadata) => {
@@ -60,7 +61,7 @@ function PostEditor() {
     updatedSelectedFile['content'] = markdown
     updatedSelectedFile['contents'] = markdown
     setSelectedFile(updatedSelectedFile);
-    window.api.saveFileMetadata(updatedSelectedFile.fileName, metadata)
+    window.api.saveFileMetadata(collectionName, postFileName, metadata)
   }
   if (selectedFile)
     return (
