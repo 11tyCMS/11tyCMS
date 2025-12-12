@@ -87,7 +87,7 @@ function MilkdownEditor({ editorRef, selectedFile, saveFile, cwd, markdownRef })
         const fileName = fileUpload.files[0].name.split(" ").join("-").toLowerCase();
         window.api.saveImage(fileName, e.target.result).then(async () => {
           const editor = await get();
-          editor.action(insert(`![image](eleventy:///${siteConfig.media}/${fileName})`))
+          editor.action(insert(`![](eleventy:///${siteConfig.media.substring(siteConfig.input.length)}/${fileName})`))
         })
       }
       reader.readAsArrayBuffer(fileUpload.files[0])
