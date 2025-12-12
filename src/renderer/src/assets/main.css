@@ -157,7 +157,15 @@ button:hover{
   cursor: pointer;
   gap: 12px;
 }
-
+.sidebar .siteInfo .infoContainer{
+  display:flex;
+  flex-grow:1;
+  gap:12px;
+}
+.sidebar .siteInfo button.exit{
+  height:30px;
+  width:30px;
+}
 .sidebar .siteInfo .favicon-container .favicon {
   width: 30px;
   height: 30px;
