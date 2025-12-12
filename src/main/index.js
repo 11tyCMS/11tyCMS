@@ -4,7 +4,7 @@ import path from 'node:path';
 import exopsedFunctions from '../functions';
 import myWindow from './window';
 import eleventyDb from './database/eleventyDb';
-import siteFuncs from '../functions/site';
+import siteFuncs, { getSiteConfig } from '../functions/site';
 const { Sequelize, DataTypes } = require('sequelize');
 const child_process = require('child_process')
 
@@ -42,7 +42,6 @@ app.whenReady().then(() => {
     const eleventyDir = siteFuncs._getSelectedEleventySiteDir();
 
     console.log(`%c[Eleventy Protocol] Fetching: %c${request.url}%c from 11ty directory: %c ${eleventyDir}`, "color:cyan; font-weight:bold;", "font-style:italic;", "color:cyan; font-weight:bold;")
-
     // Check if user has selected a directory
     if (!eleventyDir) {
       console.log("[Eleventy Protocol] No directory selected yet");
@@ -50,7 +49,7 @@ app.whenReady().then(() => {
     }
 
     // Get the file path from the URL
-    const relativePath = request.url.slice('eleventy://'.length);
+    const relativePath = `${getSiteConfig().input}/${request.url.slice('eleventy://'.length)}`;
     const fullPath = path.join(eleventyDir, relativePath);
 
     console.log("[Eleventy Protocol] Serving file:", fullPath);
