@@ -30,7 +30,7 @@ const useSiteStore = create((set) => ({
                 navigate('/welcome')
                 return
             }
-            const siteInfoData = await window.api.getSiteInfo(selectedSite.rootPath);
+            const siteInfoData = await window.api.getSelectedSiteInfo();
             set({ cwd: selectedSite.rootPath, selectedSiteInfo: siteInfoData })
             updateSelectedSitesHistory(selectedSite.rootPath, siteInfoData);
             useCollectionsStore.getState().actions.setCollections(selectedSite.collections)
@@ -39,7 +39,7 @@ const useSiteStore = create((set) => ({
         openSiteByDir: async (navigate, dir, newSiteConfigData) => {
             const selectedSite = await window.api.openDirectory(dir, newSiteConfigData);
             const siteConfigData = await window.api.getSiteConfig();
-            const siteInfoData = await window.api.getSiteInfo(selectedSite.rootPath);
+            const siteInfoData = await window.api.getSelectedSiteInfo();
             set({ cwd: selectedSite.rootPath, selectedSiteInfo: siteInfoData, selectedSiteConfig:siteConfigData })
             updateSelectedSitesHistory(selectedSite.rootPath, siteInfoData);
             useCollectionsStore.getState().actions.setCollections(selectedSite.collections)

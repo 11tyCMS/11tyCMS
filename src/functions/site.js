@@ -197,14 +197,14 @@ const functions = {
             throw new Error("No metadata/site.js/json file found!")
         return `${infoFile.parentPath}${infoFile.name}`
     },
-    getSiteInfo: async (path) => {
+    getSelectedSiteInfo: async () => {
         let otherData = {
             layouts: {}
         }
-        fs.readdirSync(`${path}/${siteConfig.includes}`, { withFileTypes: true }).forEach(file => {
+        fs.readdirSync(`${selectedSiteDir}/${siteConfig.includes}`, { withFileTypes: true }).forEach(file => {
             otherData['layouts'][file.name] = { title: file.name }
         })
-        const favicon = await getFavicon(path)
+        const favicon = await getFavicon(selectedSiteDir)
         otherData['base64Favicon'] = imageToBase64(favicon, '.svg')
 
         siteInfoFilePath = await functions._getSiteInfoFilePath();
