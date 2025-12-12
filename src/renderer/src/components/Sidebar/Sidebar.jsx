@@ -16,7 +16,7 @@ const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
     const [isPublishing, setIsPublishing] = useState(false);
     const build = (pubBuild) => {
         setIsBuilding(true);
-        return window.api.buildSite(cwd).then(() => {
+        return window.api.buildSite().then(() => {
             setIsBuilding(false);
         })
     }
@@ -24,7 +24,7 @@ const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
         return new Promise((resolve) => {
             build(true).then(() => {
                 setIsPublishing(true);
-                window.api.publishSite(cwd).then(() => {
+                window.api.publishSite().then(() => {
                     setIsPublishing(false)
                     resolve();
                 })

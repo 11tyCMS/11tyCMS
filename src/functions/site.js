@@ -226,16 +226,16 @@ const functions = {
         refreshCollectionWatcher();
         return status;
     },
-    buildSite: (path) => {
+    buildSite: () => {
         return new Promise((resolve) => {
-            child_process.exec(siteConfig.build, { cwd: path }, function (err, stdout, stderr) {
+            child_process.exec(siteConfig.build, { cwd: selectedSiteDir }, function (err, stdout, stderr) {
                 resolve(err, stdout, stderr);
             });
         })
     },
-    publishSite: async (path) => {
+    publishSite: async () => {
         return new Promise((resolve) => {
-            child_process.exec(siteConfig.publish, { cwd: `${path}/${siteConfig.output}` }, function (err, stdout, stderr) {
+            child_process.exec(siteConfig.publish, { cwd: `${selectedSiteDir}/${siteConfig.output}` }, function (err, stdout, stderr) {
                 console.log(err, stdout, stderr);
                 resolve(err, stdout, stderr);
             });
