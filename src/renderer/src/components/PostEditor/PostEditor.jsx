@@ -23,7 +23,9 @@ function PostEditor() {
   useEffect(() => {
     document.getElementsByClassName('main-view')[0].classList.toggle("thin-padding")
     return () => {
-      document.getElementsByClassName('main-view')[0].classList.remove('thin-padding')
+      const mainViewDiv = document.getElementsByClassName('main-view')[0];
+      if(mainViewDiv)
+        document.getElementsByClassName('main-view')[0].classList.remove('thin-padding')
     }
   }, []);
   const fetchFile = (collectionName, fileName) => {
