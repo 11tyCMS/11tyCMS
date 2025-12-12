@@ -215,10 +215,10 @@ const functions = {
         const writeFileResult = writeDataFile(siteInfoFilePath, data)
         return writeFileResult
     },
-    createCollection: async (sitePath, name, layout) => {
-        fs.mkdirSync(`${sitePath}/${siteConfig.input}/${name}`);
-        fs.writeFileSync(`${sitePath}/${siteConfig.input}/${name}/${name}.json`, JSON.stringify({ "layout": layout, tags: 'post' }))
-        collectionDirectories.push(`${sitePath}/${siteConfig.input}/${name}`)
+    createCollection: async (name, layout) => {
+        fs.mkdirSync(`${selectedSiteDir}/${siteConfig.input}/${name}`);
+        fs.writeFileSync(`${selectedSiteDir}/${siteConfig.input}/${name}/${name}.json`, JSON.stringify({ "layout": layout, tags: 'post' }))
+        collectionDirectories.push(`${selectedSiteDir}/${siteConfig.input}/${name}`)
         refreshCollectionWatcher()
     },
     deleteCollection: async (name) => {

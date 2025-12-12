@@ -31,7 +31,7 @@ const useCollectionsStore = create((set) => ({
             return { collections: { ...state.collections, [collection]:updatedCollection } };
         }),
         addCollection: (cwd, formData) => set(state=>{
-            window.api.createCollection(cwd, formData.name, formData.layout);
+            window.api.createCollection(formData.name, formData.layout);
             return {collections:{...state.collections, [formData.name]:[]}}
         }),
         deleteCollection: (collectionName)=>set(state=>{
