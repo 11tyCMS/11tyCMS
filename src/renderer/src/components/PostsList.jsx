@@ -35,25 +35,27 @@ function PostsList() {
         <div className='head-container'>
           <h1>{collectionName}</h1>
           <button onClick={() => setDisplayAddFileDialog(!displayAddFileDialog)}>
-            <FeatherIcon icon={"plus"} size={25} color="#7c8ad6" className='add-button'/>
+            <FeatherIcon icon={"plus"} size={25} color="#7c8ad6" className='add-button' />
           </button>
         </div>
         <ul>
           {posts
             .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
             .map((post) => (
-              <li onClick={() => { navigate(`/site/${collectionName}/posts/${post.name}`) }}>
-                <button>
+              <li>
+                <button className='listItem' onClick={() => { navigate(`/site/${collectionName}/posts/${post.name}`) }}>
                   <label>{post.data.title ? post.data.title : post.path}</label>
-                  <div className='buttons-info'>
+                  <div className='info'>
                     <span style={{ justifySelf: 'end' }}>
                       {new Date(post.data.date).toLocaleDateString('en-US')}
                     </span>
-                    <button className='icon' onClick={(e) => deletePostConfirm(e, post)}>
-                      <FeatherIcon icon='trash' size={16} />
-                    </button>
                   </div>
                 </button>
+                <div className='buttons'>
+                  <button className='no-style icon' onClick={(e) => deletePostConfirm(e, post)}>
+                    <FeatherIcon icon='trash' size={16} />
+                  </button>
+                </div>
               </li>
             ))}
         </ul>

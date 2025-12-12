@@ -437,9 +437,9 @@ table.metadata tr td {
 .postsList ul li {
   display: flex;
   margin-bottom: 15px;
+  border-radius: 6px;
 }
-
-.postsList ul li button {
+.postsList ul li button.listItem{
   flex-grow: 1;
   padding: unset;
   margin: unset;
@@ -450,9 +450,19 @@ table.metadata tr td {
   height: 50px;
   width: 100%;
 }
-
-.postsList ul li button:focus-within .buttons-info button {
-  display: flex;
+.postsList ul li .buttons{
+  margin-right:6px;
+  display:none;
+}
+.postsList ul li .buttons button{
+  padding:10px;
+  width:50px;
+  height:50px;
+  justify-content: center;
+  align-items: center;
+}
+.postsList ul li:hover .buttons, .postsList ul li:focus-within .buttons{
+  display:flex;
 }
 
 .postsList ul li button label {
@@ -465,36 +475,15 @@ table.metadata tr td {
   color: var(--lightest-text-color);
 }
 
-.postsList ul li button .buttons-info button {
-  padding: unset;
-  margin: unset;
-  background: unset;
-  flex-grow: 1;
-  display: none;
-  box-sizing: border-box;
-  height: 50px;
-  width: 50px;
-  font-size: 20px;
-  align-items: center;
-  padding-left: 15px;
-  padding-right: 15px;
-  cursor: pointer;
-  justify-content: space-between;
-}
-
-.postsList ul li .buttons-info {
+.postsList ul li button.listItem .info {
   display: flex;
   justify-content: end;
   align-items: center;
 }
 
-.postsList ul li .buttons-info button {
-  display: block;
-}
 
-.postsList ul li button:hover .buttons-info button {
+.postsList ul li button:hover .info button {
   display: flex;
-  z-index: 100
 }
 
 .postsList .head-container {
@@ -507,7 +496,7 @@ table.metadata tr td {
   background: none;
 }
 
-.postsList ul li button:hover {
+.postsList ul li:hover {
   background: #2e3455;
 }
 
