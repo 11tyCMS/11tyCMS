@@ -9,7 +9,7 @@ const DeleteCollectionDialog = ({collection, setCollectionToDelete }) => {
         setCollectionToDelete(null);
     }
     if (collection)
-        return <ConfirmationDialog confirmLabelText={`Yes, delete ${collection} and all its posts.`} onConfirm={() => deleteCollection(collection)} onCancel={() => setCollectionToDelete(null)} displayStatus={collection}>
+        return <ConfirmationDialog confirmLabelText={`Yes, delete ${collection} and all its posts.`} onConfirm={() => deleteCollection(collection)} onCancel={() => setCollectionToDelete(null)} displayStatus={collection} isConfirmDangerous={true}>
             <p>
                 Are you sure you want to delete the collection <b>{collection}</b>?
                 <br />
