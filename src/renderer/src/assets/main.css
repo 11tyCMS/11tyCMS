@@ -260,6 +260,28 @@ button:hover{
   cursor: pointer;
   color: var(--lightest-text-color);
 }
+.sidebar ul li button{
+  justify-content: flex-start;
+}
+
+.sidebar ul li .buttons{
+  display:none;
+}
+.sidebar ul li:hover .buttons, .sidebar ul li:focus-within{
+  display:flex;
+  align-items: center;
+}
+.sidebar ul li:hover .buttons button, .sidebar ul li:focus-within .buttons button{
+  width:20px;
+  height:20px;
+  padding:5px;
+  background-color: var(--secondary-color);
+  border-radius: 6px;
+}
+
+.sidebar ul li:hover .buttons, .sidebar ul li:focus-within .buttons{
+  display:flex;
+}
 
 .site-buttons {
   display: inline-grid;
