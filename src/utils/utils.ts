@@ -2,9 +2,11 @@ import Module from "node:module";
 import path from "node:path";
 import fs from 'node:fs';
 import magicast from 'magicast';
+import { pathToFileURL } from "node:url";
+
 async function requireUncached(modulePath: string): Promise<Module> {
     const cacheBuster = `?update=${Date.now()}`;
-    const module = await import(modulePath + cacheBuster);
+    const module = await import(pathToFileURL(modulePath).toString() + cacheBuster);
     return module.default;
 }
 
@@ -57,7 +59,6 @@ export const importDataFile = async (dataFilePath: string, encoding: BufferEncod
     switch (extension) {
         case '.js':
         case '.jsx':
-            console.log("importing the fucking jsxjs", dataFilePath)
             return await requireUncached(dataFilePath);
             break;
         case '.json':

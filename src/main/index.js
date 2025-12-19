@@ -5,12 +5,29 @@ import exopsedFunctions from '../functions';
 import myWindow from './window';
 import eleventyDb from './database/eleventyDb';
 import siteFuncs, { getSiteConfig } from '../functions/site';
+import fs from 'fs';
 const { Sequelize, DataTypes } = require('sequelize');
 const child_process = require('child_process')
 
 const sequelize = new Sequelize('sqlite::memory:');
 console.dbg = (...args)=>{
   console.log('%c 11tyCMS Debug ', 'background: black; color: violet; font-weight:800;', ...args);
+}
+
+const originalReadDir = fs.readdirSync
+fs.readdirSync = (...args)=>{
+  if(process.platform != "win32"){
+    return originalReadDir(...args)
+  } else{
+    const fixedPath = args[0].replace(/\\/g, '/');
+    if(args.length == 1){
+      return originalReadDir(fixedPath)
+    } else{
+      const otherArgs = [...args]
+      otherArgs.shift();
+      return originalReadDir(fixedPath, ...otherArgs);
+    }
+  }
 }
 
 let collectionWatcher = null;
