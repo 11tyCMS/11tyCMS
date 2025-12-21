@@ -17,7 +17,7 @@ let collectionDirectories = [];
 const getFavicon = async (sitePath) => {
     const extensions = ['svg', 'png', 'ico', 'jpg', 'jpeg', 'gif']
     const extension = extensions.find((ext) => fs.existsSync(`${sitePath}/${siteConfig.output}/favicon.${ext}`));
-    return await fs.readFileSync(`${sitePath}/${siteConfig.output}/favicon.${extension}`, 'utf8')
+    return extension ? await fs.readFileSync(`${sitePath}/${siteConfig.output}/favicon.${extension}`, 'utf8') : undefined;
 }
 
 const refreshCollectionWatcher = () => {
@@ -78,11 +78,10 @@ const initSiteConfigWithFile = async (cmsConfigFile) => {
         siteConfig = await importDataFile(`${selectedSiteDir}/${cmsConfigFile.name}`);
     }
     else {
-        if (!cmsConfigData) {
-            return { status: "NEW", selectedDirectory };
+        if (!siteConfig) {
+            return { status: "NEW", selectedSiteDir };
         } else {
-            writeDataFile(`${selectedSiteDir}/_11tycms.json`, cmsConfigData);
-            siteConfig = cmsConfigData;
+            writeDataFile(`${selectedSiteDir}/_11tycms.json`, siteConfig);
         }
     }
 }
@@ -103,6 +102,12 @@ const isDirCollection = (path, folderName) => {
 };
 const functions = {
     openDirectory: async (selectedDirectory, cmsConfigData) => {
+        console.log("site is openinng with the new config of", cmsConfigData)
+        if (!selectedDirectory) {
+            selectedDirectory = selectedSiteDir
+        } else {
+            selectedSiteDir = selectedDirectory
+        }
         if (!fs.existsSync(`${selectedDirectory}/eleventy.config.js`)) {
             throw new Error(`This doesn't appear to be an Eleventy website! Ensure you select a directory with an 'eleventy.config.js' file in its root.`)
         }
@@ -111,13 +116,24 @@ const functions = {
         }
         collectionDirectories = [];
         collectionWatcher = null;
-        selectedSiteDir = selectedDirectory
         const eleventyDB = eleventyDb.get();
         eleventyDB.ItemMetadata.destroy({
             truncate: true
         })
         const cmsConfigFile = await fs.readdirSync(`${selectedSiteDir}`, { withFileTypes: true }).filter(file => ['_11tycms.json', '_11tycms.js', '_11tycms.ts'].includes(file.name))[0];
-        await initSiteConfigWithFile(cmsConfigFile);
+        if (cmsConfigFile) {
+            console.log("11tyCMS config FOUND!")
+            siteConfig = await importDataFile(`${selectedSiteDir}/${cmsConfigFile.name}`);
+        }
+        else {
+            if (!cmsConfigData){
+                return { status: "NEW", selectedSiteDir };
+            } else {
+                writeDataFile(`${selectedSiteDir}/_11tycms.json`, cmsConfigData);
+                siteConfig = cmsConfigData
+            }
+        }
+        console.log("after initing the site variables here", siteConfig);
 
         const collectionsFactory = async (collectionDirectories, nested) => {
             const getDirectoryName = (directoryPath, nestedDirectory) => {
@@ -125,7 +141,7 @@ const functions = {
                     const dirArray = directoryPath.split('/')
                     return dirArray[dirArray.length - 1]
                 } else {
-                    return directoryPath.substring(selectedSiteDir.length + siteConfig.input.length+1);
+                    return directoryPath.substring(selectedSiteDir.length + siteConfig.input.length + 1);
                 }
             }
             const addFileToCollectionCache = async (file, fileCollectionDir) => {
@@ -135,7 +151,7 @@ const functions = {
                     console.log('adding file ', filename)
                     const dbFileMetadata = (await eleventyDB.ItemMetadata.create({
                         collection: fileCollectionDir,
-                        isNested:nested,
+                        isNested: nested,
                         name: file.name,
                         data: frontmatterData,
                         path: filename,
@@ -153,9 +169,9 @@ const functions = {
                 const collectionDirectoryName = getDirectoryName(directoryPath, nested);
                 collections[collectionDirectoryName] = []
                 const collectionFilesAndDirs = fs.readdirSync(directoryPath, { withFileTypes: true });
-                const collectionDirectories = collectionFilesAndDirs.filter(entry => entry.isDirectory()).map(({path, name})=>`${path}/${name}`);
+                const collectionDirectories = collectionFilesAndDirs.filter(entry => entry.isDirectory()).map(({ path, name }) => `${path}/${name}`);
                 const collectionFiles = collectionFilesAndDirs.filter(file => file.name.includes('.md'));
-                collections = {...collections, ...(await collectionsFactory(collectionDirectories, true))}
+                collections = { ...collections, ...(await collectionsFactory(collectionDirectories, true)) }
                 for (const file of collectionFiles) {
                     await addFileToCollectionCache(file, collectionDirectoryName)
                 }
@@ -181,7 +197,10 @@ const functions = {
         return new Promise(resolveOuter => {
             dialog.showOpenDialog({
                 properties: ['openDirectory']
-            }).then((response) => functions.openDirectory(response.filePaths[0]).then((res) => resolveOuter(res)))
+            }).then((response) => {
+                selectedSiteDir = response.filePaths[0]
+                return functions.openDirectory(selectedSiteDir).then((res) => resolveOuter(res))
+            })
         });
     },
     getSiteConfig: () => {
@@ -205,8 +224,9 @@ const functions = {
             otherData['layouts'][file.name] = { title: file.name }
         })
         const favicon = await getFavicon(selectedSiteDir)
-        otherData['base64Favicon'] = imageToBase64(favicon, '.svg')
-
+        if(favicon){
+            otherData['base64Favicon'] = imageToBase64(favicon, '.svg')
+        }
         siteInfoFilePath = await functions._getSiteInfoFilePath();
         const siteInfoData = await importDataFile(siteInfoFilePath)
         return { ...siteInfoData, ...otherData };

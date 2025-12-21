@@ -73,7 +73,7 @@ export const importDataFile = async (dataFilePath: string, encoding: BufferEncod
 
 export const writeDataFile = async (path:string, data:any, shallow:boolean = false, encoding:BufferEncoding = "utf8") => {
     if (await fs.existsSync(path)) {
-        const isJsFile = doesFileExtensionMatch(path, ["js", 'jsx', 'json', 'ts']);
+        const isJsFile = doesFileExtensionMatch(path, ["js", 'jsx', 'ts']);
         async function writeFile(path:string, data:any) {
             if (isJsFile) {
                 console.log("javascript file so writing js")
