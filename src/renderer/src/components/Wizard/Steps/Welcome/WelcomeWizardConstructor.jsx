@@ -23,5 +23,7 @@ export const defaultWelcomeWizardState = {
 
 export const finalAction = (wizardState, navigate)=>{
     const cwd = useSiteStore.getState().cwd;
-    useSiteStore.getState().actions.openSiteByDir(navigate, cwd, wizardState);
+    useSiteStore.getState().actions.createSiteConfigFile(wizardState).then((res)=>{
+        useSiteStore.getState().actions.openSiteByDir(navigate, cwd);
+    })
 }

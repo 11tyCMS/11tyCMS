@@ -23,6 +23,7 @@ const useSiteStore = create((set) => ({
     selectedSiteInfo: null,
     selectedSiteConfig: null,
     actions: {
+        createSiteConfigFile: async(siteConfigData)=> await window.api.createSiteConfigFile(siteConfigData),
         openSiteFolder: async (navigate) => {
             const selectedSite = await window.api.openDirectoryWithDialog();
             if(selectedSite.status == "NEW"){

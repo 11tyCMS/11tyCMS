@@ -72,19 +72,6 @@ const refreshCollectionWatcher = () => {
         .on('change', path => {
         })
 }
-const initSiteConfigWithFile = async (cmsConfigFile) => {
-    if (cmsConfigFile) {
-        console.log("11tyCMS config FOUND!")
-        siteConfig = await importDataFile(`${selectedSiteDir}/${cmsConfigFile.name}`);
-    }
-    else {
-        if (!siteConfig) {
-            return { status: "NEW", selectedSiteDir };
-        } else {
-            writeDataFile(`${selectedSiteDir}/_11tycms.json`, siteConfig);
-        }
-    }
-}
 const doesCollectionDirConfigExist = (path, folderName) => {
     const supportedConfigExtensions = ['.js', '.json', '.ts'];
     for (const extension of supportedConfigExtensions) {
@@ -101,8 +88,10 @@ const isDirCollection = (path, folderName) => {
     return !isFolderInternal && isCollectionFolder;
 };
 const functions = {
+    createSiteConfigFile: async(siteConfigData)=>{
+        return fs.writeFileSync(`${selectedSiteDir}/_11tycms.json`, JSON.stringify(siteConfigData));
+    },
     openDirectory: async (selectedDirectory, cmsConfigData) => {
-        console.log("site is openinng with the new config of", cmsConfigData)
         if (!selectedDirectory) {
             selectedDirectory = selectedSiteDir
         } else {
@@ -125,13 +114,8 @@ const functions = {
             console.log("11tyCMS config FOUND!")
             siteConfig = await importDataFile(`${selectedSiteDir}/${cmsConfigFile.name}`);
         }
-        else {
-            if (!cmsConfigData){
-                return { status: "NEW", selectedSiteDir };
-            } else {
-                writeDataFile(`${selectedSiteDir}/_11tycms.json`, cmsConfigData);
-                siteConfig = cmsConfigData
-            }
+        else if (!cmsConfigData) {
+            return { status: "NEW", selectedSiteDir };
         }
         console.log("after initing the site variables here", siteConfig);
 
@@ -224,7 +208,7 @@ const functions = {
             otherData['layouts'][file.name] = { title: file.name }
         })
         const favicon = await getFavicon(selectedSiteDir)
-        if(favicon){
+        if (favicon) {
             otherData['base64Favicon'] = imageToBase64(favicon, '.svg')
         }
         siteInfoFilePath = await functions._getSiteInfoFilePath();
