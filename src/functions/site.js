@@ -221,7 +221,7 @@ const functions = {
     },
     createCollection: async (name, layout) => {
         fs.mkdirSync(`${selectedSiteDir}/${siteConfig.input}/${name}`);
-        fs.writeFileSync(`${selectedSiteDir}/${siteConfig.input}/${name}/${name}.json`, JSON.stringify({ "layout": layout, tags: 'post' }))
+        fs.writeFileSync(`${selectedSiteDir}/${siteConfig.input}/${name}/${name}.11tydata.json`, JSON.stringify({ "layout": layout, tags: 'post' }))
         collectionDirectories.push(`${selectedSiteDir}/${siteConfig.input}/${name}`)
         refreshCollectionWatcher()
     },
