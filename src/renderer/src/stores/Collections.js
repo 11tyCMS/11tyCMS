@@ -13,8 +13,8 @@ const useCollectionsStore = create((set) => ({
             return { collections: { ...state.collections, [fileEntry.collection]:updatedCollection} };
         }),
         removeFileEntryFromCollection: (fileEntry) => set(state=> {
+            fileEntry.path = fileEntry.path.replace(/\\/g, "/");
             const currentStateCollection = state['collections'][fileEntry.collection]
-            console.log(currentStateCollection, state['collections'], fileEntry);
             let updatedCollection = [...currentStateCollection];
             updatedCollection = updatedCollection.filter(post => fileEntry.path != post.path)
             return { collections: { ...state.collections, [fileEntry.collection]:updatedCollection } };

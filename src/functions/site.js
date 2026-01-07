@@ -29,6 +29,7 @@ const refreshCollectionWatcher = () => {
     collectionWatcher = chokidar.watch(collectionDirectories, { persistent: true, ignoreInitial: true });
     return collectionWatcher
         .on('add', path => {
+            path = path.replace(/\\/g, "/");
             let explodedPathBefore = path.split('/');
             const matterData = matter.read(path);
             const pathArray = path.split('/');
@@ -55,6 +56,7 @@ const refreshCollectionWatcher = () => {
         .on('unlink', path => browserWindow.webContents.send('collectionFileRemoved', {
             path,
             collection: (() => {
+                path = path.replace(/\\/g, "/");
                 const lastSlashIndex = path.lastIndexOf('/')
                 let string = path.substring(0, lastSlashIndex);
                 let splitPath = string.split('/');
@@ -62,6 +64,7 @@ const refreshCollectionWatcher = () => {
             })()
         }))
         .on('unlink', path => {
+            path = path.replace(/\\/g, "/");
             let explodedPath = path.split('/');
             let collection = explodedPath[explodedPath.length - 2]
             let fileName = explodedPath[explodedPath.length - 1];
