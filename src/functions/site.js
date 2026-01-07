@@ -98,7 +98,7 @@ const functions = {
         if (!selectedDirectory) {
             selectedDirectory = selectedSiteDir
         } else {
-            selectedSiteDir = selectedDirectory
+            selectedSiteDir = selectedDirectory.replace(/\\/g, "/")
         }
         if (!fs.existsSync(`${selectedDirectory}/eleventy.config.js`)) {
             throw new Error(`This doesn't appear to be an Eleventy website! Ensure you select a directory with an 'eleventy.config.js' file in its root.`)
