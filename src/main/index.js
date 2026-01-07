@@ -43,19 +43,16 @@ app.whenReady().then(() => {
     const eleventyDir = siteFuncs._getSelectedEleventySiteDir();
 
     console.log(`%c[Eleventy Protocol] Fetching: %c${request.url}%c from 11ty directory: %c ${eleventyDir}`, "color:cyan; font-weight:bold;", "font-style:italic;", "color:cyan; font-weight:bold;")
-    // Check if user has selected a directory
     if (!eleventyDir) {
       console.log("[Eleventy Protocol] No directory selected yet");
       return new Response('No directory selected', { status: 404 });
     }
 
-    // Get the file path from the URL
     const relativePath = `${getSiteConfig().input}/${request.url.slice('eleventy://'.length)}`;
-    const fullPath = path.join(eleventyDir, relativePath);
+    const fullPath = path.join(eleventyDir, relativePath).replace(/\\/g, "/");
 
     console.log("[Eleventy Protocol] Serving file:", fullPath);
 
-    // Security check - make sure file is within selected directory
     if (!fullPath.startsWith(eleventyDir)) {
       return new Response('Access denied', { status: 403 });
     }
