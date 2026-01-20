@@ -1,7 +1,7 @@
 appId: com.electron.app
 productName: 11tycms
 directories:
-  buildResources: build
+  buildResources: dist
 files:
   - '!**/.vscode/*'
   - '!src/*'
@@ -30,8 +30,6 @@ dmg:
 linux:
   target:
     - AppImage
-    - snap
-    - deb
   maintainer: electronjs.org
   category: Utility
 appImage:

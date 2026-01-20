@@ -1,7 +1,7 @@
 import Module from "node:module";
 import path from "node:path";
 import fs from 'node:fs';
-import magicast from 'magicast';
+import {writeFile, parseModule, loadFile} from 'magicast';
 import { pathToFileURL } from "node:url";
 
 async function requireUncached(modulePath: string): Promise<Module> {
@@ -77,11 +77,11 @@ export const writeDataFile = async (path:string, data:any, shallow:boolean = fal
         async function writeFile(path:string, data:any) {
             if (isJsFile) {
                 console.log("javascript file so writing js")
-                const jsFile = magicast.parseModule((await fs.readFileSync(path, { encoding })))
+                const jsFile = parseModule((await fs.readFileSync(path, { encoding })))
                 for (const key in data) {
                     jsFile.exports.default[key] = data[key];
                 }
-                return await magicast.writeFile(jsFile, path);
+                return await writeFile(jsFile, path);
             } else {
                 console.log("not javascript file so writing json")
                 return fs.writeFileSync(path, JSON.stringify(data));;
@@ -93,7 +93,7 @@ export const writeDataFile = async (path:string, data:any, shallow:boolean = fal
             if (!isJsFile)
                 existingData = JSON.parse(await fs.readFileSync(path, encoding));
             else
-                existingData = (await magicast.loadFile(path)).exports.default;
+                existingData = (await loadFile(path)).exports.default;
             existingData = { ...existingData, ...data }
             return await writeFile(path, existingData);
         } else {

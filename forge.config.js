@@ -16,7 +16,7 @@ module.exports = {
       format: ['ULFO'],
     },
     {
-      name: '@electron-forge/maker-flatpak',
+      name: '@electron-forge/maker-zip',
       config: {
         options: {
           categories: ['Network'],

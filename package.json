@@ -1,10 +1,10 @@
 {
-  "name": "11tycms",
+  "name": "EleventyCMS",
   "version": "1.0.0",
   "description": "An Electron application with React",
   "main": "./dist/main/index.js",
-  "author": "example.com",
-  "homepage": "https://electron-vite.org",
+  "author": "https://jessieheald.com",
+  "homepage": "https://11tycms.com",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint --cache .",
@@ -19,7 +19,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish:mac": "electron-vite build && electron-forge package && electron-forge make --targets=@electron-forge/maker-dmg",
-    "publish:linux": "electron-vite build && electron-forge package && electron-forge make --targets=@electron-forge/maker-flatpak",
+    "publish:linux": "electron-vite build && electron-forge package && electron-forge make --targets=@electron-forge/maker-zip",
     "publish:windows": "electron-vite build && electron-forge package && electron-forge make --targets=@electron-forge/maker-squirrel"
   },
   "dependencies": {
