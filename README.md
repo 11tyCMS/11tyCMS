@@ -7,7 +7,9 @@ We're hosting builds on [GitHub](https://github.com/jh97uk/11tyCMS/releases/tag/
 I've requested larger release size caps, but Codeberg have said they have no ability to change this for individual users at this time.
 
 ### Why Codeberg anyway?
-11tyCMS is a project that seeks to help federate the web: I want more websites. I want more of our content, writing, creativity and the internet's soul to be out of the hands of centralised big tech platforms. GitHub and its parent company Microsoft have shown themselves to be ethically spurious to say the least on many levels, and their use of AI training is deeply concerning. It's not something I want to contribute to.
+11tyCMS is a project that seeks to help federate the web: I want more websites. I want more of our content, writing, creativity and the internet's soul to be out of the hands of centralised big tech platforms. GitHub and its parent company Microsoft have been ethically spurious to say the least, and their use of AI training is deeply concerning. It's not something I want to contribute to.
+
+A better web will only happen if we build it, and maintain what good we have. Let's make that happen!
 
 ### Help! It says its potentially a dangerous file?
 
