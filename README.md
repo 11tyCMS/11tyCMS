@@ -1,6 +1,11 @@
 # Introuction
 Welcome to 11tyCMS! 11tyCMS is a local, serverless, offline CMS for the 11ty SSG. Simply install, and launch.
 
+## Where can I download it?
+We're hosting builds on [GitHub](https://github.com/jh97uk/11tyCMS/releases/tag/beta). I'd love to host them on this repo, but unfortunately, the release size limits on Codeberg cap out at 100mb. If anyone knows how to reduce our build sizes, please create an issue!
+
+I've requested larger release size caps, but Codeberg have said they have no ability to change this for individual users at this time.
+
 ## Getting your site 11tyCMS ready
 11tyCMS requires all your posts to be in a "content folder". It doesn't matter the name of the folder, this is configured in the setup.
 
