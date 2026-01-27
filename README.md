@@ -1,34 +1,54 @@
-# 11tycms
+# Introuction
+Welcome to 11tyCMS! 11tyCMS is a local, serverless, offline CMS for the 11ty SSG. Simply install, and launch.
 
-An Electron application with React
+## Getting your site 11tyCMS ready
+11tyCMS requires all your posts to be in a "content folder". It doesn't matter the name of the folder, this is configured in the setup.
 
-## Recommended IDE Setup
+11tyCMS has been built around the [`eleventy-base-blog` template](https://github.com/11ty/eleventy-base-blog), so try and follow the structure and naming schemes of this template.
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+For a collection to work with 11tyCMS, you'll need the collection's folder in the content folder, followed by a js or json file inside of that folder with the matching name. For example:
 
-## Project Setup
+If you have a posts collection, create a `posts` folder in your `content` folder, and inside of it, create a file called `posts.11tydata.js`. 11tyCMS will scan the `content` folder and find all the subfolders with their associated `11tydata` files.
 
-### Install
+At present, for image "uploads" to work, the `assets` folder must be in your `content` folder.
 
-```bash
-$ npm install
+If you want to create collections in 11tyCMS, ensure you configure the layouts directory in the setup wizzard to point to where your layouts are. For example, if you have your layouts in the `_includes/layouts` folder, then you'll need to configure the `_includes` directory to that. I'm working on making this better, but for now that's what we have.
+
+A more detailed guide is on the way, but for the most part, the welcome wizard should do the heavy lifting.
+
+11tyCMS mostly looks for any 11tyCMS related settings on your website in the `_11tycms.json` file in the root of your website. My portfolio looks like this (as an example):
+```json
+{
+    "build": "npx @11ty/eleventy",
+    "publish": "git add . && git commit -a -m \"$(git status --short | sed 's/^...//g' | paste -sd ', ' -)\" && git push",
+    "input": "content",
+    "includes": "_includes/layouts",
+    "data": "_data",
+    "media": "content/assets",
+    "output": "_site"
+}
 ```
+If you want to skip the welcome wizard, just create an `_11tycms.json` file in your site's root directory.
 
-### Development
+Note that any config file or `11tydata` file can be either .json, .js, or .tsx. However if you have 2 files with different formats, this will cause bugs!
 
-```bash
-$ npm run dev
-```
+If you'd like to see an example of an 11ty site working with 11tyCMS, refer to [my portfolio](https://codeberg.org/JessieHealdUK/Portfolio) (just remember to create a `content` folder!).
 
-### Build
+# Development
+To setup the source for development run `npm install`. You'll get an error about `electron-builder`, ignore it for now, I'm in the process of fixing it.
 
-```bash
-# For windows
-$ npm run build:win
+To run in dev mode: `npm run dev`
 
-# For macOS
-$ npm run build:mac
+## Building
+If you want to build executables for your system, you'll need to run one of my `publish` commands:
+- `npm run publish:windows` will create a setup executable for your target hosts arch on Windows
+- `npm run publish:linux` will do the same on Linux.
+- `npm run publish:mac` will do the same on Linux.
 
-# For Linux
-$ npm run build:linux
-```
+### Limitations
+Unfortunately, the build/publish process is very limited. You must create builds for each platform on the OS you're targeting. This is because `sqlite3` can't be built for the target platform without being on the target platform. I am looking into creating a docker build system to have a more platform agnostic publishing setup, but for now, this is all I have!
+
+Any support or suggestions on this would be warmly welcomed.
+
+### What about Flatpak or AppImage support?
+I successfully created a Flatpak build, but ran into problems with `electron-forge` and configuring packages into it. I wanted to integrate git and npx into my flatpak build, but couldn't. Again, I'm hoping a Docker build system could resolve this issue... But if anyone has any support or suggestions on this, I'd be all ears!
