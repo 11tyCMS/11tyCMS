@@ -6,6 +6,11 @@ We're hosting builds on [GitHub](https://github.com/jh97uk/11tyCMS/releases/tag/
 
 I've requested larger release size caps, but Codeberg have said they have no ability to change this for individual users at this time.
 
+## Bugs DISCLAIMER!
+I've been using this for my portfolio and the 11tyCMS website for a while now. I've not encountered any major issues. However, backup regularly and practise great caution while using. This is early beta afterall.
+
+Please see the issues tab for common bugs to look out for while using these early builds.
+
 ## Getting your site 11tyCMS ready
 11tyCMS requires all your posts to be in a "content folder". It doesn't matter the name of the folder, this is configured in the setup.
 
