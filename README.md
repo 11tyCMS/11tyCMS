@@ -9,6 +9,15 @@ I've requested larger release size caps, but Codeberg have said they have no abi
 ### Why Codeberg anyway?
 11tyCMS is a project that seeks to help federate the web: I want more websites. I want more of our content, writing, creativity and the internet's soul to be out of the hands of centralised big tech platforms. GitHub and its parent company Microsoft has shown themselves to be ethically spurious to say the least on many levels, and their use of AI training is deeply concerning. It's not something I want to contribute to.
 
+### Help! It says its potentially a dangerous file?
+
+This is because we've not got any of the builds signed yet. We will figure out a way to fund this, but for now, just ignore the messages. Its only due to lack of signing certificates. 
+
+## Where can I find out about updates?
+At our website: https://11tycms.com ! Any time we release an update, I write a blog post detailing all the changes. You can also subscribe to our RSS feed at: https://11tycms.com/feed.xml .
+
+You can hear about our latest updates on our Mastodon account too: https://mstdn.social/@11tyCMS .
+
 ## Bugs DISCLAIMER!
 I've been using this for my portfolio and the 11tyCMS website for a while now. I've not encountered any major issues. However, backup regularly and practise great caution while using. This is early beta afterall.
 
@@ -18,6 +27,7 @@ Please see the issues tab for common bugs to look out for while using these earl
 11tyCMS requires all your posts to be in a "content folder". It doesn't matter the name of the folder, this is configured in the setup.
 
 11tyCMS has been built around the [`eleventy-base-blog` template](https://github.com/11ty/eleventy-base-blog), so try and follow the structure and naming schemes of this template.
+
 
 For a collection to work with 11tyCMS, you'll need the collection's folder in the content folder, followed by a js or json file inside of that folder with the matching name. For example:
 
