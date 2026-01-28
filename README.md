@@ -1,6 +1,6 @@
 # Introduction
 Welcome to 11tyCMS! 11tyCMS is a local, serverless, offline CMS for the 11ty SSG. Simply install, and launch.
-
+![screenshot of 11tyCMS's editor view, at the top is a metadata area, with rows of metadata. Beneath is the rich markdown editor. To the left is a side bar with the dashboard button at the top and the collections list to beneath that. Beneath the collections list are 2 buttons side by side: "Build" and "Publish"](/images/editor.png)
 ## Where can I download it?
 We're hosting builds on [GitHub](https://github.com/jh97uk/11tyCMS/releases/tag/beta). I'd love to host them on this repo, but unfortunately, the release size limits on Codeberg cap out at 100mb. If anyone knows how to reduce our build sizes, please create an issue!
 
@@ -78,3 +78,8 @@ Any support or suggestions on this would be warmly welcomed.
 
 ### What about Flatpak or AppImage support?
 I successfully created a Flatpak build, but ran into problems with `electron-forge` and configuring packages into it. I wanted to integrate git and npx into my flatpak build, but couldn't. Again, I'm hoping a Docker build system could resolve this issue... But if anyone has any support or suggestions on this, I'd be all ears!
+
+# A HUGE thank you!
+To the 11ty community. You've all been incredible on advising and giving feedback during pre public beta development. 11tyCMS couldn't have gotten to where it is today without you all. 
+
+But also, a huge thank you to the skilled aritst and developer [Reverent Geek](https://reverentgeek.com/) for kindly allowing us to use the 11ty mascot Elle in 11tyCMS. Check him out!
