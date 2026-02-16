@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import useSiteStore, { useOpenSiteByDir, useOpenSiteFolder } from "../stores/Site";
 import { useEffect, useState } from "react";
-
+import logo from '../assets/logo.png'
 const SelectSiteView = () => {
     const [selectedSiteHistory, setSelectedSiteHistory] = useState([]);
     const openSiteFolder = useOpenSiteFolder();
@@ -12,7 +12,8 @@ const SelectSiteView = () => {
         if (selectedSiteHistoryJSON)
             setSelectedSiteHistory(JSON.parse(localStorage.getItem('selectedSiteHistory')));
     }, []);
-    return <div style={{width:'100vw', display:'flex', alignItems:'center', justifyContent:'center'}}>
+    return <div style={{width:'100vw', display:'flex', flexDirection:'column', gap:50, alignItems:'center', justifyContent:'center'}}>
+        <img src={logo} width={200}/>
         <div className="siteSelector">
             {selectedSiteHistory.map((site) => <button className='siteInfo' onClick={()=>openSiteByDir(navigate, site.cwd)}>
                 <div className='favicon-container'>
