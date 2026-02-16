@@ -14,7 +14,8 @@ function createWindow() {
             preload: join(__dirname, '../preload/index.js'),
             sandbox: false,
             spellcheck: true
-        }
+        },
+        icon:  join(__dirname, '../images/logo.png')
     })
     mMainWindow.webContents.on('context-menu', (event, params) => {
         const menu = new Menu()
