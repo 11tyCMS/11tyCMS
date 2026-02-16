@@ -100,7 +100,8 @@ const functions = {
         } else {
             selectedSiteDir = selectedDirectory.replace(/\\/g, "/")
         }
-        if (!fs.existsSync(`${selectedDirectory}/eleventy.config.js`)) {
+        const eleventyConfigFile = await fs.readdirSync(`${selectedSiteDir}`, { withFileTypes: true }).filter(file=>['.eleventy.js', 'eleventy.config.js', 'eleventy.config.mjs', 'eleventy.config.cjs', '.eleventy.ts', 'eleventy.config.ts'].includes(file.name))[0];
+        if (!eleventyConfigFile) {
             throw new Error(`This doesn't appear to be an Eleventy website! Ensure you select a directory with an 'eleventy.config.js' file in its root.`)
         }
         if (collectionWatcher) {
