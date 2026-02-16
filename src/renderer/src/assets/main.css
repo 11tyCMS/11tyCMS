@@ -400,7 +400,7 @@ table.metadata tr .buttons button svg {
   color:white;
 }
 
-table.metadata tr:hover .buttons {
+table.metadata tr:hover .buttons, table.metadata tr:focus-within .buttons {
   display: flex;
   gap:10px;
 }

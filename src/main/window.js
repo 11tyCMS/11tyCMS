@@ -18,7 +18,6 @@ function createWindow() {
     })
     mMainWindow.webContents.on('context-menu', (event, params) => {
         const menu = new Menu()
-        console.log("context babyyyy")
         // Add each spelling suggestion
         for (const suggestion of params.dictionarySuggestions) {
             menu.append(new MenuItem({
