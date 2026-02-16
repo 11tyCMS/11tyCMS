@@ -1,3 +1,4 @@
+const { Menu, MenuItem } = require('electron')
 import { app, shell, BrowserWindow, ipcMain, dialog, protocol, net } from 'electron'
 import { join } from 'path'
 let mMainWindow;
@@ -12,9 +13,32 @@ function createWindow() {
         webPreferences: {
             preload: join(__dirname, '../preload/index.js'),
             sandbox: false,
+            spellcheck: true
         }
     })
+    mMainWindow.webContents.on('context-menu', (event, params) => {
+        const menu = new Menu()
+        console.log("context babyyyy")
+        // Add each spelling suggestion
+        for (const suggestion of params.dictionarySuggestions) {
+            menu.append(new MenuItem({
+                label: suggestion,
+                click: () => mMainWindow.webContents.replaceMisspelling(suggestion)
+            }))
+        }
 
+        // Allow users to add the misspelled word to the dictionary
+        if (params.misspelledWord) {
+            menu.append(
+                new MenuItem({
+                    label: 'Add to dictionary',
+                    click: () => mMainWindow.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord)
+                })
+            )
+        }
+
+        menu.popup()
+    })
     mMainWindow.on('ready-to-show', () => {
         mMainWindow.show()
     })
