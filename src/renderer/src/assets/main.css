@@ -180,6 +180,12 @@ button:hover {
   border-radius: 100%;
 }
 
+.favicon-container .favicon img {
+  width: 100%;
+  border-radius: 4%;
+  box-shadow: -1px 1px 2px 1px hsl(218.64deg 57.07% 16.02% / 98%);
+}
+
 .sidebar .siteInfo .favicon-container .favicon.no-icon {
   background: grey;
 }

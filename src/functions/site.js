@@ -16,8 +16,9 @@ let collectionDirectories = [];
 
 const getFavicon = async (sitePath) => {
     const extensions = ['svg', 'png', 'ico', 'jpg', 'jpeg', 'gif']
-    const extension = extensions.find((ext) => fs.existsSync(`${sitePath}/${siteConfig.output}/favicon.${ext}`));
-    return extension ? await fs.readFileSync(`${sitePath}/${siteConfig.output}/favicon.${extension}`, 'utf8') : undefined;
+    const extension = extensions.find((ext) => fs.existsSync(`${sitePath}/${siteConfig.media}/favicon.${ext}`));
+    const fileData = await fs.readFileSync(`${sitePath}/${siteConfig.media}/favicon.${extension}`);
+    return extension ? {fileData, pathname:`${sitePath}/${siteConfig.media}/favicon.${extension}`, extension} : undefined;
 }
 
 const refreshCollectionWatcher = () => {
@@ -212,8 +213,8 @@ const functions = {
             otherData['layouts'][file.name] = { title: file.name }
         })
         const favicon = await getFavicon(selectedSiteDir)
-        if (favicon) {
-            otherData['base64Favicon'] = imageToBase64(favicon, '.svg')
+        if (favicon.pathname) {
+            otherData['base64Favicon'] = imageToBase64(favicon.fileData, `.${favicon.extension}`)
         }
         siteInfoFilePath = await functions._getSiteInfoFilePath();
         const siteInfoData = await importDataFile(siteInfoFilePath)

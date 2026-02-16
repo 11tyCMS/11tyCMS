@@ -27,7 +27,7 @@ type SupportedImageExtension = ".png" | '.jpeg' | '.jpg' | '.gif' | '.svg' | '.w
 type SupportedMimeType = "image/png" | "image/jpeg" | "image/gif" | "image/svg+xml" | "image/webp";
 
 export const imageToBase64 = (fileContents: string, ext: SupportedImageExtension): string => {
-    const base64: string = Buffer.from(fileContents, 'utf8').toString('base64');
+    const base64: string = Buffer.from(fileContents).toString('base64');
     let mimeType: SupportedMimeType;
     switch (ext) {
         case '.png':
