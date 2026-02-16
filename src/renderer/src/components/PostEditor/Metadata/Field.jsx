@@ -15,8 +15,14 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
         delete updatedMetadata[field];
         saveMetadata(updatedMetadata);
     }
-    const saveField = (key, value) => {
-        saveMetadata({ ...metadata, [key]: value })
+    const saveField = (key, value, newKey) => {
+        let updatedMetadata = {...metadata}
+        if(newKey){
+            delete updatedMetadata[key];
+            saveMetadata({ ...updatedMetadata, [newKey]: value })
+        } else{
+            saveMetadata({ ...updatedMetadata, [key]: value })
+        }
         setIsEditing(false);
         deleteField();
         cancelAdd();
@@ -88,7 +94,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
     if (isEditing)
         return <tr>
             <td>
-                <input defaultValue={key} type="text" placeholder="Key" onChange={({ target }) => { }} />
+                <input defaultValue={key} type="text" placeholder="Key" onChange={({ target }) => setNewField({ ...newField, name: target.value })} />
             </td>
             <td>
                 {renderFieldValueArea(typeof metadata[key], key)}
@@ -97,7 +103,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
                 <button onClick={() => { setIsEditing(false) }}>Cancel</button>
             </td>
             <td>
-                <button onClick={() => saveField(newField['name'], newField['value'])}>Save</button>
+                <button onClick={() => saveField(key, newField['value'], newField['name'] != key ? newField['name'] : undefined)}>Save</button>
             </td>
         </tr>
     return <tr>
