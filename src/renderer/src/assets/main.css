@@ -444,7 +444,10 @@ table.metadata tr td:first-child {
   color: var(--lighter-text-color);
   min-width: fit-content;
 }
-
+table.metadata tr td:not(:first-child){
+  max-height:3rem;
+  overflow:scroll
+}
 table.metadata tr td {
   color: var(--lightest-text-color);
 }
