@@ -442,7 +442,7 @@ table.metadata tr:last-of-type {
 table.metadata tr td:first-child {
   padding-right: 10px;
   color: var(--lighter-text-color);
-  min-width: 46px;
+  min-width: fit-content;
 }
 
 table.metadata tr td {
