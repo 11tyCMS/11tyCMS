@@ -11,7 +11,7 @@
   --secondary-color: hsl(var(--primary-hue), var(--primary-sat), var(--secondary-brightness));
   --tertiary-color: hsl(var(--primary-hue), var(--tertiary-sat), var(--tertiary-lightness));
   --background-color: hsl(var(--primary-hue), var(--primary-sat), var(--background-brightness));
-  --button-warning-color:hsl(0, var(--primary-sat), 35%,  1);
+  --button-warning-color: hsl(0, var(--primary-sat), 35%, 1);
   --lighter-text-color: hsl(var(--primary-hue), var(--tertiary-sat), 84%);
   --lightest-text-color: hsl(var(--primary-hue), var(--tertiary-sat), 100%);
   --text-highlight-color: hsl(var(--primary-hue), var(--primary-sat), 35%);
@@ -44,9 +44,11 @@ button {
   align-items: anchor-center;
   justify-content: center;
 }
-button.warning{
-  background:var(--button-warning-color) !important;
+
+button.warning {
+  background: var(--button-warning-color) !important;
 }
+
 button.no-style {
   border-radius: none;
   padding: 0px;
@@ -84,11 +86,12 @@ button.icon svg {
   margin: 0px;
 }
 
-button{
+button {
   transition: all 0.15s;
 }
-button:hover{
-  filter:brightness(130%);
+
+button:hover {
+  filter: brightness(130%);
 }
 
 #root {
@@ -99,13 +102,14 @@ button:hover{
   padding: 10px;
   box-sizing: border-box;
 }
+
 .siteSelector {
   background-color: var(--primary-color);
   border-radius: 6px;
   padding: 10px;
   display: flex;
   flex-direction: column;
-  min-width:300px;
+  min-width: 300px;
 }
 
 .siteSelector .siteInfo {
@@ -135,6 +139,7 @@ button:hover{
   font-size: 16px;
   color: var(--lighter-text-color);
 }
+
 .sidebar {
   min-width: 200px;
   width: 200px;
@@ -157,15 +162,18 @@ button:hover{
   cursor: pointer;
   gap: 12px;
 }
-.sidebar .siteInfo .infoContainer{
-  display:flex;
-  flex-grow:1;
-  gap:12px;
+
+.sidebar .siteInfo .infoContainer {
+  display: flex;
+  flex-grow: 1;
+  gap: 12px;
 }
-.sidebar .siteInfo button.exit{
-  height:30px;
-  width:30px;
+
+.sidebar .siteInfo button.exit {
+  height: 30px;
+  width: 30px;
 }
+
 .sidebar .siteInfo .favicon-container .favicon {
   width: 30px;
   height: 30px;
@@ -201,6 +209,7 @@ button:hover{
 .sidebar .siteInfo .info button svg {
   margin-right: 0px;
 }
+
 .sidebar ul {
   padding-inline-start: 0px;
   list-style-type: none;
@@ -209,6 +218,7 @@ button:hover{
   margin-left: 14px;
   margin-right: 14px;
 }
+
 .sidebar ul li {
   height: fit-content;
   color: var(--lightest-text-color);
@@ -234,6 +244,7 @@ button:hover{
   padding-bottom: 16px;
   background: none;
 }
+
 .sidebar ul li button.parent:focus button {
   visibility: visible;
 }
@@ -260,27 +271,33 @@ button:hover{
   cursor: pointer;
   color: var(--lightest-text-color);
 }
-.sidebar ul li button{
+
+.sidebar ul li button {
   justify-content: flex-start;
 }
 
-.sidebar ul li .buttons{
-  display:none;
+.sidebar ul li .buttons {
+  display: none;
 }
-.sidebar ul li:hover .buttons, .sidebar ul li:focus-within{
-  display:flex;
+
+.sidebar ul li:hover .buttons,
+.sidebar ul li:focus-within {
+  display: flex;
   align-items: center;
 }
-.sidebar ul li:hover .buttons button, .sidebar ul li:focus-within .buttons button{
-  width:20px;
-  height:20px;
-  padding:5px;
+
+.sidebar ul li:hover .buttons button,
+.sidebar ul li:focus-within .buttons button {
+  width: 20px;
+  height: 20px;
+  padding: 5px;
   background-color: var(--secondary-color);
   border-radius: 6px;
 }
 
-.sidebar ul li:hover .buttons, .sidebar ul li:focus-within .buttons{
-  display:flex;
+.sidebar ul li:hover .buttons,
+.sidebar ul li:focus-within .buttons {
+  display: flex;
 }
 
 .site-buttons {
@@ -325,7 +342,7 @@ button:hover{
 
 .main-view {
   flex-grow: 1;
-  background:var(--primary-color);
+  background: var(--primary-color);
   box-sizing: border-box;
   padding: 20px;
   border-radius: 6px;
@@ -354,6 +371,7 @@ button:hover{
   cursor: pointer;
   background: none;
 }
+
 .main-view .title-bar input.title {
   margin: 5px;
   padding: 5px;
@@ -365,54 +383,62 @@ button:hover{
   font-weight: 800;
   -webkit-tap-highlight-color: none;
 }
+
 table.metadata {
   border-radius: 8px;
   margin-top: 10px;
   border-collapse: collapse;
 }
-table.metadata table tr td{
-  height:26px;
+
+table.metadata table tr td {
+  height: 26px;
 }
+
 table.metadata tr {
   display: block;
   padding: 8px;
   display: flex;
   align-items: anchor-center;
-  height:26px;
+  height: 26px;
 }
 
 table.metadata tr .buttons {
   margin-left: 15px;
   display: none;
 }
+
 table.metadata tr .buttons button {
   width: 24px;
   height: 24px;
   padding: unset;
-  background:none;
+  background: none;
 }
-table.metadata tr .buttons button:hover{
-  background:var(--secondary-color);
+
+table.metadata tr .buttons button:hover {
+  background: var(--secondary-color);
 }
 
 table.metadata tr .buttons button svg {
   margin-right: 0px;
-  color:white;
+  color: white;
 }
 
-table.metadata tr:hover .buttons, table.metadata tr:focus-within .buttons {
+table.metadata tr:hover .buttons,
+table.metadata tr:focus-within .buttons {
   display: flex;
-  gap:10px;
+  gap: 10px;
 }
 
 table.metadata tr:last-of-type {
   border: none;
 }
+
 table.metadata tr td:first-child {
   padding-right: 10px;
   color: var(--lighter-text-color);
   min-width: 46px;
 }
+
 table.metadata tr td {
   color: var(--lightest-text-color);
 }
@@ -422,7 +448,7 @@ table.metadata tr td {
   border-radius: 8px;
   background-color: var(--tertiary-color);
   margin: 10px;
-  margin-top:16px;
+  margin-top: 16px;
   box-sizing: border-box;
   padding: 8px;
   position: sticky;
@@ -440,6 +466,7 @@ table.metadata tr td {
 .toolbar button svg {
   margin-right: 0px !important;
 }
+
 .main-view img {
   max-width: 60%;
 }
@@ -453,10 +480,12 @@ table.metadata tr td {
   margin: 0px;
   color: #e5eeff
 }
+
 .postsList ul {
   margin-right: 10px;
   margin-top: 20px;
 }
+
 .postsList ul,
 .postsList li {
   list-style-type: none;
@@ -469,7 +498,8 @@ table.metadata tr td {
   margin-bottom: 15px;
   border-radius: 6px;
 }
-.postsList ul li button.listItem{
+
+.postsList ul li button.listItem {
   flex-grow: 1;
   padding: unset;
   margin: unset;
@@ -478,27 +508,31 @@ table.metadata tr td {
   padding-right: 15px;
   background: none;
   height: 50px;
-  width: 100%;
+  min-width: 0;
 }
-.postsList ul li .buttons{
-  margin-right:6px;
-  display:none;
+
+.postsList ul li .buttons {
+  margin-right: 6px;
+  display: none;
 }
-.postsList ul li .buttons button{
-  padding:10px;
-  width:50px;
-  height:50px;
+
+.postsList ul li .buttons button {
+  padding: 10px;
+  width: 50px;
+  height: 50px;
   justify-content: center;
   align-items: center;
 }
-.postsList ul li:hover .buttons, .postsList ul li:focus-within .buttons{
-  display:flex;
+
+.postsList ul li:hover .buttons,
+.postsList ul li:focus-within .buttons {
+  display: flex;
 }
 
 .postsList ul li button label {
   white-space: pre;
   text-overflow: ellipsis;
-  max-width: 70%;
+  max-width: 85%;
   overflow: hidden;
   cursor: pointer;
   font-size: 16px;
@@ -519,7 +553,7 @@ table.metadata tr td {
 .postsList .head-container {
   display: flex;
   justify-content: space-between;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 }
 
 .postsList .head-container button {
@@ -579,7 +613,7 @@ table.metadata tr td {
   margin-top: 14px;
 }
 
-.dialog-modal-bg .dialog .buttons button{
+.dialog-modal-bg .dialog .buttons button {
   background: var(--primary-color);
 }
 
@@ -610,6 +644,7 @@ table.metadata tr td {
 .milkdown .ProseMirror ol li::marker {
   color: white;
 }
+
 .milkdown::selection {
   color: var(--text-highlighted-color) !important;
   background: var(--text-highlight-color);
