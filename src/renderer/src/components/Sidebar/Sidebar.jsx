@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import FeatherIcon from 'feather-icons-react';
 import { ClipLoader, SyncLoader } from 'react-spinners';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import useCollectionsStore, { useCollections } from '../../stores/Collections';
 import useSiteStore, { useCwd, useResetSelection, useSelectedSiteInfo } from '../../stores/Site';
 import SiteInfoPill from './SiteInfoPIll';
@@ -12,6 +12,7 @@ const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
     const selectedSiteInfo = useSelectedSiteInfo()
     const resetSelectedSite = useResetSelection();
     const cwd = useCwd()
+    const { collectionName:selectedCollection } = useParams();
     const [isBuilding, setIsBuilding] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
     const build = (pubBuild) => {
@@ -40,7 +41,7 @@ const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
             {Object.keys(collections).map((collectionName) => (
                 <li className="parent">
                     <button className='parent' onClick={({target}) => { navigate(`/site/${collectionName}/posts`); target.blur(); target.parentElement.blur(); }}>
-                        <FeatherIcon icon="folder" size={15} fill="#547fdb" />
+                        <FeatherIcon icon="folder" size={15} fill="#547fdb" className={`folderIcon${collectionName == selectedCollection ? 'selected' : ''}`}/>
                         <span className="collectionLabel">{collectionName}</span>
                     </button>
                     <div className='buttons'>

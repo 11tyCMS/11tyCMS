@@ -270,6 +270,9 @@ button:hover {
   text-indent: 0em;
   padding-left: 2em;
 }
+.sidebar ul li button .folderIcon{
+  stroke:none;
+}
 
 .sidebar ul li {
   word-break: break-word;
