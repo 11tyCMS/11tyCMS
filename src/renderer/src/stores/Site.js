@@ -32,7 +32,8 @@ const useSiteStore = create((set) => ({
                 return
             }
             const siteInfoData = await window.api.getSelectedSiteInfo();
-            set({ cwd: selectedSite.rootPath, selectedSiteInfo: siteInfoData })
+            const siteConfigData = await window.api.getSiteConfig();
+            set({ cwd: selectedSite.rootPath, selectedSiteInfo: siteInfoData, selectedSiteConfig:siteConfigData })
             updateSelectedSitesHistory(selectedSite.rootPath, siteInfoData);
             useCollectionsStore.getState().actions.setCollections(selectedSite.collections)
             navigate('/site/')
