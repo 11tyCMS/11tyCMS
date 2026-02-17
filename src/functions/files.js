@@ -14,7 +14,7 @@ const functions = {
                     name: fileName
                 }
             }).then(result => {
-                let fileData = matter.read(result.dataValues.path);
+                let fileData = {...matter.read(result.dataValues.path)};
                 const regex = /!\[(.*?)\]\((?!https?:\/\/)(.*?)\)/g;
                 let content = fileData.content
                 content = content.replace(regex, (fullMatch, altText, relativeUrl) => {
