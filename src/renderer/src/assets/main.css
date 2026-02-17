@@ -434,6 +434,7 @@ table.metadata tr:focus-within .buttons {
   display: flex;
   min-width:fit-content;
   gap: 6px;
+  margin-left:auto;
 }
 
 table.metadata tr:last-of-type {
