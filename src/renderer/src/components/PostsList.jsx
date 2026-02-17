@@ -19,7 +19,7 @@ function PostsList() {
   useEffect(() => {
     if (!posts)
       navigate('/site')
-  }, posts)
+  }, [posts])
   if (posts)
     return (
       <div className="postsList">
