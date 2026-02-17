@@ -432,7 +432,8 @@ table.metadata tr .buttons button svg {
 table.metadata tr:hover .buttons,
 table.metadata tr:focus-within .buttons {
   display: flex;
-  gap: 10px;
+  min-width:fit-content;
+  gap: 6px;
 }
 
 table.metadata tr:last-of-type {
