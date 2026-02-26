@@ -25,11 +25,11 @@ const AddCollectionDialog = ({ siteInfo, displayStatus = false, setDisplayStatus
                 </select>
             </form>
             <div className='buttons'>
+                <button onClick={() => { setDisplayStatus(false) }}>Cancel</button>
                 <button onClick={(e) => {
                     addCollection(cwd, formData);
                     setDisplayStatus(false);
                 }}>Create</button>
-                <button onClick={() => { setDisplayStatus(false) }}>Cancel</button>
             </div>
         </DialogBase>
     else
