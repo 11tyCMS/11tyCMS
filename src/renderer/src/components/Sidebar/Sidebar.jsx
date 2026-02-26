@@ -41,7 +41,7 @@ const Sidebar = ({ setCollectionToDelete, setIsAddingCollection }) => {
             {Object.keys(collections).map((collectionName) => (
                 <li className="parent">
                     <button className='parent' onClick={({target}) => { navigate(`/site/${collectionName}/posts`); target.blur(); target.parentElement.blur(); }}>
-                        <FeatherIcon icon="folder" size={15} fill="#547fdb" className={`folderIcon${collectionName == selectedCollection ? 'selected' : ''}`}/>
+                        <FeatherIcon icon="folder" size={15} fill="#547fdb" className={`folderIcon${collectionName == selectedCollection ? 'Selected' : ''}`}/>
                         <span className="collectionLabel">{collectionName}</span>
                     </button>
                     <div className='buttons'>

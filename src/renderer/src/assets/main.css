@@ -117,15 +117,9 @@ button:hover {
   align-items: center;
   padding: 14px;
   cursor: pointer;
-  margin-bottom: 5px;
   justify-content: flex-start;
   gap: 8px;
   background: none;
-}
-
-.siteSelector .siteInfo:hover {
-  background: var(--secondary-color);
-  border-radius: 8px;
 }
 
 .siteSelector .siteInfo .favicon-container {
@@ -800,4 +794,27 @@ table.metadata tr td {
 
 .wizard .wizardActions button:only-of-type {
   margin-left: auto;
+}
+ul.siteSelector li{
+  display:flex;
+  align-items: center;
+  gap:0.5rem;
+  margin-bottom:0.5rem;
+}
+ul.siteSelector li:hover, ul.siteSelector li:focus-within{
+  background: var(--secondary-color);
+  border-radius: 8px;
+}
+
+ul.siteSelector li .buttons{
+  display:none;
+  margin-right:7px;
+}
+
+ul.siteSelector li:hover .buttons, ul.siteSelector li:focus-within .buttons{
+  display:flex;
+}
+
+ul.siteSelector li button{
+  flex-grow:1;
 }
