@@ -543,6 +543,10 @@ table.metadata tr td {
   display: flex;
 }
 
+.postsList ul li:focus-within button.listItem, .postsList ul li:hover button.listItem{
+  padding-right:5px !important;
+}
+
 .postsList ul li button label {
   white-space: pre;
   text-overflow: ellipsis;
