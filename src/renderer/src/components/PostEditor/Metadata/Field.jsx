@@ -50,7 +50,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
         }
         switch (type) {
             case "string":
-                return <input defaultValue={value} name={field} type="text" placeholder="Text value" onChange={standardOnChange} />
+                return <textarea defaultValue={value} name={field} type="text" placeholder="Text value" onChange={standardOnChange} />
                 break;
             case "boolean":
                 return <select defaultValue={value} name={field} onChange={standardOnChange}>
@@ -66,7 +66,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
     if (creating)
         return <tr>
             <td>
-                <input type="text" placeholder="Key" onChange={({ target }) => setNewField({ ...newField, name: target.value })} />
+                <textarea type="text" placeholder="Key" onChange={({ target }) => setNewField({ ...newField, name: target.value })} />
             </td>
             <td>
                 <select placeholder="of type" onChange={({ target }) => setSelectedType(target.value)} disabled={[null, undefined, ""].includes(newField["name"])}>
@@ -77,7 +77,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
             </td>
             {
                 selectedType ? (<>
-                    <td>
+                    <td className='value'>
                         {renderFieldValueArea(selectedType, newField['name'])}
                     </td>
                     <td>
@@ -96,7 +96,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
             <td>
                 <input defaultValue={key} type="text" placeholder="Key" onChange={({ target }) => setNewField({ ...newField, name: target.value })} />
             </td>
-            <td>
+            <td className='value'>
                 {renderFieldValueArea(typeof metadata[key], key)}
             </td>
             <td>
@@ -110,8 +110,8 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
         <td>
             <b>{key}</b>
         </td>
-        <td>
-            {String(metadata[key])}
+        <td className='value'>
+            <p className='limitedHeight'>{String(metadata[key])}</p>
         </td>
         <td className='buttons'>
             <button onClick={() => {setIsEditing(true); setNewField({name:key, value:metadata[key]})}}><FeatherIcon icon="edit-2" color="#7c8ad6" size={12} /></button>

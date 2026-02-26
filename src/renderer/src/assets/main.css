@@ -395,7 +395,19 @@ table.metadata {
 }
 
 table.metadata table tr td {
-  height: 26px;
+  min-height: 26px;
+}
+
+table.metadata tr td .limitedHeight {
+  max-height: 3rem;
+  overflow: scroll;
+}
+table.metadata tr td.value{
+  flex-grow:1;
+  padding-right: 1rem;
+}
+table.metadata tr td.value textarea{
+  width:100%;
 }
 
 table.metadata tr {
@@ -403,7 +415,7 @@ table.metadata tr {
   padding: 8px;
   display: flex;
   align-items: anchor-center;
-  height: 26px;
+  min-height: 26px;
 }
 
 table.metadata tr .buttons {
@@ -445,10 +457,7 @@ table.metadata tr td:first-child {
   min-width: fit-content;
 }
 
-table.metadata tr td:not(:first-child) {
-  max-height: 3rem;
-  overflow: scroll
-}
+
 
 table.metadata tr td {
   color: var(--lightest-text-color);
@@ -849,5 +858,5 @@ ul.siteSelector li button {
   background: var(--text-highlight-color);
   padding: 10px;
   border-radius: 2px;
-  margin-top:0px !important;
+  margin-top: 0px !important;
 }
