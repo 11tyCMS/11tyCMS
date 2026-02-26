@@ -39,7 +39,10 @@ const useCollectionsStore = create((set) => ({
             let updatedCollections = {...state.collections};
             delete updatedCollections[collectionName];
             return {collections:updatedCollections};
-        })
+        }),
+        getCollectionDefaultMetadata: async (collectionName)=> {
+            return await window.api.getCollectionMetadata(collectionName);
+        }
     }
 }));
 
@@ -58,3 +61,4 @@ export const useRemoveFileEntryFromCollection = ()=>useCollectionsStore(({action
 export const useModifyFileEntryFromCollecton = ()=>useCollectionsStore(({actions})=>actions.modifyFileEntryFromCollection);
 export const useAddCollection = ()=>useCollectionsStore(({actions})=>actions.addCollection);
 export const useDeleteCollection = ()=>useCollectionsStore(({actions})=>actions.deleteCollection);
+export const useGetCollectionDefaultMetadata = ()=>useCollectionsStore(({actions})=>actions.getCollectionDefaultMetadata);

@@ -76,11 +76,12 @@ const refreshCollectionWatcher = () => {
         .on('change', path => {
         })
 }
-const doesCollectionDirConfigExist = (path, folderName) => {
+export const getCollectionConfigFile = (collectionName) => {
     const supportedConfigExtensions = ['.js', '.json', '.ts'];
     for (const extension of supportedConfigExtensions) {
-        const collectionConfigPath = `${path}/${folderName}/${folderName}.11tydata${extension}`
+        const collectionConfigPath = `${selectedSiteDir}/${siteConfig.input}/${collectionName}/${collectionName}.11tydata${extension}`
         if (fs.existsSync(collectionConfigPath)) {
+            console.log("FOUND collection:", collectionName)
             return collectionConfigPath
         }
     }
@@ -88,7 +89,7 @@ const doesCollectionDirConfigExist = (path, folderName) => {
 };
 const isDirCollection = (path, folderName) => {
     const isFolderInternal = folderName[0] == '_'
-    const isCollectionFolder = doesCollectionDirConfigExist(path, folderName);
+    const isCollectionFolder = getCollectionConfigFile(folderName);
     return !isFolderInternal && isCollectionFolder;
 };
 const functions = {
@@ -194,6 +195,10 @@ const functions = {
     },
     getSiteConfig: () => {
         return siteConfig
+    },
+    getCollectionMetadata: async (collectionName)=>{
+        const collectionConfig = await importDataFile(getCollectionConfigFile(collectionName));
+        return collectionConfig.eleventyCMSMetadata
     },
     setSiteConfig: (data) => {
         siteConfig = data;

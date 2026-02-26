@@ -2,7 +2,7 @@ import * as matter from 'gray-matter';
 import fs from 'node:fs';
 import mainWindow from '../main/window';
 import eleventyDb from '../main/database/eleventyDb';
-import { getSiteDir, getSiteConfig } from './site';
+import { getSiteDir, getSiteConfig} from './site';
 const functions = {
     openFile: (collection, fileName) => {
         console.log("finding post in", collection, "called", fileName);
@@ -28,7 +28,7 @@ const functions = {
             })
         });
     },
-    saveFile: (collection, fileName, metadata, contents) => {
+    saveFile: (collection, fileName, metadata={}, contents) => {
         const path = `${getSiteDir()}/${getSiteConfig().input}/${collection}/${fileName}`
         const eleventyDB = eleventyDb.get();
         const browserWindow = mainWindow.get()
