@@ -8,6 +8,7 @@ import DashboardView from './components/Dashboard/DashboardView';
 import WelcomeWizardConstructorRoutes from './components/Wizard/Steps/Welcome/WelcomeWizardConstructor';
 import Wizard from './components/Wizard/Wizard';
 import { defaultWelcomeWizardState, finalAction } from './components/Wizard/Steps/Welcome/WelcomeWizardConstructor';
+import SelectCollection from './components/SelectCollection';
 function App() {
   const navigate = useNavigate();
   return (
@@ -17,7 +18,7 @@ function App() {
         {WelcomeWizardConstructorRoutes.map(route => <Route exact path={route.path} element={route.element} />)}
       </Route>
       <Route exact path="site" element={<SiteView />}>
-        <Route path="" exact element={<h1>Select collection</h1>} />
+        <Route path="" exact element={<SelectCollection/>} />
         <Route path="dashboard" exact element={<DashboardView />} />
         <Route path=":collectionName/posts" exact element={<PostsList />} />
         <Route path=":collectionName/posts/:postFileName" exact element={<PostEditor />} />
