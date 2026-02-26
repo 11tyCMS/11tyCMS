@@ -106,7 +106,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
                 <button onClick={() => saveField(key, newField['value'], newField['name'] != key ? newField['name'] : undefined)}>Save</button>
             </td>
         </tr>
-    return <tr tabIndex={0}>
+    return <tr tabIndex={0} onClick={({target})=>{target.blur();  target.parentElement.blur();}}>
         <td>
             <b>{key}</b>
         </td>
