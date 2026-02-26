@@ -408,6 +408,7 @@ table.metadata tr td.value{
 }
 table.metadata tr td.value textarea{
   width:100%;
+  resize:vertical;
 }
 
 table.metadata tr {
