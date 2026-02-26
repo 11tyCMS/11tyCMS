@@ -264,8 +264,9 @@ button:hover {
   text-indent: 0em;
   padding-left: 2em;
 }
-.sidebar ul li button .folderIcon{
-  stroke:none;
+
+.sidebar ul li button .folderIcon {
+  stroke: none;
 }
 
 .sidebar ul li {
@@ -429,9 +430,9 @@ table.metadata tr .buttons button svg {
 table.metadata tr:hover .buttons,
 table.metadata tr:focus-within .buttons {
   display: flex;
-  min-width:fit-content;
+  min-width: fit-content;
   gap: 6px;
-  margin-left:auto;
+  margin-left: auto;
 }
 
 table.metadata tr:last-of-type {
@@ -443,10 +444,12 @@ table.metadata tr td:first-child {
   color: var(--lighter-text-color);
   min-width: fit-content;
 }
-table.metadata tr td:not(:first-child){
-  max-height:3rem;
-  overflow:scroll
+
+table.metadata tr td:not(:first-child) {
+  max-height: 3rem;
+  overflow: scroll
 }
+
 table.metadata tr td {
   color: var(--lightest-text-color);
 }
@@ -537,8 +540,9 @@ table.metadata tr td {
   display: flex;
 }
 
-.postsList ul li:focus-within button.listItem, .postsList ul li:hover button.listItem{
-  padding-right:5px !important;
+.postsList ul li:focus-within button.listItem,
+.postsList ul li:hover button.listItem {
+  padding-right: 5px !important;
 }
 
 .postsList ul li button label {
@@ -795,43 +799,54 @@ table.metadata tr td {
 .wizard .wizardActions button:only-of-type {
   margin-left: auto;
 }
-ul.siteSelector li{
-  display:flex;
+
+ul.siteSelector li {
+  display: flex;
   align-items: center;
-  gap:0.5rem;
-  margin-bottom:0.5rem;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
-ul.siteSelector li:hover, ul.siteSelector li:focus-within{
+
+ul.siteSelector li:hover,
+ul.siteSelector li:focus-within {
   background: var(--secondary-color);
   border-radius: 8px;
 }
 
-ul.siteSelector li .buttons{
-  display:none;
-  margin-right:7px;
+ul.siteSelector li .buttons {
+  display: none;
+  margin-right: 7px;
 }
 
-ul.siteSelector li:hover .buttons, ul.siteSelector li:focus-within .buttons{
-  display:flex;
+ul.siteSelector li:hover .buttons,
+ul.siteSelector li:focus-within .buttons {
+  display: flex;
 }
 
-ul.siteSelector li button{
-  flex-grow:1;
+ul.siteSelector li button {
+  flex-grow: 1;
 }
 
-.siteSelectionPrompt{
-  display:flex;
+.siteSelectionPrompt {
+  display: flex;
   flex-direction: column;
-  gap:1.25rem;
-  color:var(--lighter-text-color);
-  font-size:25px;
-  height:100%;
+  gap: 1.25rem;
+  color: var(--lighter-text-color);
+  font-size: 25px;
+  height: 100%;
   justify-content: center;
   justify-items: center;
   align-items: center;
   align-content: center;
 
 }
-.siteSelectionPrompt svg{
-  color:#547fdb;
+
+.siteSelectionPrompt svg {
+  color: #547fdb;
+}
+
+.milkdown .milkdown-image-block .caption-input {
+  background: var(--text-highlight-color);
+  padding: 10px;
+  border-radius: 2px;
 }
