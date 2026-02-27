@@ -861,3 +861,34 @@ ul.siteSelector li button {
   border-radius: 2px;
   margin-top: 0px !important;
 }
+.tagEditor {
+    display: flex;
+    gap:0.75rem;
+    flex-direction: row;
+  flex-wrap: wrap;
+}
+.tagItem {
+    display: flex;
+    flex-wrap: wrap;
+    background-color:var(--secondary-color);
+    padding:6px;
+    gap:4px;
+    border-radius:3px;
+    height:20px;
+    min-width:fit-content;
+}
+.tagItem button{
+    width:fit-content;
+    height:fit-content;
+    margin:0px;
+    padding:4px;
+    display:flex;
+    justify-content:center;
+    background:none;
+}
+.tagItem button svg{
+    margin:0px !important;
+}
+.tagEditor input{
+    width:80px;
+}
