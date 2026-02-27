@@ -62,7 +62,9 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
                 </select>
                 break;
             case "object":
-                return <TagField onInit={()=>setNewField({name:field, value})} tags={newField.value} setTags={(value)=>setNewField({value, name:field})}/>
+                const arrayItemValidTypes = value.map(item=>['string', 'number'].includes(typeof item));
+                if(!arrayItemValidTypes.includes(false))
+                    return <TagField onInit={()=>setNewField({name:field, value})} tags={newField.value} setTags={(value)=>setNewField({value, name:field})}/>
             default:
                 break;
         }
@@ -77,6 +79,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
                     <option disabled selected>of type</option>
                     <option value="string">Text</option>
                     <option value="boolean">Boolean</option>
+                    <option value="object">String array</option>
                 </select>
             </td>
             {
