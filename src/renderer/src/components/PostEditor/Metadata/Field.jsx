@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import FeatherIcon from 'feather-icons-react';
+import TagField from './TagField';
 const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
     const key = itemKey;
     const creating = !key;
@@ -48,6 +49,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
         if (metadata[field]) {
             value = metadata[field];
         }
+        console.log("field", field, "is", type, metadata);
         switch (type) {
             case "string":
                 return <textarea defaultValue={value} name={field} type="text" placeholder="Text value" onChange={standardOnChange} />
@@ -59,6 +61,8 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
                     <option value={false}>false</option>
                 </select>
                 break;
+            case "object":
+                return <TagField onInit={()=>setNewField({name:field, value})} tags={newField.value} setTags={(value)=>setNewField({value, name:field})}/>
             default:
                 break;
         }
@@ -107,13 +111,13 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
             </td>
         </tr>
     return <tr tabIndex={0} onClick={({target})=>{target.blur();  target.parentElement.blur();}}>
-        <td>
+        <td onClick={({target})=>{target.blur();  target.parentElement.blur();}}>
             <b>{key}</b>
         </td>
-        <td className='value'>
-            <p className='limitedHeight'>{String(metadata[key])}</p>
+        <td className='value' onClick={({target})=>{target.blur();  target.parentElement.blur();}}>
+            <p className='limitedHeight' onClick={({target})=>{target.blur();  target.parentElement.blur();}}>{String(metadata[key])}</p>
         </td>
-        <td className='buttons'>
+        <td className='buttons' onClick={({target})=>{target.blur();  target.parentElement.blur();}}>
             <button onClick={() => {setIsEditing(true); setNewField({name:key, value:metadata[key]})}}><FeatherIcon icon="edit-2" color="#7c8ad6" size={12} /></button>
             <button onClick={() => saveRemoveField(key)}><FeatherIcon icon="trash-2" color="#7c8ad6" size={12} /></button>
         </td>
