@@ -81,6 +81,16 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
                 break;
         }
     }
+    const renderFieldValue = (value)=>{
+        switch (typeof value) {
+            case "object":
+                return <div className='tagEditor'>{value.map(item=><div className='tagItem'>{item}</div>)}</div>
+                break;
+            default:
+                return <p className='limitedHeight' onClick={({target})=>{target.blur();  target.parentElement.blur();}}>{String(metadata[key])}</p>
+                break;
+        }
+    }
     if (creating)
         return <tr>
             <td>
@@ -130,7 +140,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
             <b>{key}</b>
         </td>
         <td className='value' onClick={({target})=>{target.blur();  target.parentElement.blur();}}>
-            <p className='limitedHeight' onClick={({target})=>{target.blur();  target.parentElement.blur();}}>{String(metadata[key])}</p>
+            {renderFieldValue(metadata[key])}
         </td>
         <td className='buttons' onClick={({target})=>{target.blur();  target.parentElement.blur();}}>
             <button onClick={() => {setIsEditing(true); setNewField({name:key, value:metadata[key]})}}><FeatherIcon icon="edit-2" color="#7c8ad6" size={12} /></button>
