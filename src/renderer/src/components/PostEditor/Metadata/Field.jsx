@@ -7,6 +7,16 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
     const [selectedType, setSelectedType] = useState(null);
     const [newField, setNewField] = useState({});
     const [isEditing, setIsEditing] = useState(false);
+    const handleSetSelectedType = (type)=>{
+        switch (type) {
+            case "object":
+                setNewField({...newField, value:[]})
+                break;
+            default:
+                break;
+        }
+        setSelectedType(type)
+    }
     const deleteField = () => {
         setNewField({})
         setSelectedType(null);
@@ -48,6 +58,8 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
         let value = null;
         if (metadata[field]) {
             value = metadata[field];
+        } else{
+            value = newField['value'];
         }
         console.log("field", field, "is", type, metadata);
         switch (type) {
@@ -75,7 +87,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
                 <textarea type="text" placeholder="Key" onChange={({ target }) => setNewField({ ...newField, name: target.value })} />
             </td>
             <td>
-                <select placeholder="of type" onChange={({ target }) => setSelectedType(target.value)} disabled={[null, undefined, ""].includes(newField["name"])}>
+                <select placeholder="of type" onChange={({ target }) => handleSetSelectedType(target.value)} disabled={[null, undefined, ""].includes(newField["name"])}>
                     <option disabled selected>of type</option>
                     <option value="string">Text</option>
                     <option value="boolean">Boolean</option>
