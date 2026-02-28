@@ -130,7 +130,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd, isEditingStatus, se
                 {renderFieldValueArea(typeof metadata[key], key)}
             </td>
             <td>
-                <button onClick={() => { setIsEditing(false) }}>Cancel</button>
+                <button onClick={() => { setIsEditing(false); setIsEditingStatus(false); }}>Cancel</button>
             </td>
             <td>
                 <button onClick={() => saveField(key, newField['value'], newField['name'] != key ? newField['name'] : undefined)}>Save</button>
