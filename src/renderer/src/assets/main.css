@@ -464,6 +464,10 @@ table.metadata tr td.value textarea {
   resize: vertical;
 }
 
+table.metadata tr td:has(button:only-child):not(:last-child){
+  margin-right:5px;
+}
+
 table.metadata tr {
   display: block;
   padding: 8px;
@@ -744,6 +748,9 @@ table.metadata tr td {
 
 .dashboardForm {
   margin-bottom: 15px;
+}
+.dashboardForm input{
+  min-width:60%;
 }
 
 .dashboardForm span {
