@@ -94,7 +94,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
     if (creating)
         return <tr>
             <td>
-                <textarea type="text" placeholder="Key" onChange={({ target }) => setNewField({ ...newField, name: target.value })} />
+                <input type="text" placeholder="Key" onChange={({ target }) => setNewField({ ...newField, name: target.value })} />
             </td>
             <td>
                 <select placeholder="of type" onChange={({ target }) => handleSetSelectedType(target.value)} disabled={[null, undefined, ""].includes(newField["name"])}>
