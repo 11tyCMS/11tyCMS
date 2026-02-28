@@ -5,6 +5,7 @@ import DeleteCollectionDialog from './Dialogs/DeleteCollectionDialog';
 import Sidebar from './Sidebar/Sidebar';
 import useCollectionsStore, { useCollections, useCollectionsActions } from '../stores/Collections';
 import useSiteStore, { useCwd, useSelectedSiteInfo } from '../stores/Site';
+import FeatherIcon from 'feather-icons-react';
 
 const SiteView = () => {
     const [isAddingCollection, setIsAddingCollection] = useState(false);
@@ -36,9 +37,14 @@ const SiteView = () => {
     if(selectedSiteInfo == null){
         return <Navigate to="/"/>
     }
-    
+    const toggleSidebar = ()=>{
+        document.getElementById("sidebar").classList.toggle('collapsed');
+    }
     return <>
         <Sidebar setCollectionToDelete={setCollectionToDelete} setIsAddingCollection={setIsAddingCollection} />
+        <div className='pane-gap'>
+            <button className='no-style' onClick={toggleSidebar}><FeatherIcon icon='more-vertical' color='white' size={30}/></button>
+        </div>
         <div className="main-view">
             <AddCollectionDialog siteInfo={selectedSiteInfo} displayStatus={isAddingCollection} setDisplayStatus={setIsAddingCollection} cwd={cwd} />
             <DeleteCollectionDialog collection={collectionToDelete} setCollectionToDelete={setCollectionToDelete} />
