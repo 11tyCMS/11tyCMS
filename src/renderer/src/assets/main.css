@@ -878,7 +878,7 @@ ul.siteSelector li:focus-within {
 
 ul.siteSelector li .buttons {
   display: none;
-  margin-right: 7px;
+  margin-right: 14px;
 }
 
 ul.siteSelector li:hover .buttons,
