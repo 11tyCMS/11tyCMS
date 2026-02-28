@@ -934,12 +934,17 @@ ul.siteSelector li button {
   flex-wrap: wrap;
   background-color: var(--secondary-color);
   padding: 4px;
+  padding-left:8px;
+  padding-right:8px;
   gap: 4px;
   border-radius: 3px;
   height: 24px;
   min-width: fit-content;
   font-size: 14px;
   align-items: anchor-center;
+}
+.tagEditor.editing .tagItem{
+  padding: 4px !important;
 }
 
 .tagItem span {
