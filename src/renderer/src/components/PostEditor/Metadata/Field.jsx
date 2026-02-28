@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import FeatherIcon from 'feather-icons-react';
 import TagField from './TagField';
-const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
+const Field = ({ metadata, itemKey, saveMetadata, cancelAdd, isEditingStatus, setIsEditingStatus }) => {
     const key = itemKey;
     const creating = !key;
     const [selectedType, setSelectedType] = useState(null);
@@ -37,6 +37,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
         setIsEditing(false);
         deleteField();
         cancelAdd();
+        setIsEditingStatus(false);
     }
     const standardOnChange = (event) => {
         let updatedNewField = { ...newField };
@@ -143,7 +144,7 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd }) => {
             {renderFieldValue(metadata[key])}
         </td>
         <td className='buttons' onClick={({target})=>{target.blur();  target.parentElement.blur();}}>
-            <button onClick={() => {setIsEditing(true); setNewField({name:key, value:metadata[key]})}}><FeatherIcon icon="edit-2" color="#7c8ad6" size={12} /></button>
+            <button disabled={isEditingStatus} onClick={() => {setIsEditing(true); setIsEditingStatus(true); setNewField({name:key, value:metadata[key]})}}><FeatherIcon icon="edit-2" color="#7c8ad6" size={12} /></button>
             <button onClick={() => saveRemoveField(key)}><FeatherIcon icon="trash-2" color="#7c8ad6" size={12} /></button>
         </td>
     </tr>

@@ -4,7 +4,7 @@ import Field from './Field';
 const Metadata = ({ selectedFile, saveMetadata }) => {
     console.log('%c 11tyCMS Debug ', 'background: black; color: violet; font-weight:800;', `Metadata for ${selectedFile.fileName}\n`, selectedFile.data);
     const [newField, setNewField] = useState(null);
-    const [selectedType, setSelectedType] = useState(null);
+    const [isEditingStatus, setIsEditingStatus] = useState(false);
     const addNewField = () => setNewField({name:null});
     const cancelAdd = ()=>setNewField(null);
     return <table className="metadata">
@@ -12,7 +12,7 @@ const Metadata = ({ selectedFile, saveMetadata }) => {
             ? Object.keys(selectedFile.data)
                 .filter((key) => key != 'title')
                 .map((key) => (
-                    <Field metadata={selectedFile.data} itemKey={key} saveMetadata={saveMetadata}/>
+                    <Field metadata={selectedFile.data} itemKey={key} saveMetadata={saveMetadata} setIsEditingStatus={setIsEditingStatus} isEditingStatus={isEditingStatus}/>
                 ))
             : ''}
         {newField ? <Field metadata={selectedFile.data} key={undefined} saveMetadata={saveMetadata} cancelAdd={cancelAdd}/> : ''}
