@@ -74,6 +74,7 @@ function PostEditor() {
           </button>
 
           <input
+            placeholder='Post title'
             className="title"
             value={selectedFile ? selectedFile.data.title : ''}
             onChange={(e) => {
