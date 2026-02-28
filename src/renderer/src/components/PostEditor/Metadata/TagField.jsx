@@ -28,7 +28,7 @@ const TagField = ({tags, setTags})=>{
             <button onClick={()=>deleteTagAtIndex(index)}><FeatherIcon icon="delete" size={12}/></button>
         </div>
     }
-    return <div className="tagEditor">
+    return <div className="tagEditor editing">
         {tags.map((item, index)=>renderTagValue(item, index))}
         <input ref={inputRef} placeholder="Value" onKeyDown={keyDownHandler} onChange={({target})=>setInputValue(target.value)} value={inputValue}/>
     </div>

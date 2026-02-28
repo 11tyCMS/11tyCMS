@@ -402,13 +402,15 @@ table.metadata tr td .limitedHeight {
   max-height: 3rem;
   overflow: scroll;
 }
-table.metadata tr td.value{
-  flex-grow:1;
+
+table.metadata tr td.value {
+  flex-grow: 1;
   padding-right: 1rem;
 }
-table.metadata tr td.value textarea{
-  width:100%;
-  resize:vertical;
+
+table.metadata tr td.value textarea {
+  width: 100%;
+  resize: vertical;
 }
 
 table.metadata tr {
@@ -861,34 +863,51 @@ ul.siteSelector li button {
   border-radius: 2px;
   margin-top: 0px !important;
 }
+
 .tagEditor {
-    display: flex;
-    gap:0.75rem;
-    flex-direction: row;
+  display: flex;
+  gap: 0.75rem;
+  flex-direction: row;
   flex-wrap: wrap;
 }
+.tagEditor.editing{
+  background: #04060b;
+  padding: 6px;
+  border: 2px solid #1a2f55;
+  border-radius: 4px;
+}
+
 .tagItem {
-    display: flex;
-    flex-wrap: wrap;
-    background-color:var(--secondary-color);
-    padding:6px;
-    gap:4px;
-    border-radius:3px;
-    height:20px;
-    min-width:fit-content;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: var(--secondary-color);
+  padding: 4px;
+  gap: 4px;
+  border-radius: 3px;
+  height: 20px;
+  min-width: fit-content;
+  font-size: 14px;
+  align-items: anchor-center;
 }
-.tagItem button{
-    width:fit-content;
-    height:fit-content;
-    margin:0px;
-    padding:4px;
-    display:flex;
-    justify-content:center;
-    background:none;
+
+.tagItem button {
+  width: fit-content;
+  height: fit-content;
+  margin: 0px;
+  padding: 4px;
+  display: flex;
+  justify-content: center;
+  background: none;
 }
-.tagItem button svg{
-    margin:0px !important;
+
+.tagItem button svg {
+  margin: 0px !important;
 }
-.tagEditor input{
-    width:80px;
+
+.tagEditor input {
+  width: 80px;
+  background: none;
+  border: none;
+  outline: none;
+  color: white;
 }
