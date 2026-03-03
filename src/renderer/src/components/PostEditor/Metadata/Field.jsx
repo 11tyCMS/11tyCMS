@@ -111,10 +111,10 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd, isEditingStatus, se
                         {renderFieldValueArea(selectedType, newField['name'])}
                     </td>
                     <td>
-                        <button onClick={cancelAdd}>Cancel</button>
+                        <button onClick={({target}) => {cancelAdd(); target.blur(); target.parentElement.blur();}}>Cancel</button>
                     </td>
                     <td>
-                        <button onClick={() => saveField(newField['name'], newField['value'])}>Save</button>
+                        <button onClick={({target}) => {saveField(newField['name'], newField['value']); target.blur(); target.parentElement.blur();}}>Save</button>
                     </td>
                 </>) : <td>
                     <button onClick={cancelAdd}>Cancel</button>

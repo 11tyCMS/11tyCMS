@@ -11,8 +11,8 @@ const Metadata = ({ selectedFile, saveMetadata }) => {
         {selectedFile
             ? Object.keys(selectedFile.data)
                 .filter((key) => key != 'title')
-                .map((key) => (
-                    <Field metadata={selectedFile.data} itemKey={key} saveMetadata={saveMetadata} setIsEditingStatus={setIsEditingStatus} isEditingStatus={isEditingStatus}/>
+                .map((key, index) => (
+                    <Field index={index} metadata={selectedFile.data} itemKey={key} saveMetadata={saveMetadata} setIsEditingStatus={setIsEditingStatus} isEditingStatus={isEditingStatus}  cancelAdd={cancelAdd}/>
                 ))
             : ''}
         {newField ? <Field metadata={selectedFile.data} key={undefined} saveMetadata={saveMetadata} cancelAdd={cancelAdd}/> : ''}
