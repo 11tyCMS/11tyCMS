@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DialogBase from './DialogBase';
 import { useNavigate } from 'react-router-dom';
-import useSiteStore, { useGetInputDir } from '../../stores/Site';
+import useSiteStore, { useGetInputDir, useSelectedSiteInfo } from '../../stores/Site';
 import ConfirmationDialog from './ConfirmationDialog';
 import { useGetCollectionDefaultMetadata } from '../../stores/Collections';
 function AddFileDialog({ displayStatus, setDisplayStatus, fetchFile, cwd, collection }) {
     const [slug, setSlug] = useState('');
     const navigate = useNavigate();
-    const getInputDir = useGetInputDir()
+    const selectedSiteInfo =  useSelectedSiteInfo();
     const getCollectionDefaultMetadata = useGetCollectionDefaultMetadata();
     const createPost = (slug) => {
         slug = slug
@@ -21,8 +21,17 @@ function AddFileDialog({ displayStatus, setDisplayStatus, fetchFile, cwd, collec
             })
         })
     }
+    useEffect(() => {
+        if (!displayStatus) {
+            setSlug('');
+        }
+    }, [displayStatus])
     return <ConfirmationDialog displayStatus={displayStatus} confirmLabelText="Save" headerLabelText={`Add post to ${collection}`} onConfirm={() => createPost(slug)} onCancel={() => setDisplayStatus(false)}>
-        <input placeholder='File name here' onChange={(e) => setSlug(e.target.value)}></input>
+        <div style={{display:'flex', flexDirection:'column', gap:'8px'}}>
+            <input placeholder='File name here' onChange={(e) => setSlug(e.target.value)}></input>
+            <span><b>URL example:</b></span>
+            <p>{selectedSiteInfo.url ? selectedSiteInfo.url : 'https://example-site.com'}/example-collection/{slug.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').replaceAll(' ', '-')}</p>
+        </div>
     </ConfirmationDialog>
 
 }
