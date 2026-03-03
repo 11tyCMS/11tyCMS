@@ -487,6 +487,10 @@ table.metadata tr .buttons button {
   padding: unset;
   background: none;
 }
+table.metadata tr .buttons-active{
+  display:flex;
+  gap:6px;
+}
 
 table.metadata tr .buttons button:hover {
   background: var(--secondary-color);
@@ -510,7 +514,6 @@ table.metadata tr:last-of-type {
 }
 
 table.metadata tr td:first-child {
-  padding-right: 10px;
   color: var(--lighter-text-color);
   min-width: fit-content;
 }
@@ -519,6 +522,7 @@ table.metadata tr td:first-child {
 
 table.metadata tr td {
   color: var(--lightest-text-color);
+  padding-right:10px;
 }
 
 .toolbar {

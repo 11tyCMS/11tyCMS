@@ -110,13 +110,11 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd, isEditingStatus, se
                     <td className='value'>
                         {renderFieldValueArea(selectedType, newField['name'])}
                     </td>
-                    <td>
+                    <td className='buttons-active'>
                         <button onClick={({target}) => {cancelAdd(); target.blur(); target.parentElement.blur();}}>Cancel</button>
-                    </td>
-                    <td>
                         <button onClick={({target}) => {saveField(newField['name'], newField['value']); target.blur(); target.parentElement.blur();}}>Save</button>
                     </td>
-                </>) : <td>
+                </>) : <td className='buttons-active'>
                     <button onClick={cancelAdd}>Cancel</button>
                 </td>
             }
@@ -129,11 +127,9 @@ const Field = ({ metadata, itemKey, saveMetadata, cancelAdd, isEditingStatus, se
             <td className='value'>
                 {renderFieldValueArea(typeof metadata[key], key)}
             </td>
-            <td>
-                <button onClick={() => { setIsEditing(false); setIsEditingStatus(false); }}>Cancel</button>
-            </td>
-            <td>
-                <button onClick={() => saveField(key, newField['value'], newField['name'] != key ? newField['name'] : undefined)}>Save</button>
+            <td className='buttons-active'>
+                <button onClick={({target}) => { setIsEditing(false); setIsEditingStatus(false); target.blur(); target.parentElement.blur(); }}>Cancel</button>
+                <button onClick={({target}) => {saveField(key, newField['value'], newField['name'] != key ? newField['name'] : undefined); target.blur(); target.parentElement.blur();}}>Save</button>
             </td>
         </tr>
     return <tr tabIndex={0} onClick={({target})=>{target.blur();  target.parentElement.blur();}}>
