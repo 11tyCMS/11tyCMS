@@ -649,6 +649,7 @@ table.metadata tr td {
   cursor: pointer;
   font-size: 16px;
   color: var(--lightest-text-color);
+  margin-right:0.75rem;
 }
 
 .postsList ul li button.listItem .info {
