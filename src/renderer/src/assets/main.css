@@ -39,10 +39,12 @@ select {
   font-size: 14px;
   font-family: Arial, Helvetica, sans-serif;
 }
+
 input:focus,
 textarea:focus,
-select:focus, button:focus {
-  outline-color:  rgb(129 155 255 / 70%);
+select:focus,
+button:focus {
+  outline-color: rgb(129 155 255 / 70%);
 }
 
 p {
@@ -74,16 +76,19 @@ button.no-style {
   align-items: unset;
   justify-content: unset;
 }
-button.no-style svg{
-  margin:0px !important;
+
+button.no-style svg {
+  margin: 0px !important;
 }
-.pane-gap{
-  display:flex;
+
+.pane-gap {
+  display: flex;
   flex-direction: column;
   justify-content: center;
 }
-.pane-gap button svg{
-  color:var(--text-highlight-color);
+
+.pane-gap button svg {
+  color: var(--text-highlight-color);
 }
 
 button.darkest {
@@ -167,33 +172,37 @@ button:hover {
 
 .sidebar {
   width: 215px;
-  min-width:215px;
-  overflow:hidden;
-  transition:width 0.4s, min-width 0.4s, padding 0.2s;
+  min-width: 215px;
+  overflow: hidden;
+  transition: width 0.4s, min-width 0.4s, padding 0.2s;
   transition-timing-function: ease;
-  padding-left:10px;
+  padding-left: 10px;
 }
-.sidebar .container{
+
+.sidebar .container {
   background-color: var(--primary-color);
   border-radius: var(--squarcle-radius);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width:215px;
-  min-width:215px;
-  height:100%;
-  padding:10px;
+  width: 215px;
+  min-width: 215px;
+  height: 100%;
+  padding: 10px;
 }
-.sidebar.collapsed{
-  width:0px;
+
+.sidebar.collapsed {
+  width: 0px;
   min-width: 0px;
-  padding-left:0px;
+  padding-left: 0px;
 }
-#root:has(.pane-gap:hover) .sidebar.collapsed, .sidebar.collapsed:hover{
-  width:215px;
-  min-width:215px;
-  padding-left:10px;
+
+#root:has(.pane-gap:hover) .sidebar.collapsed,
+.sidebar.collapsed:hover {
+  width: 215px;
+  min-width: 215px;
+  padding-left: 10px;
 }
 
 
@@ -464,8 +473,8 @@ table.metadata tr td.value textarea {
   resize: vertical;
 }
 
-table.metadata tr td:has(button:only-child):not(:last-child){
-  margin-right:5px;
+table.metadata tr td:has(button:only-child):not(:last-child) {
+  margin-right: 5px;
 }
 
 table.metadata tr {
@@ -487,9 +496,10 @@ table.metadata tr .buttons button {
   padding: unset;
   background: none;
 }
-table.metadata tr .buttons-active{
-  display:flex;
-  gap:6px;
+
+table.metadata tr .buttons-active {
+  display: flex;
+  gap: 6px;
 }
 
 table.metadata tr .buttons button:hover {
@@ -522,7 +532,7 @@ table.metadata tr td:first-child {
 
 table.metadata tr td {
   color: var(--lightest-text-color);
-  padding-right:10px;
+  padding-right: 10px;
 }
 
 .toolbar {
@@ -680,6 +690,17 @@ table.metadata tr td {
   color: white;
 }
 
+.dialog-modal-bg .dialog {
+  width: 500px;
+}
+
+.dialog-modal-bg .dialog .content {
+  box-sizing: border-box;
+  width: 100%;
+  text-wrap: wrap;
+  word-wrap: break-word;
+}
+
 .dialog-modal-bg .dialog h1:first-of-type {
   font-size: 24px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
@@ -753,8 +774,9 @@ table.metadata tr td {
 .dashboardForm {
   margin-bottom: 15px;
 }
-.dashboardForm input{
-  min-width:60%;
+
+.dashboardForm input {
+  min-width: 60%;
 }
 
 .dashboardForm span {
@@ -945,8 +967,8 @@ ul.siteSelector li button {
   flex-wrap: wrap;
   background-color: var(--secondary-color);
   padding: 4px;
-  padding-left:8px;
-  padding-right:8px;
+  padding-left: 8px;
+  padding-right: 8px;
   gap: 4px;
   border-radius: 3px;
   height: 24px;
@@ -954,7 +976,8 @@ ul.siteSelector li button {
   font-size: 14px;
   align-items: anchor-center;
 }
-.tagEditor.editing .tagItem{
+
+.tagEditor.editing .tagItem {
   padding: 4px !important;
 }
 
