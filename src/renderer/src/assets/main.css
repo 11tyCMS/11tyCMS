@@ -160,6 +160,18 @@ button:hover {
   width: 25px;
   height: 25px;
   margin-right: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: anchor-center;
+}
+
+.siteSelector .siteInfo .favicon-container .favicon {
+  display: flex;
+  justify-content: center;
+  align-items: anchor-center;
+}
+.siteSelector .siteInfo .favicon-container .favicon svg{
+  margin-right:unset !important;
 }
 
 .siteSelector .siteInfo .info {
@@ -232,6 +244,9 @@ button:hover {
   width: 30px;
   height: 30px;
   border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: anchor-center;
 }
 
 .favicon-container .favicon img {

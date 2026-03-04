@@ -17,6 +17,8 @@ let collectionDirectories = [];
 const getFavicon = async (sitePath) => {
     const extensions = ['svg', 'png', 'ico', 'jpg', 'jpeg', 'gif']
     const extension = extensions.find((ext) => fs.existsSync(`${sitePath}/${siteConfig.media}/favicon.${ext}`));
+    if(!extension)
+        return undefined;
     const fileData = await fs.readFileSync(`${sitePath}/${siteConfig.media}/favicon.${extension}`);
     return extension ? {fileData, pathname:`${sitePath}/${siteConfig.media}/favicon.${extension}`, extension} : undefined;
 }
@@ -218,7 +220,7 @@ const functions = {
             otherData['layouts'][file.name] = { title: file.name }
         })
         const favicon = await getFavicon(selectedSiteDir)
-        if (favicon.pathname) {
+        if (favicon) {
             otherData['base64Favicon'] = imageToBase64(favicon.fileData, `.${favicon.extension}`)
         }
         siteInfoFilePath = await functions._getSiteInfoFilePath();

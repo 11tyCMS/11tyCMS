@@ -10,7 +10,9 @@ function SiteInfoPill() {
         <button className="no-style infoContainer">
             <div className='favicon-container'>
                 <div className='favicon'>
-                    <img src={selectedSiteInfo['base64Favicon']}></img>
+                    {
+                        !selectedSiteInfo['base64Favicon'] ? <FeatherIcon icon="globe" size={20} /> : <img src={selectedSiteInfo['base64Favicon']}/>
+                    }
                 </div>
             </div>
             <div className='info'>

@@ -22,7 +22,9 @@ const SelectSiteView = () => {
             {selectedSiteHistory.map((site) => <li><button className='siteInfo' onClick={() => openSiteByDir(navigate, site.cwd)}>
                 <div className='favicon-container'>
                     <div className='favicon'>
-                        <img src={site['base64Favicon']}></img>
+                        {
+                            site['base64Favicon'] ? <img src={site['base64Favicon']} alt={`${site.title}'s favicon`} /> : <FeatherIcon icon="globe" size={20} />
+                        }
                     </div>
                 </div>
                 <div className='info'>
