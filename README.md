@@ -2,15 +2,7 @@
 Welcome to 11tyCMS! 11tyCMS is a local, serverless, offline CMS for the 11ty SSG. Simply install, and launch.
 ![screenshot of 11tyCMS's editor view, at the top is a metadata area, with rows of metadata. Beneath is the rich markdown editor. To the left is a side bar with the dashboard button at the top and the collections list to beneath that. Beneath the collections list are 2 buttons side by side: "Build" and "Publish"](/images/editor.png)
 ## Where can I download it?
-We're hosting builds on [GitHub](https://github.com/jh97uk/11tyCMS/releases/tag/beta). I'd love to host them on this repo, but unfortunately, the release size limits on Codeberg cap out at 100mb. If anyone knows how to reduce our build sizes, please create an issue!
-
-I've requested larger release size caps, but Codeberg have said they have no ability to change this for individual users at this time.
-
-### Why Codeberg anyway?
-
-11tyCMS is a project that seeks to help federate the web: I want more websites. I want more of our content, writing, creativity and the internet's soul to be out of the hands of centralised big tech platforms. GitHub and its parent company Microsoft have been ethically spurious to say the least, and their use of AI training is deeply concerning. It's not something I want to contribute to.
-
-A better web will only happen if we build it, and maintain what good we have. Let's make that happen!
+The builds can be found [here](https://github.com/jh97uk/11tyCMS/releases/tag/beta).
 
 ### Help! It says its potentially a dangerous file?
 
@@ -58,7 +50,7 @@ If you want to skip the welcome wizard, just create an `_11tycms.json` file in y
 
 Note that any config file or `11tydata` file can be either .json, .js, or .tsx. However if you have 2 files with different formats, this will cause bugs!
 
-If you'd like to see an example of an 11ty site working with 11tyCMS, refer to [my portfolio](https://codeberg.org/JessieHealdUK/Portfolio) (just remember to create a `content` folder!).
+If you'd like to see an example of an 11ty site working with 11tyCMS, refer to [my portfolio](https://github.com/jh97uk/Portfolio) (just remember to create a `content` folder!).
 
 # Development
 To setup the source for development run `npm install`. You'll get an error about `electron-builder`, ignore it for now, I'm in the process of fixing it.
