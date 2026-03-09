@@ -2,7 +2,7 @@
 Welcome to 11tyCMS! 11tyCMS is a local, serverless, offline CMS for the 11ty SSG. Simply install, and launch.
 ![screenshot of 11tyCMS's editor view, at the top is a metadata area, with rows of metadata. Beneath is the rich markdown editor. To the left is a side bar with the dashboard button at the top and the collections list to beneath that. Beneath the collections list are 2 buttons side by side: "Build" and "Publish"](/images/editor.png)
 ## Where can I download it?
-The builds can be found [here](https://github.com/jh97uk/11tyCMS/releases/tag/beta).
+The builds can be found [here](https://github.com/jh97uk/11tyCMS/releases).
 
 ### Help! It says its potentially a dangerous file?
 
