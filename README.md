@@ -21,7 +21,7 @@ Please see the issues tab for common bugs to look out for while using these earl
 ## Getting your site 11tyCMS ready
 11tyCMS requires all your posts to be in a "content folder". It doesn't matter the name of the folder, this is configured in the setup.
 
-11tyCMS has been built around the [`eleventy-base-blog` template](https://github.com/11ty/eleventy-base-blog), so try and follow the structure and naming schemes of this template.
+11tyCMS has been built around the [`eleventy-base-blog` template](https://github.com/11ty/eleventy-base-blog), so try and follow the structure and naming schemes of this template. For an example, please refer to [our fork](https://github.com/11tyCMS/eleventy-base-blog) of `eleventy-base-blog`.
 
 
 For a collection to work with 11tyCMS, you'll need the collection's folder in the content folder, followed by a js or json file inside of that folder with the matching name. For example:
