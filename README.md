@@ -13,6 +13,9 @@ At our website: https://11tycms.com ! Any time we release an update, I write a b
 
 You can hear about our latest updates on our Mastodon account too: https://mstdn.social/@11tyCMS .
 
+## How can I support development?
+I've setup donations via [Ko-Fi](https://ko-fi.com/11tycms) and [GitHub Sponsors](https://github.com/sponsors/11tyCMS), any donations would be warmly welcomed! However, reporting issues, spreading the word and contributing code and UI/UX guidance is equally valuable.
+
 ## Bugs DISCLAIMER!
 I've been using this for my portfolio and the 11tyCMS website for a while now. I've not encountered any major issues. However, backup regularly and practise great caution while using. This is early beta after all.
 
