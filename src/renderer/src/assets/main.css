@@ -496,6 +496,7 @@ table.metadata table tr td {
 table.metadata tr td .limitedHeight {
   max-height: 3rem;
   overflow: auto;
+  line-break: anywhere;
 }
 
 table.metadata tr td.value {
