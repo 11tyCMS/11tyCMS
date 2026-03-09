@@ -495,7 +495,7 @@ table.metadata table tr td {
 
 table.metadata tr td .limitedHeight {
   max-height: 3rem;
-  overflow: scroll;
+  overflow: auto;
 }
 
 table.metadata tr td.value {
